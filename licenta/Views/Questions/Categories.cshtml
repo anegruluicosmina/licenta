@@ -1,0 +1,8 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<licenta.Models.Category>
+@foreach (var category in Model)
+{
+    @Html.ActionLink(category.Name, "Questions", "Questions", new { id = category.Id }, null)
+}

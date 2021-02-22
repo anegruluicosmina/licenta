@@ -1,0 +1,65 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model licenta.ViewModel.QuestionFormViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@Model.Title</h2>
+@*using = for close tag for form*@
+@using (Html.BeginForm("Save", "Questions", null, FormMethod.Post, true, new { id = "questionForm" }))
+{
+    @*using div to render responsive forms*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.Text)
+        @*new is for the attributes*@
+        @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Text)
+    </div>
+
+    @Html.Label("Raspunsuri")
+    @Html.ValidationMessageFor(m => m.Answers)
+    @*use for because it need indexing for the model to take the data*@
+    <div class="form-group" id="answercontainer">
+        @for (var i = 0; i < Model.NumberOfAnswers; i++)
+        {
+            @Html.TextBoxFor(m => m.Answers[i].Text, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Answers[i].Text)
+            <div class="custom-checkbox">
+                <label>
+                    @Html.CheckBoxFor(m => m.Answers[i].IsCorrect, new { name = "isCorret" }) Raspunsul corect
+                </label>
+            </div>
+        }
+        @Html.ValidationMessageFor(m => m.Answers)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.CategoryId)
+        @*new is for the attributes*@
+
+        @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select a category", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.CategoryId)
+
+    </div>
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-primary"> Save</button>
+}
+
+@section Scripts{
+    <script>
+        var lenght = 0;
+        function nextIteration() {
+            var questionForm = document.getElementById("answercontainer");
+            var newLabel = document.createElement("INPUT");
+            newLabel.setAttribute("type", "text");
+            newLabel.setAttribute("name", "Answers_" + lenght + "__Text")
+            newLabel.setAttribute("id", lenght);
+            lenght ++;
+            questionForm.appendChild(newLabel);
+        }
+    </script>
+}

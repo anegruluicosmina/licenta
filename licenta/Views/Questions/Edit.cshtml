@@ -28,7 +28,7 @@
             @Html.ValidationMessageFor(m => m.Answers[i].Text)
             <div class="custom-checkbox">
                 <label>
-                    @Html.CheckBoxFor(m => m.Answers[i].IsCorrect, new { name = "isCorret" }) Raspunsul corect
+                    @Html.CheckBoxFor(m => m.Answers[i].IsCorrect, new { name = "isCorret" }) Raspuns corect
                 </label>
             </div>
         }
@@ -47,6 +47,7 @@
     @Html.AntiForgeryToken()
 
     <button type="submit" class="btn btn-primary"> Save</button>
+
 }
 
 @section Scripts{
@@ -58,7 +59,7 @@
             newLabel.setAttribute("type", "text");
             newLabel.setAttribute("name", "Answers_" + lenght + "__Text")
             newLabel.setAttribute("id", lenght);
-            lenght ++;
+            lenght++;
             questionForm.appendChild(newLabel);
         }
     </script>

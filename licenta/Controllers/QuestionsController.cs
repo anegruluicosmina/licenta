@@ -113,5 +113,94 @@ namespace licenta.Controllers
 
             return View("Edit", viewModel);
         }
+
+        public IActionResult Test(int id)
+        {
+            var numberOfQuestions = _context.Categories
+                            .First(c => c.Id == id)
+                            .NumberOfQuestions;
+
+            var questionsInDb = _context.Question.Where(q => q.CategoryId == id)
+                .Include(q => q.Answers)
+                .OrderBy(r => Guid.NewGuid()).Take(numberOfQuestions)
+                .ToList();
+
+
+            TestViewModel viewModel = new TestViewModel()
+            {
+                Id = 1,
+                Index = 0,
+                Questions = new List<QuestionViewModel>(),
+                NumberOfQuestions = numberOfQuestions 
+            };
+
+            foreach (var question in questionsInDb)
+            {
+                QuestionViewModel questionModel = new QuestionViewModel
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Answers = question.Answers.Select(x => new AnswerViewModel()
+                    {
+                        // variable mapping here 
+                        Id = x.Id,
+                        Text = x.Text
+                    }).ToList()
+                };
+                viewModel.Questions.Add(questionModel);                
+            }
+
+            /*var questions = _mapper.Map<List<Question>, List<QuestionViewModel>>(questionsInDb);*/
+
+            return View(viewModel);
+        }
+        public IActionResult VerifyAnswer(string data, int questionid)
+        {
+            if (data == "[]" || questionid == 0)
+                return Json(new { message = "Nu ati selectat un rapuns", id = 1 });
+
+            var givenAnswers = JsonConvert.DeserializeObject<List<int>>(data);
+
+            List<int> corectAnswers = _context.Answers
+                .Where(a => a.QuestionId == questionid)
+                .Where(a => a.IsCorrect == true)
+                .Select(a => a.Id)
+                .ToList();
+
+            if (corectAnswers == null)
+                return Json("Nu ati selectat un rapuns");
+
+            /*            MVC defaults to DenyGet to protect you against a very specific attack involving JSON 
+                            requests to improve the liklihood that the implications of allowing HTTP GET exposure 
+                            are considered in advance of allowing them to occur.*/
+            if (Enumerable.SequenceEqual(givenAnswers, corectAnswers))
+                return Json(new { message = "Raspuns corect", id = "0" });
+
+            return Json(new { message = "Raspuns gresit", id = "2" });
+
+        }
+        public IActionResult SaveAnswers(TestViewModel question)
+        {
+            bool ok = true;
+
+            foreach (var answer in question.Questions[question.Index].Answers)
+            {
+                var isCorrect = _context.Answers
+                    .SingleOrDefault(a => a.Id == answer.Id);
+
+                if (isCorrect == null)
+                    return StatusCode(404);
+
+                if (answer.IsChecked != isCorrect.IsCorrect)
+                    ok = false;
+            }
+            if (ok)
+            {
+
+            }
+            return View("");
+        }
+
+
     }
 }

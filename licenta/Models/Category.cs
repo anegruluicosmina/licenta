@@ -14,6 +14,7 @@ namespace licenta.Models
         [StringLength(10)]
         public string Name { get; set; }
 
+        public int NumberOfQuestions { get; set; }
         public ICollection<Question> Question { get; set; }
     }
 }

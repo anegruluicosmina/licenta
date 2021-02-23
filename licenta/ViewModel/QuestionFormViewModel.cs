@@ -11,11 +11,11 @@ namespace licenta.ViewModel
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The question needs a text")]
-        [MinLength(255, ErrorMessage = "not long")]
+        [Required(ErrorMessage = "Introduceti un text pentru intrebare")]
+        [Display(Name ="Textul intrebarii")]
         public string Text { get; set; }
 
-        [MinOneCorrectAnswer(ErrorMessage = "aaaaaaaa")]
+        [MinOneCorrectAnswer]
         public List<Answer> Answers { get; set; }
 
         [Required(ErrorMessage = "bbbbb")]
@@ -34,8 +34,8 @@ namespace licenta.ViewModel
             get
             {
                 if (Id == 0)
-                    return "New Question";
-                return "Edit question";
+                    return "Adaugare intrebare noua";
+                return "Editare intrebare";
             }
         }
 

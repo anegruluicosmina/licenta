@@ -1,0 +1,145 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model licenta.ViewModel.TestViewModel
+
+<div id="test_form">
+    <div class="form_container">
+        <div>
+            <p>Numarul de raspunsuri corecte<p>
+            <p id="correct_answers"> 0</p>
+            <p>Numarul de raspunsuri gresite</p>
+            <p id="wrong_answers"> 0</p>
+            <p>Numarul de intrebari</p>
+            <p id="nr_questions"> @Model.NumberOfQuestions</p>
+            <p id="question_text"></p>
+        </div>
+
+        <br />
+        <div id="answers">
+        </div>
+        <p id="error_message"></p>
+    </div>
+</div>
+<input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verifyAnswer" />
+<input type="submit" id="btn_start_test" value="Start Test" />
+<input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul"/>
+
+@section Scripts{
+    <script>
+        var model = @Html.Raw(Json.Serialize(Model));
+        console.log(model);
+        var unansweredQuestions = [];
+        for (var i = 0; i < model.questions.length; i++) {
+            unansweredQuestions.push(model.questions[i].id);
+        }
+        console.log(unansweredQuestions);
+        var index = 0;
+        var answers = document.getElementById("answers");
+
+
+        @* function to add next question *@
+
+        $("#btn_start_test").click(function () {
+            if (index == 0) {
+                $("#verifyAnswer").show();
+                $("#btn_start_test").attr('value', 'Urmatoarea intrebare');
+            }
+            if (unansweredQuestions.length > 0) {
+                console.log(unansweredQuestions.length);
+                console.log("here");
+                next_question();
+            }
+        });
+
+        $("#verifyAnswer").click(function () {
+            if (unansweredQuestions.length > 0) {
+                var data = take_data();
+                verify_answers(data);
+            } else {
+                @*salveaza testul*@
+            }
+        });
+
+        function next_question() {
+            var questionIndex = unansweredQuestions.indexOf(model.questions[index].id);
+            $("#error_message").text("");
+
+            if (index != 0 && questionIndex > 0) {
+                var data = take_data();
+                verify_answers(data);
+                console.log("noooooooooooo");
+            }
+
+            $("#question_text").text(model.questions[index].text);
+            $("#answers").empty();
+            for (var i = 0; i < model.questions[index].answers.length; i++) {
+                var check = document.createElement("INPUT");
+                check.setAttribute("type", "checkbox");
+                check.setAttribute('id', model.questions[index].answers[i].id);
+                check.setAttribute("value", model.questions[index].answers[i].id);
+                var nod = document.createTextNode(model.questions[index].answers[i].text);
+                $("#answers").append(check, nod);
+            }
+            index++;
+
+        }
+
+        function take_data() {
+            var selected = [];
+            $('#answers input:checked').each(function () {
+                selected.push($(this).attr('id'));
+            });
+            var data = JSON.stringify(selected);
+            return data;
+        }
+
+        function verify_answers(data) {
+            var res = $.ajax({
+                type: "GET",
+                url: '@(Url.Action( "VerifyAnswer", "Questions"))',
+                data: { data: data, questionid: model.questions[index-1].id},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+            function successFunc(data) {
+                var questionIndex = unansweredQuestions.indexOf(model.questions[index-1].id);
+                if (data.id == 0) {
+                    if (questionIndex > -1) {
+                        $("#correct_answers").text(function (i, oldvalue) {
+                            return parseInt(oldvalue, 10) + 1;
+                        });
+                    }
+                    $("#error_message").text("Ai raspuns corect");
+                    console.log(0);
+                } else {
+                    if (questionIndex > -1) {
+                        $("#wrong_answers").text(function (i, oldvalue) {
+                            return parseInt(oldvalue, 10) + 1;
+                        });
+                    }
+                    $("#error_message").text("Ai raspuns gresit");
+                    console.log("wrong_answers");
+                }
+              
+                if (questionIndex > -1) {
+                    $("#nr_questions").text(function (i, oldvalue) {
+                        return parseInt(oldvalue, 10) - 1;
+                    });  
+                    unansweredQuestions.splice(questionIndex, 1);
+                }
+            }
+
+            function errorFunc(data) {
+                $("#error_message").text("error");
+            }
+        }
+    </script>
+}
+
+
+
+

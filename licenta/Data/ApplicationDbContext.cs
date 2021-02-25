@@ -13,6 +13,7 @@ namespace licenta.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Question> Question { get; set; }
+        public DbSet<Test> Tests { get; set; }
 
 /*        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

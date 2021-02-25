@@ -31,7 +31,6 @@ namespace licenta.Controllers
             var questionsInDb = _context.Question
                             .Include(c => c.Category).Where(c => c.CategoryId == id)
                             .Include(q => q.Answers)
-                            .OrderBy(r => Guid.NewGuid()).Take(5)
                             .ToList();
             return View(questionsInDb);
         }
@@ -131,7 +130,8 @@ namespace licenta.Controllers
                 Id = 1,
                 Index = 0,
                 Questions = new List<QuestionViewModel>(),
-                NumberOfQuestions = numberOfQuestions 
+                NumberOfQuestions = numberOfQuestions,
+                CategoryId = id
             };
 
             foreach (var question in questionsInDb)
@@ -201,6 +201,17 @@ namespace licenta.Controllers
             return View("");
         }
 
+        public IActionResult SaveTest(string correctAnswers, string categoryId)
+        {
+            Test test = new Test
+            {
+                NumberOfCorrectAnswers = Int32.Parse(correctAnswers),
+                CategoryId = Int32.Parse(categoryId)
+            };
+            _context.Tests.Add(test);
+            _context.SaveChanges();
+            return Content("");
+        }
 
     }
 }

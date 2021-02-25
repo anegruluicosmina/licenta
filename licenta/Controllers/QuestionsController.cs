@@ -168,7 +168,7 @@ namespace licenta.Controllers
                 .ToList();
 
             if (corectAnswers == null)
-                return Json("Nu ati selectat un rapuns");
+                return Json(new { message = "Eroare de server", id = "3" });
 
             /*            MVC defaults to DenyGet to protect you against a very specific attack involving JSON 
                             requests to improve the liklihood that the implications of allowing HTTP GET exposure 
@@ -210,7 +210,21 @@ namespace licenta.Controllers
             };
             _context.Tests.Add(test);
             _context.SaveChanges();
-            return Content("");
+            return Json("succes");
+        }
+
+        public IActionResult WrongAnswered (string data)
+        {
+            var wrongQuestions = data.Split('/').ToList();
+            wrongQuestions.RemoveAt(wrongQuestions.Count - 1);
+            List<int> intList = wrongQuestions.ConvertAll(int.Parse);
+
+            var questionsInDb = _context.Question
+                .Where(q => intList.Contains(q.Id))
+                .Include(q => q.Answers)
+                .ToList();
+
+            return View(questionsInDb);
         }
 
     }

@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<licenta.Models.Question>
+@{
+    @foreach (var question in Model)
+    {
+        @Html.Label(question.Text);
+        foreach (var answer in question.Answers)
+        {
+            if (answer.IsCorrect)
+            {
+                @Html.Label(answer.Text, null, new { id = "correct_answer" });
+            }
+            else
+            {
+                @Html.Label(answer.Text);
+            }
+        }
+    }
+}

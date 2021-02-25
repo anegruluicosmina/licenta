@@ -4,39 +4,53 @@
 
 @model licenta.ViewModel.TestViewModel
 
-<div id="test_form">
-    <div class="form_container">
-        <div>
+<div id="test_container">
+    <div class="answer_count">
+        <div class="answer_count">
+            <p id="result"></p>
             <p>Numarul de raspunsuri corecte<p>
             <p id="correct_answers"> 0</p>
             <p>Numarul de raspunsuri gresite</p>
             <p id="wrong_answers"> 0</p>
-            <p>Numarul de intrebari</p>
+            <p>Numarul de intrebari ramase</p>
             <p id="nr_questions"> @Model.NumberOfQuestions</p>
+        </div>
+        <div id="question_container">
             <p id="question_text"></p>
+            <br />
+            <div id="answers"></div>
+            <p id="error_message"></p>
         </div>
 
-        <br />
-        <div id="answers">
-        </div>
-        <p id="error_message"></p>
     </div>
+    <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verifyAnswer" />
+    <input type="submit" id="btn_next_question" value="Start Test" />
+    <input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul" />
+    <input type="submit" id="btn_wrong_qst" value="" style="display: none;">
+    <a href="" id="anch_show" style="display: none;">Vezi intrebarile gresite</a>
 </div>
-<input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verifyAnswer" />
-<input type="submit" id="btn_next_question" value="Start Test" />
-<input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul"/>
-
 @section Scripts{
     <script>
         var model = @Html.Raw(Json.Serialize(Model));
         console.log(model);
         var correctAnswers = 0;
         var category = model.categoryId;
+        var wrongQuestions = [];
+        var wrongAnsweres = "";
         var index = -1;
         var answers = document.getElementById("answers");
 
-
-        @* function to add next question *@
+@*        $('#answers input:checked').click(function () {
+            var ok = 0;
+            $('#answers input:checked').each(function () {
+                if ($(this).is(":checked")) {
+                    ok = 1;
+                }
+            });
+            if (ok == 1) {
+                $("#verifyAnswer").attr("enable", false);
+            }
+        });*@
 
         $("#btn_next_question").click(function () {
             if (index < 0) {
@@ -47,39 +61,63 @@
             if (index + 1 >= model.questions.length) {
                 index = -1;
             }
-
-            if (model.questions.length > 0) {
-                console.log(">1");
-                next_question();
+            if (wrongQuestions.length < 5) {
+                if (model.questions.length > 0) {
+                    next_question();
+                } else {
+                    var data = take_data();
+                    $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
+                    $("#question_container").text("");
+                    if (wrongQuestions.length > 0) {
+                        $("#anch_show").show();
+                        $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + wrongAnsweres);
+                    }
+                    $("#btn_next_question").hide();
+                    $("#verifyAnswer").hide();
+                }
             } else {
-                var data = take_data();
-                console.log("am terminat");
+                $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
+                $("#question_container").text("");
+                $("#anch_show").show();
+                $("#anch_show").attr("href","https://localhost:44368/questions/WrongAnswered?data=" + wrongAnsweres);
+                $("#btn_next_question").hide();
+                $("#verifyAnswer").hide();
             }
+
         });
 
         $("#verifyAnswer").click(function () {
-            if (model.questions.length > 7) {
+            if (model.questions.length > 0) {
                 var data = take_data();
-                verify_answers(data);
+                if (data === "[]") {
+                    $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
+                } else {
+                    verify_answers(data);
+                }
             } else {
-                @*save_test(correctAnswers, model.numberOfQuestions, categoryId);*@
+                if (wrongQuestions.length > 0) {
+                    $("#anch_show").show();
+                }
+                if (wrongQuestions.length > 5) {
+                    $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
+                } else {
+                    $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
+                }
                 save_test();
             }
         });
 
         function next_question() {
+            $("#verifyAnswer").attr("disabled", false);
+
             index++;
-            console.log("index ===" + index);
 @*            var questionIndex = unansweredQuestions.indexOf(model.questions[index].id);*@
             $("#error_message").text("");
-
 @*            if (index != 0 && questionIndex > 0) {
                 var data = take_data();
                 verify_answers(data);
                 console.log("noooooooooooo");
             }*@
-
-
             $("#question_text").text(model.questions[index].text);
             $("#answers").empty();
             for (var i = 0; i < model.questions[index].answers.length; i++) {
@@ -102,7 +140,6 @@
             return data;
         }
 
-
         function save_test() {
             $.ajax({
                 type: "GET",
@@ -110,20 +147,15 @@
                 data: { correctAnswers: correctAnswers, categoryId: model.categoryId },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: successFunc,
                 error: errorFunc
             });
-            function successFunc(data) {
-                $("#test_form").text("ouau");
-            }
-
-            function errorFunc(data) {
-                $("#error_message").text("error");
+            function errorFunc() {
+                $("#error_message").text("error from save_test");
             }
         }
 
         function verify_answers(data) {
-            var res = $.ajax({
+             $.ajax({
                 type: "GET",
                 url: '@(Url.Action( "VerifyAnswer", "Questions"))',
                 data: { data: data, questionid: model.questions[index].id},
@@ -131,7 +163,6 @@
                 dataType: "json",
                 success: successFunc,
                 error: errorFunc
-
             });
             function successFunc(data) {
                 if (data.id == 0) {
@@ -140,29 +171,36 @@
                         $("#correct_answers").text(correctAnswers);
                     }
                     $("#error_message").text("Ai raspuns corect");
-                } else {
+
+                } else if (data.id == 3) {
+                    $("#error_message").text("A aparut o eroare de la noi, te rugam incearca sa reiei testul");
+
+                } else if (data.id == 1) {
+                    $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
+
+                }else if(data.id == 2) {
                     if (index > -1) {
                         $("#wrong_answers").text(function (i, oldvalue) {
                             return parseInt(oldvalue, 10) + 1;
                         });
                     }
+                    wrongQuestions.push(model.questions[index].id);
+                    wrongAnsweres += model.questions[index].id + "/";
                     $("#error_message").text("Ai raspuns gresit");
-                    console.log("wrong_answers");
                 }
 
+                $("#verifyAnswer").attr("disabled", true);
                 if (index > -1) {
                     $("#nr_questions").text(function (i, oldvalue) {
                         return parseInt(oldvalue, 10) - 1;
                     });
-                    console.log(model.questions[index].id);
                     model.questions.splice(index, 1);
-                    console.log("sters" + JSON.stringify(model.questions));
                 }
                 index--;
             }
 
             function errorFunc(data) {
-                $("#error_message").text("error");
+                $("#error_message").text("error from verify answer");
             }
         }
     </script>

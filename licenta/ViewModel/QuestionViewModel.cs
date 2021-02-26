@@ -15,6 +15,8 @@ namespace licenta.ViewModel
         [StringLength(255)]
         public string Text { get; set; }
 
+        public string Explanation { get; set; }
+
         public Category Category { get; set; }
 
         public int CategoryId { get; set; }

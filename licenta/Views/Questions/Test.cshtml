@@ -19,6 +19,10 @@
             <p id="question_text"></p>
             <br />
             <div id="answers"></div>
+            <div id="explanation_container" style=" display: none;">
+                <input type="submit" id="show_explanation" value="Vezi explicatia" />
+                <p id="explanation"> </p>
+            </div>
             <p id="error_message"></p>
         </div>
 
@@ -35,34 +39,34 @@
         console.log(model);
         var correctAnswers = 0;
         var category = model.categoryId;
+        var questionsIds = [];
         var wrongQuestions = [];
-        var wrongAnsweres = "";
         var index = -1;
         var answers = document.getElementById("answers");
+        console.log(questionsIds);
 
-@*        $('#answers input:checked').click(function () {
-            var ok = 0;
-            $('#answers input:checked').each(function () {
-                if ($(this).is(":checked")) {
-                    ok = 1;
-                }
-            });
-            if (ok == 1) {
-                $("#verifyAnswer").attr("enable", false);
-            }
-        });*@
+        for (var i = 0; i < model.questions.length; i++) {
+            questionsIds.push(model.questions[i].id);
+        }
+
+        $("#show_explanation").click(function () {
+            $("#explanation").text(model.questions.find(element => element.id === questionsIds[index+1]).explanation);
+        })
 
         $("#btn_next_question").click(function () {
+            $("#explanation_container").hide();
+            $("#explanation").text("");
+            console.log(index);
             if (index < 0) {
                 $("#verifyAnswer").show();
                 $("#btn_next_question").attr('value', 'Urmatoarea intrebare');
             }
 
-            if (index + 1 >= model.questions.length) {
+            if (index + 1 >= questionsIds.length) {
                 index = -1;
             }
             if (wrongQuestions.length < 5) {
-                if (model.questions.length > 0) {
+                if (questionsIds.length > 0) {
                     next_question();
                 } else {
                     var data = take_data();
@@ -70,7 +74,7 @@
                     $("#question_container").text("");
                     if (wrongQuestions.length > 0) {
                         $("#anch_show").show();
-                        $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + wrongAnsweres);
+                        $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
                     }
                     $("#btn_next_question").hide();
                     $("#verifyAnswer").hide();
@@ -79,7 +83,7 @@
                 $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
                 $("#question_container").text("");
                 $("#anch_show").show();
-                $("#anch_show").attr("href","https://localhost:44368/questions/WrongAnswered?data=" + wrongAnsweres);
+                $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
                 $("#btn_next_question").hide();
                 $("#verifyAnswer").hide();
             }
@@ -87,12 +91,16 @@
         });
 
         $("#verifyAnswer").click(function () {
-            if (model.questions.length > 0) {
+            if (questionsIds.length > 0) {
                 var data = take_data();
                 if (data === "[]") {
                     $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
                 } else {
+                    console.log("verf");
+                    console.log(index);
+                    console.log(questionsIds[index]);
                     verify_answers(data);
+                    index--;
                 }
             } else {
                 if (wrongQuestions.length > 0) {
@@ -108,27 +116,21 @@
         });
 
         function next_question() {
-            $("#verifyAnswer").attr("disabled", false);
-
             index++;
-@*            var questionIndex = unansweredQuestions.indexOf(model.questions[index].id);*@
+            $("#verifyAnswer").attr("disabled", false);
+            $("#explanation").text("");
+            console.log(questionsIds);
             $("#error_message").text("");
-@*            if (index != 0 && questionIndex > 0) {
-                var data = take_data();
-                verify_answers(data);
-                console.log("noooooooooooo");
-            }*@
-            $("#question_text").text(model.questions[index].text);
+            $("#question_text").text(model.questions.find(element => element.id === questionsIds[index]).text);
             $("#answers").empty();
             for (var i = 0; i < model.questions[index].answers.length; i++) {
                 var check = document.createElement("INPUT");
                 check.setAttribute("type", "checkbox");
-                check.setAttribute('id', model.questions[index].answers[i].id);
-                check.setAttribute("value", model.questions[index].answers[i].id);
-                var nod = document.createTextNode(model.questions[index].answers[i].text);
+                check.setAttribute('id', model.questions.find(element => element.id === questionsIds[index]).answers[i].id);
+                check.setAttribute("value", model.questions.find(element => element.id === questionsIds[index]).answers[i].id);
+                var nod = document.createTextNode(model.questions.find(element => element.id === questionsIds[index]).answers[i].text);
                 $("#answers").append(check, nod);
             }
-
         }
 
         function take_data() {
@@ -157,8 +159,8 @@
         function verify_answers(data) {
              $.ajax({
                 type: "GET",
-                url: '@(Url.Action( "VerifyAnswer", "Questions"))',
-                data: { data: data, questionid: model.questions[index].id},
+                 url: '@(Url.Action( "VerifyAnswer", "Questions"))',
+                 data: { data: data, questionid: questionsIds[index] },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: successFunc,
@@ -166,7 +168,7 @@
             });
             function successFunc(data) {
                 if (data.id == 0) {
-                    if (index > -1) {
+                    if (index >= -1) {
                         correctAnswers++;
                         $("#correct_answers").text(correctAnswers);
                     }
@@ -179,24 +181,25 @@
                     $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
 
                 }else if(data.id == 2) {
-                    if (index > -1) {
+                    if (index >= -1) {
                         $("#wrong_answers").text(function (i, oldvalue) {
                             return parseInt(oldvalue, 10) + 1;
                         });
                     }
-                    wrongQuestions.push(model.questions[index].id);
-                    wrongAnsweres += model.questions[index].id + "/";
+                    wrongQuestions.push(questionsIds[index+1]);
+                    $("#explanation_container").show();
                     $("#error_message").text("Ai raspuns gresit");
                 }
 
                 $("#verifyAnswer").attr("disabled", true);
-                if (index > -1) {
+                if (index >= -1) {
                     $("#nr_questions").text(function (i, oldvalue) {
                         return parseInt(oldvalue, 10) - 1;
                     });
-                    model.questions.splice(index, 1);
+                    console.log(index);
+                    console.log("xdrcgvybhjnmk  "+ index);
+                    questionsIds.splice(index+1, 1);
                 }
-                index--;
             }
 
             function errorFunc(data) {

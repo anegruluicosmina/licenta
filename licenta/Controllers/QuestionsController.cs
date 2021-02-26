@@ -145,7 +145,8 @@ namespace licenta.Controllers
                         // variable mapping here 
                         Id = x.Id,
                         Text = x.Text
-                    }).ToList()
+                    }).ToList(),
+                    Explanation = question.Explination
                 };
                 viewModel.Questions.Add(questionModel);                
             }
@@ -215,12 +216,10 @@ namespace licenta.Controllers
 
         public IActionResult WrongAnswered (string data)
         {
-            var wrongQuestions = data.Split('/').ToList();
-            wrongQuestions.RemoveAt(wrongQuestions.Count - 1);
-            List<int> intList = wrongQuestions.ConvertAll(int.Parse);
+            List<int> wrongAnswered = JsonConvert.DeserializeObject<List<int>>(data);
 
             var questionsInDb = _context.Question
-                .Where(q => intList.Contains(q.Id))
+                .Where(q => wrongAnswered.Contains(q.Id))
                 .Include(q => q.Answers)
                 .ToList();
 

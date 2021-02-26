@@ -14,6 +14,8 @@ namespace licenta.Models
         [StringLength(255)]
         public string Text { get; set; }
 
+        public string Explination { get; set; }
+
         public ICollection<Category> Category { get; set; }
         public int CategoryId { get; set; }
 

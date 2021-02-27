@@ -10,11 +10,16 @@ namespace licenta.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Categoria are nevoie de un nume")]
         [StringLength(10)]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Trebuie sa adaugi care este numar de intrebari intr-un test pentru aceasta categorie.")]
         public int NumberOfQuestions { get; set; }
+
+        [Required (ErrorMessage = "Trebuie sa adaugi care este numarul minim de intrebari care pot fi gesite la un test pentru aceasta categorie.")]
+        public int NumberOfWrongQuestions { get; set; }
+
         public ICollection<Question> Question { get; set; }
     }
 }

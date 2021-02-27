@@ -15,15 +15,14 @@ namespace licenta.ViewModel
         [Display(Name ="Textul intrebarii")]
         public string Text { get; set; }
 
-        [MinOneCorrectAnswer]
+        [MinOneCorrectAnswer (ErrorMessage ="uauua")]
         public List<Answer> Answers { get; set; }
 
-        [Required(ErrorMessage = "bbbbb")]
         public List<Category> Categories { get; set; }
 
-        [Required(ErrorMessage = "Please select a project owner")]
+        [Required(ErrorMessage = "Alege o categorie.")]
         [StringLength(255)]
-        [Display(Name = "Category")]
+        [Display(Name = "Categorie")]
         public int CategoryId { get; set; }
 
         public int NumberOfAnswers { get; set; } = 3;

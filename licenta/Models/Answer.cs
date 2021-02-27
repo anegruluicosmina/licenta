@@ -10,7 +10,7 @@ namespace licenta.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required (ErrorMessage ="Trebuie sa introduci un text pentru raspuns.")]
         [StringLength(255)]
         public string Text { get; set; }
 

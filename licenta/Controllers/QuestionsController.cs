@@ -22,7 +22,6 @@ namespace licenta.Controllers
         // return the questions's categories
         public IActionResult Categories()
         {
-            // var data = _context.Questions.Include(q => q.Difficulty).Include(q => q.Answers).OrderBy(r => Guid.NewGuid()).Take(5);
             var categories = _context.Categories.ToList();
             return View(categories);
         }
@@ -87,6 +86,7 @@ namespace licenta.Controllers
             else
             {
                 var questionInDb = _context.Question.Include(q => q.Answers).Single(q => q.Id == viewModel.Id);
+
                 questionInDb.Text = viewModel.Text;
                 questionInDb.Category = viewModel.Category;
                 questionInDb.Answers = viewModel.Answers.Select(x => new Answer()
@@ -128,9 +128,9 @@ namespace licenta.Controllers
             TestViewModel viewModel = new TestViewModel()
             {
                 Id = 1,
-                Index = 0,
-                Questions = new List<QuestionViewModel>(),
                 NumberOfQuestions = numberOfQuestions,
+                Questions = new List<QuestionViewModel>(),
+                NumberOfWrongAnswer = _context.Categories.Where(c => c.Id == id).Select(c => c.NumberOfWrongQuestions).SingleOrDefault(),
                 CategoryId = id
             };
 
@@ -180,27 +180,6 @@ namespace licenta.Controllers
             return Json(new { message = "Raspuns gresit", id = "2" });
 
         }
-        public IActionResult SaveAnswers(TestViewModel question)
-        {
-            bool ok = true;
-
-            foreach (var answer in question.Questions[question.Index].Answers)
-            {
-                var isCorrect = _context.Answers
-                    .SingleOrDefault(a => a.Id == answer.Id);
-
-                if (isCorrect == null)
-                    return StatusCode(404);
-
-                if (answer.IsChecked != isCorrect.IsCorrect)
-                    ok = false;
-            }
-            if (ok)
-            {
-
-            }
-            return View("");
-        }
 
         public IActionResult SaveTest(string correctAnswers, string categoryId)
         {
@@ -226,5 +205,28 @@ namespace licenta.Controllers
             return View(questionsInDb);
         }
 
+
+        /*        public IActionResult SaveAnswers(TestViewModel question)
+        {
+            bool ok = true;
+
+            foreach (var answer in question.Questions[question.Index].Answers)
+            {
+                var isCorrect = _context.Answers
+                    .SingleOrDefault(a => a.Id == answer.Id);
+
+                if (isCorrect == null)
+                    return StatusCode(404);
+
+                if (answer.IsChecked != isCorrect.IsCorrect)
+                    ok = false;
+            }
+            if (ok)
+            {
+
+            }
+            return View("");
+        }
+*/
     }
 }

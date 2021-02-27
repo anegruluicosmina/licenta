@@ -8,9 +8,9 @@ namespace licenta.ViewModel
     public class TestViewModel
     {
         public int Id { get; set; }
-        public int Index { get; set; }
         public int CategoryId { get; set; }
         public int NumberOfCorectAnswer { get; set; } = 0;
+        public int NumberOfWrongAnswer { get; set; } = 0;
         public int NumberOfQuestions { get; set; }
         public List<QuestionViewModel> Questions { get; set; }
     }

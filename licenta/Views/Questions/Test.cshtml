@@ -36,14 +36,12 @@
 @section Scripts{
     <script>
         var model = @Html.Raw(Json.Serialize(Model));
-        console.log(model);
         var correctAnswers = 0;
         var category = model.categoryId;
         var questionsIds = [];
         var wrongQuestions = [];
         var index = -1;
         var answers = document.getElementById("answers");
-        console.log(questionsIds);
 
         for (var i = 0; i < model.questions.length; i++) {
             questionsIds.push(model.questions[i].id);
@@ -56,7 +54,6 @@
         $("#btn_next_question").click(function () {
             $("#explanation_container").hide();
             $("#explanation").text("");
-            console.log(index);
             if (index < 0) {
                 $("#verifyAnswer").show();
                 $("#btn_next_question").attr('value', 'Urmatoarea intrebare');
@@ -65,7 +62,7 @@
             if (index + 1 >= questionsIds.length) {
                 index = -1;
             }
-            if (wrongQuestions.length < 5) {
+            if (wrongQuestions.length < model.numberOfWrongAnswer) {
                 if (questionsIds.length > 0) {
                     next_question();
                 } else {
@@ -96,9 +93,6 @@
                 if (data === "[]") {
                     $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
                 } else {
-                    console.log("verf");
-                    console.log(index);
-                    console.log(questionsIds[index]);
                     verify_answers(data);
                     index--;
                 }
@@ -106,7 +100,7 @@
                 if (wrongQuestions.length > 0) {
                     $("#anch_show").show();
                 }
-                if (wrongQuestions.length > 5) {
+                if (wrongQuestions.length > model.numberOfWrongAnswer) {
                     $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
                 } else {
                     $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
@@ -119,7 +113,6 @@
             index++;
             $("#verifyAnswer").attr("disabled", false);
             $("#explanation").text("");
-            console.log(questionsIds);
             $("#error_message").text("");
             $("#question_text").text(model.questions.find(element => element.id === questionsIds[index]).text);
             $("#answers").empty();
@@ -196,8 +189,6 @@
                     $("#nr_questions").text(function (i, oldvalue) {
                         return parseInt(oldvalue, 10) - 1;
                     });
-                    console.log(index);
-                    console.log("xdrcgvybhjnmk  "+ index);
                     questionsIds.splice(index+1, 1);
                 }
             }

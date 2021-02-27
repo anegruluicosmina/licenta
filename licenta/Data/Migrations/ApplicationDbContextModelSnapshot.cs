@@ -270,6 +270,9 @@ namespace licenta.Migrations
                     b.Property<int>("NumberOfQuestions")
                         .HasColumnType("int");
 
+                    b.Property<int>("NumberOfWrongQuestions")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -286,7 +289,9 @@ namespace licenta.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Explination")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Text")
                         .IsRequired()

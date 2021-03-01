@@ -1,0 +1,114 @@
+﻿#test_container {
+    width: 60%;
+    margin: 0 auto;
+    border: 2px solid #6D929B;
+    border-radius: 25px;
+    box-shadow: 1px 3px 5px 5px #edf4f5;
+    color: #231F20;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    padding-top: 3px;
+}
+p{
+    margin: 0;
+}
+
+#result {
+    font-size: 12px;
+    text-align: center;
+    padding: 9px;
+    font-weight: 600;
+    border-bottom: 2px solid #184D68;
+    letter-spacing: 0.4px;
+}
+.answ_count {
+    display: block;
+
+}
+.answ_count p {
+    font-size: 10px;
+    line-height: 13px;
+}
+.qst_left {
+    display: flex;
+    border-bottom: 1px solid #184D68;
+    justify-content: space-between;
+    padding: 6px 12px;
+}
+#nr_questions{
+    font-weight:600;
+}
+.wrong_correct_answ {
+    display: block;
+    justify-content: space-between;
+    border-bottom: 1px solid#184D68;
+}
+
+.correct_answers, .wrong_answers {
+    display: flex;
+    padding: 6px 12px;
+    justify-content: space-between;
+}
+.correct_answers {
+    border-bottom: 1px solid #184D68;
+}
+#answers {
+    display: block;
+}
+
+.answer{
+    display: flex;
+}
+
+#question_container{
+    padding: 8px;
+}
+#question_text {
+    font-size: 13px;
+}
+#question_container input {
+    cursor: pointer;
+    height: 9px;
+    width: 9px;
+}
+
+#error_message {
+    padding: 10px 0;
+    color: #F1433F;
+}
+
+
+
+
+input[type="button"], input[type="submit"] {
+    background: #184D68;
+    color: #EAEEEA;
+    padding: 4px 15px;
+    border: none;
+    font-size: 12px;
+}
+#test_buttons{
+    display: flex;
+    flex-direction: column;
+    padding:0;
+    width: 100%;
+}
+#verify_answer {
+  /*  border-radius: 5px 5px 0px 0px;*/
+}
+#btn_next_question {
+    border-radius: 0px 0px 25px 25px;
+}
+#anch_show {
+    text-decoration: none;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 16px;
+    padding: 10px;
+    background-color: #184D68;
+    color: #EAEEEA;
+    border-radius: 0px 0px 25px 25px;
+}
+

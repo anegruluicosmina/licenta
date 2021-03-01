@@ -5,199 +5,48 @@
 @model licenta.ViewModel.TestViewModel
 
 <div id="test_container">
-    <div class="answer_count">
-        <div class="answer_count">
-            <p id="result"></p>
-            <p>Numarul de raspunsuri corecte<p>
-            <p id="correct_answers"> 0</p>
-            <p>Numarul de raspunsuri gresite</p>
-            <p id="wrong_answers"> 0</p>
-            <p>Numarul de intrebari ramase</p>
+    <div class="answ_count">
+        <p id="result"> </p>
+        <div class="qst_left">
+            <p>Întrebari ramase</p>
             <p id="nr_questions"> @Model.NumberOfQuestions</p>
+        </div>
+        <div class="wrong_correct_answ" style="display: none;">
+            <div class="correct_answers">
+                <p>Raspunsuri corecte<p>
+                <p id="correct_answers"> 0</p>
+            </div>
+            <div class="wrong_answers">
+                <p>Raspunsuri gresite</p>
+                <p id="wrong_answers"> 0</p>
+            </div>
         </div>
         <div id="question_container">
             <p id="question_text"></p>
             <br />
             <div id="answers"></div>
-            <div id="explanation_container" style=" display: none;">
-                <input type="submit" id="show_explanation" value="Vezi explicatia" />
-                <p id="explanation"> </p>
-            </div>
             <p id="error_message"></p>
+            <p id="explanation"> </p>
+        </div>
+        <div id="test_buttons">
+            <input type="submit" id="show_explanation" value="Vezi explicatia" style=" display: none;" />
+            <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verify_answer" />
+            <input type="submit" id="btn_next_question" value="Start Test" />
+            <input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul" />
+            <input type="submit" id="btn_wrong_qst" value="" style="display: none;">
+            <a href="" id="anch_show" style="display: none;">Vezi intrebarile gresite</a>
         </div>
 
     </div>
-    <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verifyAnswer" />
-    <input type="submit" id="btn_next_question" value="Start Test" />
-    <input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul" />
-    <input type="submit" id="btn_wrong_qst" value="" style="display: none;">
-    <a href="" id="anch_show" style="display: none;">Vezi intrebarile gresite</a>
-</div>
 @section Scripts{
     <script>
         var model = @Html.Raw(Json.Serialize(Model));
-        var correctAnswers = 0;
-        var category = model.categoryId;
-        var questionsIds = [];
-        var wrongQuestions = [];
-        var index = -1;
-        var answers = document.getElementById("answers");
-
-        for (var i = 0; i < model.questions.length; i++) {
-            questionsIds.push(model.questions[i].id);
-        }
-
-        $("#show_explanation").click(function () {
-            $("#explanation").text(model.questions.find(element => element.id === questionsIds[index+1]).explanation);
-        })
-
-        $("#btn_next_question").click(function () {
-            $("#explanation_container").hide();
-            $("#explanation").text("");
-            if (index < 0) {
-                $("#verifyAnswer").show();
-                $("#btn_next_question").attr('value', 'Urmatoarea intrebare');
-            }
-
-            if (index + 1 >= questionsIds.length) {
-                index = -1;
-            }
-            if (wrongQuestions.length < model.numberOfWrongAnswer) {
-                if (questionsIds.length > 0) {
-                    next_question();
-                } else {
-                    var data = take_data();
-                    $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
-                    $("#question_container").text("");
-                    if (wrongQuestions.length > 0) {
-                        $("#anch_show").show();
-                        $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
-                    }
-                    $("#btn_next_question").hide();
-                    $("#verifyAnswer").hide();
-                }
-            } else {
-                $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
-                $("#question_container").text("");
-                $("#anch_show").show();
-                $("#anch_show").attr("href", "https://localhost:44368/questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
-                $("#btn_next_question").hide();
-                $("#verifyAnswer").hide();
-            }
-
-        });
-
-        $("#verifyAnswer").click(function () {
-            if (questionsIds.length > 0) {
-                var data = take_data();
-                if (data === "[]") {
-                    $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
-                } else {
-                    verify_answers(data);
-                    index--;
-                }
-            } else {
-                if (wrongQuestions.length > 0) {
-                    $("#anch_show").show();
-                }
-                if (wrongQuestions.length > model.numberOfWrongAnswer) {
-                    $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
-                } else {
-                    $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
-                }
-                save_test();
-            }
-        });
-
-        function next_question() {
-            index++;
-            $("#verifyAnswer").attr("disabled", false);
-            $("#explanation").text("");
-            $("#error_message").text("");
-            $("#question_text").text(model.questions.find(element => element.id === questionsIds[index]).text);
-            $("#answers").empty();
-            for (var i = 0; i < model.questions[index].answers.length; i++) {
-                var check = document.createElement("INPUT");
-                check.setAttribute("type", "checkbox");
-                check.setAttribute('id', model.questions.find(element => element.id === questionsIds[index]).answers[i].id);
-                check.setAttribute("value", model.questions.find(element => element.id === questionsIds[index]).answers[i].id);
-                var nod = document.createTextNode(model.questions.find(element => element.id === questionsIds[index]).answers[i].text);
-                $("#answers").append(check, nod);
-            }
-        }
-
-        function take_data() {
-            var selected = [];
-            $('#answers input:checked').each(function () {
-                selected.push($(this).attr('id'));
-            });
-            var data = JSON.stringify(selected);
-            return data;
-        }
-
-        function save_test() {
-            $.ajax({
-                type: "GET",
-                url: '@(Url.Action("SaveTest", "Questions"))',
-                data: { correctAnswers: correctAnswers, categoryId: model.categoryId },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                error: errorFunc
-            });
-            function errorFunc() {
-                $("#error_message").text("error from save_test");
-            }
-        }
-
-        function verify_answers(data) {
-             $.ajax({
-                type: "GET",
-                 url: '@(Url.Action( "VerifyAnswer", "Questions"))',
-                 data: { data: data, questionid: questionsIds[index] },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: successFunc,
-                error: errorFunc
-            });
-            function successFunc(data) {
-                if (data.id == 0) {
-                    if (index >= -1) {
-                        correctAnswers++;
-                        $("#correct_answers").text(correctAnswers);
-                    }
-                    $("#error_message").text("Ai raspuns corect");
-
-                } else if (data.id == 3) {
-                    $("#error_message").text("A aparut o eroare de la noi, te rugam incearca sa reiei testul");
-
-                } else if (data.id == 1) {
-                    $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
-
-                }else if(data.id == 2) {
-                    if (index >= -1) {
-                        $("#wrong_answers").text(function (i, oldvalue) {
-                            return parseInt(oldvalue, 10) + 1;
-                        });
-                    }
-                    wrongQuestions.push(questionsIds[index+1]);
-                    $("#explanation_container").show();
-                    $("#error_message").text("Ai raspuns gresit");
-                }
-
-                $("#verifyAnswer").attr("disabled", true);
-                if (index >= -1) {
-                    $("#nr_questions").text(function (i, oldvalue) {
-                        return parseInt(oldvalue, 10) - 1;
-                    });
-                    questionsIds.splice(index+1, 1);
-                }
-            }
-
-            function errorFunc(data) {
-                $("#error_message").text("error from verify answer");
-            }
-        }
     </script>
+    <script src="~/js/test.js">
+    </script>
+}
+@section Style{
+    <link href="@Url.Content("~/css/test.css")" rel="stylesheet" type="text/css" />
 }
 
 

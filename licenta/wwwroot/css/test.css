@@ -98,8 +98,8 @@ input[type="button"], input[type="submit"] {
     padding:0;
     width: 100%;
 }
-#verify_answer {
-  /*  border-radius: 5px 5px 0px 0px;*/
+#verify_answer, #show_explanation {
+    width: 100%;
 }
 #btn_next_question {
     border-radius: 0px 0px 25px 25px;
@@ -129,10 +129,24 @@ input[type="button"], input[type="submit"] {
     #answers{
         font-size: 14px;
     }
+    .wrong_correct_answ {
+        display: flex;
+        flex-direction: row;
+    }
+    #qst_left {
+        padding: 6px 40px;
+    }
+    .correct_answers, .wrong_answers {
+        width: 50%;
+        border: none;
+    }
+    .correct_answers {
+        border-right: 1px solid #184D68;
+    }
     #question_container input {
         cursor: pointer;
         height: 11px;
-        width: 11px;
+         width: 11px;
     }
     #test_buttons {
         display: flex;

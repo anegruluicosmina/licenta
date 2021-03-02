@@ -5,17 +5,37 @@
 @{
     @foreach (var question in Model)
     {
-        @Html.Label(question.Text);
-        foreach (var answer in question.Answers)
-        {
-            if (answer.IsCorrect)
-            {
-                @Html.Label(answer.Text, null, new { id = "correct_answer" });
+        <div class="question_container">
+            @{
+                <div>
+                    @Html.Label(question.Text, null, new { @class = "qst_text" })
+                </div>
+                foreach (var answer in question.Answers)
+                {
+                    <div>
+                        @{
+                            if (answer.IsCorrect)
+                            {
+                                <div class="correct_answer">
+                                    @Html.Label(answer.Text)
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="answer">
+                                    @Html.Label(answer.Text)
+                                </div>
+                            }
+                        }
+                    </div>
+                }
             }
-            else
-            {
-                @Html.Label(answer.Text);
-            }
-        }
+        </div>
+
     }
 }
+
+@section Style{
+    <link href="@Url.Content("~/css/wrongAnswered.css")" rel="stylesheet" type="text/css" />
+}
+

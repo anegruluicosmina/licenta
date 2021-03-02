@@ -5,7 +5,6 @@
 @model licenta.ViewModel.TestViewModel
 
 <div id="test_container">
-    <div class="answ_count">
         <p id="result"> </p>
         <div class="qst_left">
             <p>Întrebari ramase</p>
@@ -29,11 +28,11 @@
             <p id="explanation"> </p>
         </div>
         <div id="test_buttons">
-            <input type="submit" id="show_explanation" value="Vezi explicatia" style=" display: none;" />
-            <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verify_answer" />
+            <div>
+                <input type="submit" id="show_explanation" value="Vezi explicatia" style=" display: none;" />
+                <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verify_answer" />
+            </div>
             <input type="submit" id="btn_next_question" value="Start Test" />
-            <input type="submit" id="btn_finish" style="display: none;" value="Salveaza testul" />
-            <input type="submit" id="btn_wrong_qst" value="" style="display: none;">
             <a href="" id="anch_show" style="display: none;">Vezi intrebarile gresite</a>
         </div>
 

@@ -33,6 +33,8 @@ $("#btn_next_question").click(function () {
         } else {
             var data = take_data();
             $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
+            $("#result").css("border-bottom", "2px solid #184D68");
+            save_test();
             $("#question_container").text("");
             if (wrongQuestions.length > 0) {
                 $("#anch_show").show();
@@ -43,11 +45,13 @@ $("#btn_next_question").click(function () {
         }
     } else {
         $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
+        $("#result").css("border-bottom", "2px solid #184D68");
         $("#question_container").text("");
         $("#anch_show").show();
         $("#anch_show").attr("href", baseUrl +"questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
         $("#btn_next_question").hide();
         $("#verify_answer").hide();
+        save_test();
     }
 
 });
@@ -59,6 +63,7 @@ $("#verify_answer").click(function () {
             $("#error_message").text("Inainte de a verifica un raspuns, selecteaza unul.");
         } else {
             verify_answers(data);
+            $("#verify_answer").hide();
             index--;
         }
     } else {
@@ -68,8 +73,10 @@ $("#verify_answer").click(function () {
         }
         if (wrongQuestions.length > model.numberOfWrongAnswer) {
             $("#result").text("Ai picat examinarea cu urmatoarele rezultate:");
+            $("#result").css("background-color", "2px solid #184D68");
         } else {
             $("#result").text("Ai trecut examinarea cu urmatoarele rezultate:");
+            $("#result").css("background-color", "2px solid #184D68");
         }
         save_test();
     }
@@ -77,13 +84,12 @@ $("#verify_answer").click(function () {
 
 function next_question() {
     index++;
-    $("#verify_answer").attr("disabled", false);
+    $("#verify_answer").show();
     $("#explanation").text("");
     $("#error_message").text("");
     $("#question_text").text(model.questions.find(element => element.id === questionsIds[index]).text);
     $("#answers").empty();
     for (var i = 0; i < model.questions[index].answers.length; i++) {
-        console.log(i);
         var answer = document.createElement("div");
         answer.setAttribute("class", "answer");
         var check = document.createElement("INPUT");
@@ -91,8 +97,6 @@ function next_question() {
         check.setAttribute("value", model.questions.find(element => element.id === questionsIds[index]).answers[i].id);
         var nod = document.createTextNode(model.questions.find(element => element.id === questionsIds[index]).answers[i].text);
         answer.append(check, nod);
-        console.log(answer);
-        console.log("aaa");
         $("#answers").append(answer);
 
     }
@@ -110,7 +114,7 @@ function take_data() {
 function save_test() {
     $.ajax({
         type: "GET",
-        url: baseUrl + 'questions/SaveTest"',
+        url: baseUrl + 'questions/SaveTest',
         data: { correctAnswers: correctAnswers, categoryId: model.categoryId },
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -122,7 +126,6 @@ function save_test() {
 }
 
 function verify_answers(data) {
-    console.log(data);
     $.ajax({
         type: "GET",
         url: baseUrl+'questions/verifyAnswer',
@@ -158,7 +161,7 @@ function verify_answers(data) {
             $("#error_message").text("Ai raspuns gresit");
         }
 
-        $("#verify_answer").attr("disabled", true);
+        $("#verify_answer").hide();
         if (index >= -1) {
             $("#nr_questions").text(function (i, oldvalue) {
                 return parseInt(oldvalue, 10) - 1;

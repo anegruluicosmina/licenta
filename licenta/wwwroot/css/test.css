@@ -1,4 +1,9 @@
-﻿#test_container {
+﻿html,
+body {
+    height: 100%;
+}
+
+#test_container {
     width: 60%;
     margin: 0 auto;
     border: 2px solid #6D929B;
@@ -18,7 +23,6 @@ p{
     text-align: center;
     padding: 9px;
     font-weight: 600;
-    border-bottom: 2px solid #184D68;
     letter-spacing: 0.4px;
 }
 .answ_count {
@@ -86,6 +90,7 @@ input[type="button"], input[type="submit"] {
     padding: 4px 15px;
     border: none;
     font-size: 12px;
+    line-height: 18px;
 }
 #test_buttons{
     display: flex;
@@ -103,7 +108,6 @@ input[type="button"], input[type="submit"] {
     text-decoration: none;
     text-align: center;
     font-size: 12px;
-    font-weight: 600;
     letter-spacing: 0.5px;
     line-height: 16px;
     padding: 10px;
@@ -112,3 +116,43 @@ input[type="button"], input[type="submit"] {
     border-radius: 0px 0px 25px 25px;
 }
 
+@media only screen and (min-width: 600px) {
+    #test_container {
+        width: 50%;
+        border: 2px solid #6D929B;
+        font-size: 14px;
+        padding-top: 3px;
+    }
+    #question_text {
+        font-size: 15px;
+    }
+    #answers{
+        font-size: 14px;
+    }
+    #question_container input {
+        cursor: pointer;
+        height: 11px;
+        width: 11px;
+    }
+    #test_buttons {
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+        width: 100%;
+        justify-content: space-around;
+        padding: 20px 0;
+    }
+    input[type="button"], input[type="submit"] {
+        padding: 6px 15px;
+        font-size: 15px;
+        line-height: 20px;
+        border-radius: 10px;
+    }
+    #btn_next_question {
+        border-radius: 10px;
+    }
+    #anch_show {
+        width: 100%;
+        border-radius: 0px;
+    }
+}

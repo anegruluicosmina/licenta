@@ -18,7 +18,7 @@ namespace licenta.ViewModel
             }
              return (ok)
                 ? ValidationResult.Success
-                : new ValidationResult("You should choose at least one correct answer.");
+                : new ValidationResult("Ar trebuie sa ai cel putin un răspuns corect.");
         }
     }
 }

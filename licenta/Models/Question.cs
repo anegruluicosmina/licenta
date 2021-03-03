@@ -17,7 +17,7 @@ namespace licenta.Models
 
         [Required(ErrorMessage ="Trebuie sa adaugi o explicatie")]
         [StringLength(500)]
-        public string Explination { get; set; }
+        public string Explanation { get; set; }
 
         public ICollection<Category> Category { get; set; }
 

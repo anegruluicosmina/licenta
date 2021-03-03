@@ -12,16 +12,40 @@
         id = question.CategoryId;
         break;
     }
-    @Html.ActionLink("Test", "Test", "Questions", new { id = id }, null);
 
 }
-@foreach (var question in Model)
-{
-    @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
-    @Html.Label(question.Text);
-    foreach (var answer in question.Answers)
-    {
-        @Html.Label(answer.Text);
-    }
+@section Style{
+    <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
 }
+<p id="instruction"> Pentru a edita întrebarea dă click pe cerinta acestia </p>
+<div class="questions_ctn">
+    @foreach (var question in Model)
+    {
+        <div class="question_ctn">
+            @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
+            <div class="answers_ctn">
+                @foreach (var answer in question.Answers)
+                {
+                    <div>
+                        @{
+                            if (answer.IsCorrect)
+                            {
+                                <div class="correct_answer">
+                                    @Html.Label(answer.Text)
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="answer">
+                                    @Html.Label(answer.Text)
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
 

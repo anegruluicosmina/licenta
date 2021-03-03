@@ -2,40 +2,44 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<licenta.Models.Question>
-@{
-    @foreach (var question in Model)
-    {
-        <div class="question_container">
-            @{
-                <div>
-                    @Html.Label(question.Text, null, new { @class = "qst_text" })
-                </div>
-                foreach (var answer in question.Answers)
-                {
-                    <div>
-                        @{
-                            if (answer.IsCorrect)
-                            {
-                                <div class="correct_answer">
-                                    @Html.Label(answer.Text)
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="answer">
-                                    @Html.Label(answer.Text)
-                                </div>
-                            }
-                        }
-                    </div>
-                }
-            }
-        </div>
-
-    }
-}
 
 @section Style{
-    <link href="@Url.Content("~/css/wrongAnswered.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
 }
+@{
+    <div class="questions_ctn">
+
+        @foreach (var question in Model)
+        {
+            <div class="question_ctn">
+                @{
+                    <div>
+                        @Html.Label(question.Text, null, new { @class = "qst_text" })
+                    </div>
+                    foreach (var answer in question.Answers)
+                    {
+                        <div>
+                            @{
+                                if (answer.IsCorrect)
+                                {
+                                    <div class="correct_answer">
+                                        @Html.Label(answer.Text)
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="answer">
+                                        @Html.Label(answer.Text)
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                }
+            </div>
+
+        }
+    </div>
+}
+
 

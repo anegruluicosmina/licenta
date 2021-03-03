@@ -6,51 +6,61 @@
     ViewBag.Title = "New";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>@Model.Title</h2>
-@*using = for close tag for form*@
-@using (Html.BeginForm("Save", "Questions", null, FormMethod.Post, true, new { id = "questionForm" }))
-{
-    @*using div to render responsive forms*@
-    <div class="form-group">
-        @Html.LabelFor(m => m.Text)
-        @*new is for the attributes*@
-        @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Text)
-    </div>
+<div id="question_form_ctn">
 
-    @Html.Label("Raspunsuri")
-    @Html.ValidationMessageFor(m => m.Answers)
-    @*use for because it need indexing for the model to take the data*@
-    <div class="form-group" id="answercontainer">
-        @for (var i = 0; i < Model.NumberOfAnswers; i++)
-        {
-            @Html.TextBoxFor(m => m.Answers[i].Text, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Answers[i].Text)
-            <div class="custom-checkbox">
-                <label>
-                    @Html.CheckBoxFor(m => m.Answers[i].IsCorrect, new { name = "isCorret" }) Raspuns corect
-                </label>
-            </div>
-        }
-        @Html.ValidationMessageFor(m => m.Answers)
-    </div>
+    <p class="title">@Model.Title</p>
+    @*using = for close tag for form*@
+    @using (Html.BeginForm("Save", "Questions", null, FormMethod.Post, true, new { id = "question_form" }))
+    {
+        @*using div to render responsive forms*@
+        <div class="form_group">
+            @Html.LabelFor(m => m.Text)
+            @*new is for the attributes*@
+            @Html.TextBoxFor(m => m.Text)
+            @Html.ValidationMessageFor(m => m.Text, null, new { @class = "validation_mesg" })
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.CategoryId)
-        @*new is for the attributes*@
+        @Html.Label("Raspunsuri", null, new { id = "form_label" })
+        @Html.ValidationMessageFor(m => m.Answers, null, new { @class = "validation_mesg" })
+        @*use for because it need indexing for the model to take the data*@
+        <div class="form_group" id="answer_container">
+            @for (var i = 0; i < Model.NumberOfAnswers; i++)
+            {
+                <div class="answer">
+                    @Html.TextBoxFor(m => m.Answers[i].Text)
+                    @Html.ValidationMessageFor(m => m.Answers[i].Text, null, new { @class = "validation_mesg" })
+                    <div class="custom-checkbox">
+                        <label>
+                            @Html.CheckBoxFor(m => m.Answers[i].IsCorrect, new { name = "isCorret" }) Raspuns corect
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="form_group">
+            @Html.LabelFor(m => m.Explanation)
+            @*new is for the attributes*@
+            @Html.TextAreaFor(m => m.Explanation,  new { @class = "explanation_txt"})
+            @Html.ValidationMessageFor(m => m.Explanation, null, new { @class = "validation_mesg" })
+        </div>
+        <div class="form_group">
+            @Html.LabelFor(m => m.CategoryId)
+            @*new is for the attributes*@
 
-        @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select a category", new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.CategoryId)
+            @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Alege o categorie", new { @class = "form_control", id = "select_category" })
+            @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "validation_mesg" })
 
-    </div>
-    @Html.HiddenFor(m => m.Id)
-    @Html.AntiForgeryToken()
+        </div>
 
-    <button type="submit" class="btn btn-primary"> Save</button>
+        @Html.HiddenFor(m => m.Id)
+        @Html.AntiForgeryToken()
 
-}
+        <button type="submit" class="save_button"> Save</button>
+    }
 
-@section Scripts{
+</div>
+
+@*@section Scripts{
     <script>
         var lenght = 0;
         function nextIteration() {
@@ -63,4 +73,7 @@
             questionForm.appendChild(newLabel);
         }
     </script>
+}*@
+@section  Style{ 
+    <link href="~/css/questionForm.css"  rel="stylesheet" type="text/css" />
 }

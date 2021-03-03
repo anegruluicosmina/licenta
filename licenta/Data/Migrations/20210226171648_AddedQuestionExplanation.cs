@@ -7,7 +7,7 @@ namespace licenta.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Explination",
+                name: "Explanation",
                 table: "Question",
                 type: "nvarchar(max)",
                 nullable: true);
@@ -16,7 +16,7 @@ namespace licenta.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Explination",
+                name: "Explanation",
                 table: "Question");
         }
     }

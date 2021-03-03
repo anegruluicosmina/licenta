@@ -103,7 +103,7 @@ namespace licenta.Controllers
             }
 
             _context.SaveChanges();
-            return RedirectToAction("Categories", "Questions");
+            return RedirectToAction("Categories", "Questions", new { id = 1});
         }
 
         public IActionResult New()
@@ -150,7 +150,7 @@ namespace licenta.Controllers
                         Id = x.Id,
                         Text = x.Text
                     }).ToList(),
-                    Explanation = question.Explination
+                    Explanation = question.Explanation
                 };
                 viewModel.Questions.Add(questionModel);                
             }

@@ -27,6 +27,12 @@ namespace licenta.ViewModel
 
         public int NumberOfAnswers { get; set; } = 3;
 
+        [Display(Name = "Explicație")]
+        [Required(ErrorMessage = "Introduceti o explicație pentru intrebare")]
+        public string Explanation { get; set; }
+
+        public bool Saved { get; set; }
+
         //display the title for the page
         public string Title
         {

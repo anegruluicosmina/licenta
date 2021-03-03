@@ -1,14 +1,26 @@
 ﻿body {
     font-family: 'Montserrat', sans-serif;
 }
-.container{
+#instruction {
+    font-size: 13px;
+    padding: 10px;
+    text-align: center;
+    margin: 10px;
+}
+.questions_ctn {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    align-items: center;
+    padding: 10px;
 }
-.question_container {
-    padding: 15px 0;
+.question_ctn{
+    margin: 8px;
+}
+.question_ctn a {
+    color: black;
+    text-decoration: none;
+    padding: 2px;
+    font-size: 17px;
 }
 .qst_text {
     border-bottom: 1px solid;
@@ -22,12 +34,15 @@
     padding: 2px 20px 0 20px;
 }
 @media only screen and (min-width: 600px) {
-    .container {
+    #instruction {
+        font-size: 15px;
+    }
+    .questions_ctn {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
     }
-    .question_container {
+    .question_ctn {
         width: 35%;
         margin: 10px 25px;
         box-shadow: 1px 3px 5px 5px #edf4f5;

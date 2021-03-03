@@ -17,6 +17,12 @@ body {
 p{
     margin: 0;
 }
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+}
 
 #result {
     font-size: 12px;
@@ -80,8 +86,6 @@ p{
     padding: 10px 0;
     color: #F1433F;
 }
-
-
 
 
 input[type="button"], input[type="submit"] {

@@ -3,8 +3,8 @@
 *@
 
 @model licenta.ViewModel.TestViewModel
-
-<div id="test_container">
+<div class="container">
+    <div id="test_container">
         <p id="result"> </p>
         <div class="qst_left">
             <p>Întrebari ramase</p>
@@ -37,6 +37,8 @@
         </div>
 
     </div>
+</div>
+
 @section Scripts{
     <script>
         var model = @Html.Raw(Json.Serialize(Model));

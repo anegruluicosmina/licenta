@@ -20,10 +20,14 @@ namespace licenta.Controllers
             _context = context;
         }
         // return the questions's categories
-        public IActionResult Categories()
+        public IActionResult Categories(int id)
         {
+
             var categories = _context.Categories.ToList();
-            return View(categories);
+            if(id == 0) 
+                return View("TestCategories", categories);
+            return View("EditCategories", categories);
+
         }
         public IActionResult Questions(int id)
         {

@@ -9,16 +9,14 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,300&display=swap" rel="stylesheet">
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/navBar.css" />
 </head>
 <body>
     @Html.Partial("_NavBar")
-    <div class="container">
-        <main role="main" class="pb-3">
+
             @RenderBody()
-        </main>
-    </div>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">

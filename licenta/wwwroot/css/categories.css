@@ -1,0 +1,22 @@
+﻿#categories_ctn {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 20px;
+    font-size: 16px;
+}
+.category {
+    width: 45%;
+    text-align: center;
+    padding: 15px 0;
+    margin: 10px;
+    background: #184D68;
+    border-radius: 25px;
+    max-width: 400px;
+}
+.category a{
+    text-decoration: none;
+    color: #edf4f5;
+}

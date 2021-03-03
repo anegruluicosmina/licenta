@@ -1,6 +1,6 @@
 ﻿<header>
     <nav class="navbar_container">
-        <div class="container">
+        <div class="container_questions">
             <div class="brand_ctn">
                 <ul>
                     <li class="item" id="logo_img">
@@ -20,14 +20,17 @@
                         <a class="nav_link" asp-area="" asp-controller="" asp-action="">Instructori</a>
                     </li>
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Programe</a>
+                        <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id ="1">Intrebari</a>
+                    </li>
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id ="0">Test</a>
                     </li>
                 </ul>
             </div>
             <div class="profile_ctn">
                 <ul>
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Questions">Log In</a>
+                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Log In</a>
                     </li>
                     <li class="item">
                         <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Test">Register</a>

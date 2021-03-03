@@ -1,9 +1,11 @@
 ﻿body {
     font-family: 'Montserrat', sans-serif;
 }
-.pb-3 {
+.container{
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
 }
 .question_container {
     padding: 15px 0;
@@ -20,11 +22,10 @@
     padding: 2px 20px 0 20px;
 }
 @media only screen and (min-width: 600px) {
-    .pb-3 {
+    .container {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
     }
     .question_container {
         width: 35%;

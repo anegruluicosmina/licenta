@@ -19,7 +19,7 @@ namespace licenta.Controllers
         {
             _context = context;
         }
-        // return the questions's categories
+        // return the categories
         public async Task<IActionResult> Categories(int id)
         {
 
@@ -29,6 +29,7 @@ namespace licenta.Controllers
             return View("EditCategories", categories);
 
         }
+        //return the questions of a category
         public async Task<IActionResult> Questions(int id)
         {
             var questionsInDb = await _context.Question
@@ -37,6 +38,8 @@ namespace licenta.Controllers
                             .ToListAsync();
             return View(questionsInDb);
         }
+
+        //edit question
         public async Task<IActionResult> Edit(int id)
         {
             var questionInDb = await _context.Question.SingleOrDefaultAsync(q => q.Id == id);
@@ -55,6 +58,8 @@ namespace licenta.Controllers
             };
             return View(viewModel);
         }
+
+        //save the new or updated question
         public async Task<IActionResult> Save(Question viewModel)
         {
             if (!ModelState.IsValid)
@@ -68,18 +73,7 @@ namespace licenta.Controllers
                         Answers = viewModel.Answers.ToList()
                     });
             }
-            //ad custom anotation
-            bool corrextAnswers = false;
-            //errors that come from model binding and model validation
-            foreach (var answer in viewModel.Answers)
-            {
-                if (answer.IsCorrect)
-                    corrextAnswers = true;
-            }
-
-            if (!corrextAnswers)
-                return Content("no correct answer");
-
+            
             if (viewModel.Id == 0)
             {
                 await _context.Question.AddAsync(viewModel);
@@ -90,7 +84,9 @@ namespace licenta.Controllers
             }
             else
             {
-                var questionInDb = await _context.Question.Include(q => q.Answers).SingleAsync(q => q.Id == viewModel.Id);
+                var questionInDb = await _context.Question
+                    .Include(q => q.Answers)
+                    .SingleAsync(q => q.Id == viewModel.Id);
 
                 questionInDb.Text = viewModel.Text;
                 questionInDb.Category = viewModel.Category;
@@ -106,7 +102,8 @@ namespace licenta.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Categories", "Questions", new { id = 1});
         }
-
+        
+        // return view to add new question
         public async Task<IActionResult> New()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -118,6 +115,73 @@ namespace licenta.Controllers
             return View("Edit", viewModel);
         }
 
+        //save the new or updated category
+        public async Task<IActionResult> SaveCategory(Category viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+
+                return View("CategoryForm",
+                    new CategoryFormViewModel
+                    {
+                        Name = viewModel.Name,
+                        NumberOfQuestions = viewModel.NumberOfQuestions,
+                        NumberOfWrongQuestions = viewModel.NumberOfWrongQuestions
+                    });
+            }
+
+            if (viewModel.Id == 0)
+            {
+                await _context.Categories.AddAsync(viewModel);
+            }
+            else
+            {
+                var categoryInDb = await _context.Categories.SingleAsync(q => q.Id == viewModel.Id);
+
+                categoryInDb.Name = viewModel.Name;
+                categoryInDb.NumberOfQuestions = viewModel.NumberOfQuestions;
+                categoryInDb.NumberOfWrongQuestions = viewModel.NumberOfWrongQuestions;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Categories", "Questions", new { id = 1 });
+        }
+
+        //return view to add new category
+        public async Task<IActionResult> NewCategory()
+        {
+            CategoryFormViewModel viewModel = new CategoryFormViewModel();
+            return View("CategoryForm", viewModel);
+        }
+
+        //return view to edit a category
+        public async Task<IActionResult> EditCategoty(int id)
+        {
+            var categoryInDb = await _context.Categories.SingleOrDefaultAsync(q => q.Id == id);
+
+            if (categoryInDb == null)
+                return StatusCode(404);
+
+            var viewModel = new CategoryFormViewModel
+            {
+                Name = categoryInDb.Name,
+                NumberOfWrongQuestions = categoryInDb.NumberOfWrongQuestions,
+                NumberOfQuestions = categoryInDb.NumberOfQuestions,
+            };
+            return View("CategoryForm", viewModel);
+        }
+
+        public IActionResult DeleteCategory(int id)
+        {
+            var category = _context.Categories.Include(c => c.Question).Where(c => c.Id == id).SingleOrDefault();
+
+            _context.Categories.Remove(category);
+            var res = _context.SaveChanges();
+
+            return RedirectToAction("Categories", new { id = 1});
+        }
+
+         //return view and data o a test
         public async Task<IActionResult> Test(int id)
         {
             var numberOfQuestions = _context.Categories
@@ -163,6 +227,8 @@ namespace licenta.Controllers
 
             return View(viewModel);
         }
+
+        //check the correctness of an answer
         public async Task<IActionResult> VerifyAnswer(string data, int questionid)
         {
             if (data == "[]" || questionid == 0)
@@ -189,6 +255,7 @@ namespace licenta.Controllers
 
         }
 
+        //save result of test
         public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId)
         {
             Test test = new Test
@@ -201,6 +268,7 @@ namespace licenta.Controllers
             return Json("succes");
         }
 
+        //show to wronged answered questions when test is finished
         public async Task<IActionResult> WrongAnswered (string data)
         {
             List<int> wrongAnswered = JsonConvert.DeserializeObject<List<int>>(data);

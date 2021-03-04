@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model licenta.ViewModel.CategoryFormViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="question_form_ctn">
+    <p class="title">@Model.Title</p>
+    @*using = for close tag for form*@
+    @using (Html.BeginForm("SaveCategory", "Questions", null, FormMethod.Post, true, new { id = "question_form" }))
+    {
+        @*using div to render responsive forms*@
+        <div class="form_group">
+            @Html.LabelFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name, null, new { @class = "validation_mesg" })
+        </div>
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.NumberOfQuestions)
+            @Html.TextBoxFor(m => m.NumberOfQuestions, new { @class = "explanation_txt" })
+            @Html.ValidationMessageFor(m => m.NumberOfQuestions, null, new { @class = "validation_mesg" })
+        </div>
+        <div class="form_group">
+            @Html.LabelFor(m => m.NumberOfWrongQuestions)
+            @Html.TextBoxFor(m => m.NumberOfWrongQuestions, new { @class = "explanation_txt" })
+            @Html.ValidationMessageFor(m => m.NumberOfWrongQuestions, null, new { @class = "validation_mesg" })
+        </div>
+
+        @Html.HiddenFor(m => m.Id)
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="save_button"> Save</button>
+    }
+
+</div>
+@section Style{ 
+    <link href="~/css/questionForm.css" rel="stylesheet" />
+}

@@ -2,19 +2,26 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<licenta.Models.Category>
-<div id="categories_ctn">
-    <div class="category">
-        @Html.ActionLink("New Question", "New", "Questions")
+<div class="main_ctn">
+    <div class="category" id="new_ctg">
+        @Html.ActionLink("Întrebare nouă", "New", "Questions")
     </div>
+    <div class="category" id="new_qst">
+        @Html.ActionLink("Categorie nouă", "NewCategory", "Questions")
+    </div>
+    <div id="categories_ctn">
 
-    @foreach (var category in Model)
-    {
-        <div class="category">
-            @Html.ActionLink("Categoria: " + category.Name, "Questions", "Questions", new { id = category.Id }, null)
-        </div>
-    }
+        @foreach (var category in Model)
+        {
+            <div class="category">
+                @Html.ActionLink("Categoria: " + category.Name, "Questions", "Questions", new { id = category.Id }, null)
+                @Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = category.Id },new{ @class = "btn_delete"} )
+            </div>
+        }
+    </div>
 </div>
 
-    @section Style{
-        <link href="@Url.Content("~/css/categories.css")" rel="stylesheet" type="text/css" />
-    }
+
+@section Style{
+    <link href="@Url.Content("~/css/categories.css")" rel="stylesheet" type="text/css" />
+}

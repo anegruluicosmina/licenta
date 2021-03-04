@@ -20,26 +20,26 @@ namespace licenta.Controllers
             _context = context;
         }
         // return the questions's categories
-        public IActionResult Categories(int id)
+        public async Task<IActionResult> Categories(int id)
         {
 
-            var categories = _context.Categories.ToList();
+            var categories = await _context.Categories.ToListAsync();
             if(id == 0) 
                 return View("TestCategories", categories);
             return View("EditCategories", categories);
 
         }
-        public IActionResult Questions(int id)
+        public async Task<IActionResult> Questions(int id)
         {
-            var questionsInDb = _context.Question
+            var questionsInDb = await _context.Question
                             .Include(c => c.Category).Where(c => c.CategoryId == id)
                             .Include(q => q.Answers)
-                            .ToList();
+                            .ToListAsync();
             return View(questionsInDb);
         }
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var questionInDb = _context.Question.SingleOrDefault(q => q.Id == id);
+            var questionInDb = await _context.Question.SingleOrDefaultAsync(q => q.Id == id);
 
             if (questionInDb == null)
                 return StatusCode(404);
@@ -49,12 +49,13 @@ namespace licenta.Controllers
                 Id = questionInDb.Id,
                 Text = questionInDb.Text,
                 CategoryId = questionInDb.CategoryId,
-                Answers = _context.Answers.Where(a => a.QuestionId == id).ToList(),
-                Categories = _context.Categories.ToList()
+                Explanation = questionInDb.Explanation,
+                Answers = await _context.Answers.Where(a => a.QuestionId == id).ToListAsync(),
+                Categories = await _context.Categories.ToListAsync()
             };
             return View(viewModel);
         }
-        public IActionResult Save(Question viewModel)
+        public async Task<IActionResult> Save(Question viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -81,15 +82,15 @@ namespace licenta.Controllers
 
             if (viewModel.Id == 0)
             {
-                _context.Question.Add(viewModel);
+                await _context.Question.AddAsync(viewModel);
                 foreach (var answer in viewModel.Answers)
                 {
-                    _context.Answers.Add(answer);
+                    await _context.Answers.AddAsync(answer);
                 }
             }
             else
             {
-                var questionInDb = _context.Question.Include(q => q.Answers).Single(q => q.Id == viewModel.Id);
+                var questionInDb = await _context.Question.Include(q => q.Answers).SingleAsync(q => q.Id == viewModel.Id);
 
                 questionInDb.Text = viewModel.Text;
                 questionInDb.Category = viewModel.Category;
@@ -102,13 +103,13 @@ namespace licenta.Controllers
                 questionInDb.CategoryId = viewModel.CategoryId;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Categories", "Questions", new { id = 1});
         }
 
-        public IActionResult New()
+        public async Task<IActionResult> New()
         {
-            var categories = _context.Categories.ToList();
+            var categories = await _context.Categories.ToListAsync();
             QuestionFormViewModel viewModel = new QuestionFormViewModel()
             {
                 Categories = categories
@@ -117,16 +118,16 @@ namespace licenta.Controllers
             return View("Edit", viewModel);
         }
 
-        public IActionResult Test(int id)
+        public async Task<IActionResult> Test(int id)
         {
             var numberOfQuestions = _context.Categories
                             .First(c => c.Id == id)
                             .NumberOfQuestions;
 
-            var questionsInDb = _context.Question.Where(q => q.CategoryId == id)
+            var questionsInDb = await _context.Question.Where(q => q.CategoryId == id)
                 .Include(q => q.Answers)
                 .OrderBy(r => Guid.NewGuid()).Take(numberOfQuestions)
-                .ToList();
+                .ToListAsync();
 
 
             TestViewModel viewModel = new TestViewModel()
@@ -134,7 +135,10 @@ namespace licenta.Controllers
                 Id = 1,
                 NumberOfQuestions = numberOfQuestions,
                 Questions = new List<QuestionViewModel>(),
-                NumberOfWrongAnswer = _context.Categories.Where(c => c.Id == id).Select(c => c.NumberOfWrongQuestions).SingleOrDefault(),
+                NumberOfWrongAnswer =await _context.Categories
+                                            .Where(c => c.Id == id)
+                                            .Select(c => c.NumberOfWrongQuestions)
+                                            .SingleOrDefaultAsync(),
                 CategoryId = id
             };
 
@@ -159,18 +163,18 @@ namespace licenta.Controllers
 
             return View(viewModel);
         }
-        public IActionResult VerifyAnswer(string data, int questionid)
+        public async Task<IActionResult> VerifyAnswer(string data, int questionid)
         {
             if (data == "[]" || questionid == 0)
                 return Json(new { message = "Nu ati selectat un rapuns", id = 1 });
 
             var givenAnswers = JsonConvert.DeserializeObject<List<int>>(data);
 
-            List<int> corectAnswers = _context.Answers
+            List<int> corectAnswers =await _context.Answers
                 .Where(a => a.QuestionId == questionid)
                 .Where(a => a.IsCorrect == true)
                 .Select(a => a.Id)
-                .ToList();
+                .ToListAsync();
 
             if (corectAnswers == null)
                 return Json(new { message = "Eroare de server", id = "3" });
@@ -185,52 +189,28 @@ namespace licenta.Controllers
 
         }
 
-        public IActionResult SaveTest(string correctAnswers, string categoryId)
+        public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId)
         {
             Test test = new Test
             {
                 NumberOfCorrectAnswers = Int32.Parse(correctAnswers),
                 CategoryId = Int32.Parse(categoryId)
             };
-            _context.Tests.Add(test);
-            _context.SaveChanges();
+            await _context.Tests.AddAsync(test);
+            await _context.SaveChangesAsync();
             return Json("succes");
         }
 
-        public IActionResult WrongAnswered (string data)
+        public async Task<IActionResult> WrongAnswered (string data)
         {
             List<int> wrongAnswered = JsonConvert.DeserializeObject<List<int>>(data);
 
-            var questionsInDb = _context.Question
+            var questionsInDb =await  _context.Question
                 .Where(q => wrongAnswered.Contains(q.Id))
                 .Include(q => q.Answers)
-                .ToList();
+                .ToListAsync();
 
             return View(questionsInDb);
         }
-
-
-        /*        public IActionResult SaveAnswers(TestViewModel question)
-        {
-            bool ok = true;
-
-            foreach (var answer in question.Questions[question.Index].Answers)
-            {
-                var isCorrect = _context.Answers
-                    .SingleOrDefault(a => a.Id == answer.Id);
-
-                if (isCorrect == null)
-                    return StatusCode(404);
-
-                if (answer.IsChecked != isCorrect.IsCorrect)
-                    ok = false;
-            }
-            if (ok)
-            {
-
-            }
-            return View("");
-        }
-*/
     }
 }

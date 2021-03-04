@@ -111,13 +111,11 @@ input[type="button"], input[type="submit"] {
 #anch_show {
     text-decoration: none;
     text-align: center;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    line-height: 16px;
+    font-size: 6px 15px;
+    line-height: 20px;
     padding: 10px;
     background-color: #184D68;
     color: #EAEEEA;
-    border-radius: 0px 0px 25px 25px;
 }
 
 @media only screen and (min-width: 600px) {
@@ -170,7 +168,9 @@ input[type="button"], input[type="submit"] {
         border-radius: 10px;
     }
     #anch_show {
-        width: 100%;
-        border-radius: 0px;
+        padding: 6px 15px;
+        font-size: 15px;
+        line-height: 20px;
+        border-radius: 10px;
     }
 }

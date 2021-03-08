@@ -1,0 +1,25 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model licenta.ViewModel.CreateRoleViewModel
+@{
+    ViewBag.Title = "Creaza un nou rol";
+}
+<div>
+    @using (Html.BeginForm("CreateRole", "Administration", null, FormMethod.Post, true, new { id = "question_form" }))
+    {
+
+        @Html.ValidationSummary();
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.RoleName)
+            @Html.TextBoxFor(m => m.RoleName)
+            @Html.ValidationMessageFor(m => m.RoleName, null, new { @class = "validation_mesg" })
+        </div>
+
+        <button type="submit" class="save_button"> Salvare</button>
+    }
+</div>
+@section Style{
+    <link href="~/css/questionForm.css" rel="stylesheet" type="text/css" />
+}

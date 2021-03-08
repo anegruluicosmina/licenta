@@ -1,0 +1,17 @@
+﻿@model List<licenta.ViewModel.UserRoleViewModel>
+
+@{ 
+    var roleId = ViewBag.RoleId;
+}
+@using (Html.BeginForm("EditUserInRole", "Administration"))
+{
+    @for(int i=0; i<Model.Count; i++)
+    {
+        <div>
+            <input asp-for="@Model[i].IsSelected"/>
+            <label asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
+        </div>
+    }
+    <input type="submit" value="Salveaza"/>
+    @Html.ActionLink("Anuleaza", "EditRole", "Administration", new { id = roleId}, null)
+}

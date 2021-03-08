@@ -1,0 +1,39 @@
+﻿@model licenta.ViewModel.EditRoleViewModel
+@{
+    ViewBag.Title = "Editare rol";
+}
+<h1>Editare rol</h1>
+
+@using (Html.BeginForm("EditRole", "Administration"))
+{
+    <div>
+        @Html.LabelFor(m => m.Id)
+        @Html.TextBoxFor(m => m.Id, new { disabled = "disabled" })
+    </div>
+    <div>
+        @Html.LabelFor(m => m.RoleName)
+        @Html.TextBoxFor(m=> m.RoleName)
+        @Html.ValidationMessageFor( m=> m.RoleName)
+    </div>
+    <div>
+        <button type ="submit">Salvare</button>
+        @Html.ActionLink("Anulare", "ListRoles", "Administration")
+    </div>    
+}
+<div>
+    @if (Model.Users.Any())
+    {
+        foreach (var user in Model.Users)
+        {
+            @Html.Label(user)
+        }
+
+    }
+    else
+    {
+        <p>Niciun user momentan</p>
+    }
+    <div>
+        @Html.ActionLink("Adauga sau sterge utilizatori", "EditUserRole", "Administration", new { roleId = Model.Id }, null)
+    </div>
+</div>

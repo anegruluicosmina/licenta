@@ -17,7 +17,7 @@ namespace licenta.Models
         [Required(ErrorMessage = "Trebuie sa adaugi care este numar de intrebari intr-un test pentru aceasta categorie.")]
         public int NumberOfQuestions { get; set; }
 
-        [NrOfWrongAnsweresQst(ErrorMessage = "aaaas")]
+        [NrOfWrongAnsweresQst]
         [Required (ErrorMessage = "Trebuie sa adaugi care este numarul minim de intrebari care pot fi gesite la un test pentru aceasta categorie.")]
         public int NumberOfWrongQuestions { get; set; }
 

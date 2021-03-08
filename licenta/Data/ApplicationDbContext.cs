@@ -24,5 +24,6 @@ namespace licenta.Data
         {
 
         }
+
     }
 }

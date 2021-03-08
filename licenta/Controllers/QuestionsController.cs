@@ -22,11 +22,13 @@ namespace licenta.Controllers
         // return the categories
         public async Task<IActionResult> Categories(int id)
         {
-
-            var categories = await _context.Categories.ToListAsync();
-            if(id == 0) 
-                return View("TestCategories", categories);
-            return View("EditCategories", categories);
+            if (id == 0)
+            {                
+                var categoriesTest = await _context.Categories.ToListAsync();
+                return View("TestCategories", categoriesTest);
+            }
+            var categoriesEdit = await _context.Categories.ToListAsync();
+            return View("EditCategories", categoriesEdit);
 
         }
         //return the questions of a category
@@ -171,9 +173,29 @@ namespace licenta.Controllers
             return View("CategoryForm", viewModel);
         }
 
+        public async Task<IActionResult> DeleteQuestion (int id)
+        {
+            var questionInDb =await  _context.Question
+                                        .Include(q => q.Answers)
+                                        .SingleOrDefaultAsync(q => q.Id == id);
+
+            _context.Answers.RemoveRange(questionInDb.Answers);
+            _context.Question.Remove(questionInDb);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Categories", new { id = 1 });
+        }
+
         public IActionResult DeleteCategory(int id)
         {
-            var category = _context.Categories.Include(c => c.Question).Where(c => c.Id == id).SingleOrDefault();
+            var category = _context.Categories.SingleOrDefault(c => c.Id == id);
+
+            var questions = _context.Question.Where(q => q.CategoryId == id).Include(q => q.Answers).ToList();
+            foreach (var question in questions)
+                _context.Answers.RemoveRange(question.Answers);
+
+           _context.Question.RemoveRange(questions);
 
             _context.Categories.Remove(category);
             var res = _context.SaveChanges();

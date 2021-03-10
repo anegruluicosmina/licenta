@@ -1,0 +1,19 @@
+﻿@model List<ApplicationUser>
+
+@{ 
+    ViewBag.Title = "Lista utilizatorlor";
+}
+
+<div>
+    @foreach(var user in Model)
+    {
+    <div>
+        <label>@user.Id</label>
+        <label>@user.UserName</label>
+        <label>@user.FirstName @user.LastName</label>
+        <label>@user.Email</label>
+        <label>@user.PhoneNumber</label>
+        <label>@user.Birthday.ToShortDateString()</label>
+    </div>
+    }
+</div>

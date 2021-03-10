@@ -1,4 +1,4 @@
-﻿@inject SignInManager<IdentityUser> signInManager;
+﻿@inject SignInManager<ApplicationUser> signInManager;
 
 <header>
     <nav class="navbar_container">
@@ -21,12 +21,25 @@
                     <li class="item">
                         <a class="nav_link" asp-area="" asp-controller="" asp-action="">Instructori</a>
                     </li>
-                    <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
-                    </li>
-                    <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
-                    </li>
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListRoles">Administreaza rolurile</a>
+                        </li>
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Vezi utilizatori</a>
+                        </li>
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
+                        </li>
+                    }
+                    else if(signInManager.IsSignedIn(User))
+                    {
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
+                        </li>
+                    }
+
                 </ul>
             </div>
             <div class="profile_ctn">
@@ -40,7 +53,7 @@
                     else
                     {
                         <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="login">Log In</a>
+                            <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Login">Log In</a>
                         </li>
                         <li class="item">
                             <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>

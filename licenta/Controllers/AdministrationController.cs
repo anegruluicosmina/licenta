@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using licenta.Models;
 using licenta.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +13,8 @@ namespace licenta.Controllers
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -54,6 +56,13 @@ namespace licenta.Controllers
         }
 
         [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users =  _userManager.Users.ToList();
+            return View(users);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
@@ -71,7 +80,6 @@ namespace licenta.Controllers
             
             foreach(var user in _userManager.Users)
             {
-                model.Users.Add(user.UserName);
                 /*select users with specific roles*/
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
@@ -90,7 +98,7 @@ namespace licenta.Controllers
             if (role == null)
             {
                 ViewBag.ErrorMessage = $"Rolul cu acest id nu poate fi gasit";
-                return View("Not found");
+                return Content("Not found");
             }
             else
             {
@@ -109,6 +117,7 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> EditUserRole(string roleId)
         {
             ViewBag.RoleId = roleId;
@@ -118,7 +127,7 @@ namespace licenta.Controllers
             if(role == null)
             {
                 ViewBag.ErrorMessage = $"Role with this id could not be found";
-                return View("Not found");
+                return Content("Not found");
             }
 
             var viewModel = new List<UserRoleViewModel>();
@@ -145,10 +154,46 @@ namespace licenta.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUserInRole (List<UserRoleViewModel> viewModels, string roleId)
+        public async Task<IActionResult> EditUserRole(string roleId,List<UserRoleViewModel> viewModels)
         {
-            return View();
-        }
+            var role = await _roleManager.FindByIdAsync(roleId);
 
+            if(role == null)
+            {
+                ViewBag.ErrorMessage = "Nu a fost gasit niciun rol cu acest Id";
+                return Content("Not found");
+            }
+
+            for(int i = 0; i < viewModels.Count; i++)
+            {
+               var user = await _userManager.FindByIdAsync(viewModels[i].UserId);
+
+                IdentityResult result = null;
+                /*user selected but not in role, add role to user*/
+                if (viewModels[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
+                {
+                    result = await _userManager.AddToRoleAsync(user, role.Name);
+                /*if user not selected but in role, remove user*/
+                }else if (!viewModels[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+                /*user selected and in role, user not selected not added to role*/
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (result.Succeeded)
+                {
+                    if (i < (viewModels.Count))
+                        continue;
+                    else
+                        return RedirectToAction("EditRole", new { roleId = roleId });
+                }
+            }
+
+            return RedirectToAction("EditRole", new { id = roleId });
+        }
     }
 }

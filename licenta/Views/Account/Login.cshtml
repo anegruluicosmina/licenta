@@ -1,0 +1,29 @@
+﻿@model licenta.ViewModel.LoginViewModel
+
+@{
+    ViewBag.Title = "Autentificare";
+}
+
+<h1> Autentificare</h1>
+
+@using (Html.BeginForm("Login", "Account"))
+{
+    @Html.ValidationSummary()
+    <div class="form_group">
+        @Html.LabelFor(m => m.Username)
+        @Html.TextBoxFor(m => m.Username)
+        @Html.ValidationMessageFor(m => m.Username)
+    </div>
+    <div class="form_group">
+        @Html.LabelFor(m => m.Password)
+        @Html.TextBoxFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+
+    <div class="form_group">
+        @Html.CheckBoxFor(m => m.RememberMe)
+        @Html.LabelFor(m => m.RememberMe)
+        @Html.ValidationMessageFor(m => m.Username)
+    </div>
+    <input type="submit" value="Autentificare" /> 
+}

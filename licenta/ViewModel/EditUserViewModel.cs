@@ -1,23 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace licenta.Models
+namespace licenta.ViewModel
 {
-    public class ApplicationUser: IdentityUser
+    public class EditUserViewModel
     {
-        [Display(Name = "Prenume")]
-        [Required(ErrorMessage = "Introduceți prenumele dvs.")]
-        [StringLength(255, ErrorMessage ="Introduceti o valoarea de lungime mai scurta.")]
-        public string FirstName { get; set; }
-
+        public string Id { get; set; }
         [Display(Name = "Nume")]
         [Required(ErrorMessage = "Introduceți numele dvs de familie.")]
-        [StringLength(255, ErrorMessage = "Introduceti o valoarea de lungime mai scurta.")]
         public string LastName { get; set; }
+
+
+        [Display(Name = "Prenume")]
+        [Required(ErrorMessage = "Introduceți prenumele dvs.")]
+        public string FirstName { get; set; }
+
+
+        [Required(ErrorMessage = "Introduceți un email.")]
+        [EmailAddress]
+        public string Email { get; set; }
+
+
+        [Display(Name = "Numărul de telefon")]
+        [Required(ErrorMessage = "Introduceți numărul de telefon.")]
+        [Phone]
+        public string PhoneNumber { get; set; }
 
         [Display(Name = "Data nașterii")]
         [Required(ErrorMessage = "Introduceți data nașterii.")]
@@ -27,5 +37,6 @@ namespace licenta.Models
         [Display(Name = "Descriere")]
         [StringLength(500, ErrorMessage = "Introduceti o valoarea de lungime mai scurta.")]
         public string Description { get; set; }
+
     }
 }

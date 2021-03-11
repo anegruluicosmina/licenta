@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using licenta.Data;
 using licenta.Models;
 using licenta.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace licenta.Controllers
 {
@@ -40,8 +41,8 @@ namespace licenta.Controllers
                             .ToListAsync();
             return View(questionsInDb);
         }
-
         //edit question
+        [Authorize(Roles ="Admin, Instructor")]
         public async Task<IActionResult> Edit(int id)
         {
             var questionInDb = await _context.Question.SingleOrDefaultAsync(q => q.Id == id);
@@ -61,6 +62,7 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles ="Admin, Instructor")]
         //save the new or updated question
         public async Task<IActionResult> Save(Question viewModel)
         {
@@ -105,6 +107,7 @@ namespace licenta.Controllers
             return RedirectToAction("Categories", "Questions", new { id = 1});
         }
         
+        [Authorize(Roles ="Admin, Instructor")]
         // return view to add new question
         public async Task<IActionResult> New()
         {
@@ -117,6 +120,7 @@ namespace licenta.Controllers
             return View("Edit", viewModel);
         }
 
+        [Authorize(Roles ="Admin, Instructor")]
         //save the new or updated category
         public async Task<IActionResult> SaveCategory(Category viewModel)
         {
@@ -149,6 +153,7 @@ namespace licenta.Controllers
             return RedirectToAction("Categories", "Questions", new { id = 1 });
         }
 
+        [Authorize(Roles ="Admin, Instructor")]
         //return view to add new category
         public async Task<IActionResult> NewCategory()
         {
@@ -156,6 +161,7 @@ namespace licenta.Controllers
             return View("CategoryForm", viewModel);
         }
 
+        [Authorize(Roles ="Admin, Instructor")]
         //return view to edit a category
         public async Task<IActionResult> EditCategoty(int id)
         {
@@ -173,6 +179,7 @@ namespace licenta.Controllers
             return View("CategoryForm", viewModel);
         }
 
+        [Authorize(Roles = "Admin, Instructor")]
         public async Task<IActionResult> DeleteQuestion (int id)
         {
             var questionInDb =await  _context.Question
@@ -187,6 +194,7 @@ namespace licenta.Controllers
             return RedirectToAction("Categories", new { id = 1 });
         }
 
+        [Authorize(Roles ="Admin, Instructor")]
         public IActionResult DeleteCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(c => c.Id == id);

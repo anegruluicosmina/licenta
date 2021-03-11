@@ -21,14 +21,11 @@ else
                 @Html.Label(role.Name)
             </div>
             <div>
-                @Html.ActionLink("Editare", "EditRole", "Administration", new { id =role.Id }, null)
-                @Html.ActionLink("Lista utilizatori", "ListUsers", "Administration")
-                <a href="">Sterge</a>
+                @Html.ActionLink("Lista utilizatori", "ListUsersInRole", "Administration", new { roleId = role.Id }, null)
             </div>
         </div>
     }
 }
 <div>
     @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
-
 </div>

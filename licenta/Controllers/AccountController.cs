@@ -20,6 +20,13 @@ namespace licenta.Controllers
         }
 
         [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            /*return View();*/
+            return Content("AccessDenied");
+        }
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -44,6 +51,10 @@ namespace licenta.Controllers
 
                 if (result.Succeeded)
                 {
+                    if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
                     /* session cookie*/
                     await _signInManager.SignInAsync(user, false);
 
@@ -85,5 +96,71 @@ namespace licenta.Controllers
 
             return RedirectToAction("index", "home");
         }
+
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditUser()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            if(userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user =await _userManager.FindByIdAsync(userId);
+            var role = await _userManager.GetRolesAsync(user);
+
+            var model = new EditUserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthday = user.Birthday,
+                PhoneNumber = user.PhoneNumber,
+                Email = user.Email,
+                Description = user.Description
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel viewModel)
+        {
+            var user = await _userManager.FindByIdAsync(viewModel.Id);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                user.FirstName = viewModel.FirstName;
+                user.LastName = viewModel.LastName;
+                user.Email = viewModel.Email;
+                user.PhoneNumber = viewModel.PhoneNumber;
+                user.Description = viewModel.Description;
+            }
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return View("Profile");
+            }
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(viewModel);
+        }
+
+
     }
 }

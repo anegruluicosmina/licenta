@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace licenta.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -60,6 +61,25 @@ namespace licenta.Controllers
         {
             var users =  _userManager.Users.ToList();
             return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListUsersInRole(string roleId)
+        {
+            ViewBag.roleId = roleId;
+            var role = await _roleManager.FindByIdAsync(roleId);
+            ViewBag.RoleName = role.Name;
+            var users = new List<ApplicationUser>();
+
+            foreach (var user in _userManager.Users)
+            {
+                /*select users with specific roles*/
+                if (await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    users.Add(user);
+                }
+            }
+            return View("ListUsers", users);
         }
 
         [HttpGet]
@@ -123,7 +143,7 @@ namespace licenta.Controllers
             ViewBag.RoleId = roleId;
 
             var role = await _roleManager.FindByIdAsync(roleId);
-
+            ViewBag.RoleName = role.Name;
             if(role == null)
             {
                 ViewBag.ErrorMessage = $"Role with this id could not be found";
@@ -189,11 +209,43 @@ namespace licenta.Controllers
                     if (i < (viewModels.Count))
                         continue;
                     else
-                        return RedirectToAction("EditRole", new { roleId = roleId });
+                        return RedirectToAction("ListUsersInRole", new { roleId = roleId });
                 }
             }
 
-            return RedirectToAction("EditRole", new { id = roleId });
+            return RedirectToAction("ListUsersInRole", new { roleId = roleId });
+        }
+        public async Task<IActionResult> DeleteUser(string userId, string? roleId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = "Utilizatorul cu acest id nu poate fi gasit";
+                return Content("Not found");
+            }
+            else
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    if(roleId == null)
+                        return RedirectToAction("ListUsers");
+                    
+                    return RedirectToAction("ListUsersInRole", new { roleId = roleId });
+
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                if (roleId == null)
+                    return View("ListUsers");
+
+                return View("ListUsersInRole", new { roleId = roleId });
+            }
         }
     }
 }

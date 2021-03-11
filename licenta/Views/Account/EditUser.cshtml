@@ -1,0 +1,49 @@
+﻿@model licenta.ViewModel.EditUserViewModel
+
+<div>
+    @using (Html.BeginForm("EditUser", "Account"))
+    {
+        @Html.HiddenFor(m => m.Id)
+        <div class="form_group">
+            @Html.LabelFor(m => m.FirstName)
+            @Html.TextBoxFor(m => m.FirstName)
+            @Html.ValidationMessageFor(m => m.FirstName)
+        </div>
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.LastName)
+            @Html.TextBoxFor(m => m.LastName)
+            @Html.ValidationMessageFor(m => m.LastName)
+        </div>
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.Birthday)
+            <input type="datetime" asp-for="@Model.Birthday" asp-format="{0:dd/MM/yyyy}" readonly />
+            @Html.ValidationMessageFor(m => m.Birthday)
+        </div>
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+
+        <div class="form_group">
+            @Html.LabelFor(m => m.PhoneNumber)
+            @Html.TextBoxFor(m => m.PhoneNumber)
+            @Html.ValidationMessageFor(m => m.PhoneNumber)
+        </div>
+        @if (User.IsInRole("Instructor"))
+        {
+            <div class="form_group">
+                @Html.LabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
+        }
+
+        <input type="submit" value="Schimba parola" />
+
+        <input type="submit" value="Salveaza modificarile" />
+    }
+</div>

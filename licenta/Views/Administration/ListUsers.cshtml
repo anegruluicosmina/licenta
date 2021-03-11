@@ -1,19 +1,43 @@
-﻿@model List<ApplicationUser>
+﻿@model IEnumerable<ApplicationUser>
 
-@{ 
+@{
     ViewBag.Title = "Lista utilizatorlor";
+    var roleId = ViewBag.RoleId;
+    var roleName = ViewBag.RoleName;
 }
-
-<div>
-    @foreach(var user in Model)
+<p>@roleName</p>
+@if (Model.Any())
+{
+    if (roleId != null)
     {
-    <div>
-        <label>@user.Id</label>
-        <label>@user.UserName</label>
-        <label>@user.FirstName @user.LastName</label>
-        <label>@user.Email</label>
-        <label>@user.PhoneNumber</label>
-        <label>@user.Birthday.ToShortDateString()</label>
-    </div>
+        @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId })
     }
-</div>
+    else
+    {
+        @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
+     }
+
+    <div>
+        @foreach (var user in Model)
+        {
+            <div>
+                <label>@user.Id</label>
+                <label>@user.UserName</label>
+                <label>@user.FirstName @user.LastName</label>
+                <label>@user.Email</label>
+                <label>@user.PhoneNumber</label>
+                <label>@user.Birthday.ToShortDateString()</label>
+            </div>
+            <div>
+                @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
+                {
+                    <button type="submit">Sterge utilizator</button>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Niciun utilizator momentan</p>
+}

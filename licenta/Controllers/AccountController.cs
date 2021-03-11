@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using licenta.Models;
 using licenta.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,14 +52,21 @@ namespace licenta.Controllers
 
                 if (result.Succeeded)
                 {
-                    if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Administration");
                     }
                     /* session cookie*/
-                    await _signInManager.SignInAsync(user, false);
-
-                    return RedirectToAction("index", "home");
+                    /*                    await _signInManager.SignInAsync(user, false);
+                                        return RedirectToAction("index", "home");*/
+                    ModelState.AddModelError("", "Inregistrare cu succes.");
+                    ModelState.AddModelError("", "Inaite de a te autentifica, esti nevoit sa confirmi adresa de email printr-un click pe link-ul trimis pe email de catre noi.");
+/*                    ViewBag.ErrorTitle = "Inregistrare cu succes.";
+                    ViewBag.ErrorMessage = "Inaite de a te autentifica, esti nevoit sa confirmi adresa de email printr-un click pe link-ul trimis pe email de catre noi.";*/
+                    return View(registerViewModel);
                 }
 
                 foreach(var error in result.Errors)
@@ -80,6 +88,18 @@ namespace licenta.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByEmailAsync(viewModel.Username);
+                if (!(await _userManager.CheckPasswordAsync(user, viewModel.Password)) || user == null)
+                {
+                    ModelState.AddModelError("", "Email-ul sau parola sunt gresite.");
+                    return View(viewModel);
+                }
+                if(user != null && user.EmailConfirmed == false)
+                {
+                    ModelState.AddModelError("", "Email-ul nu a fost inca confirmat");
+                    return View(viewModel);
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(viewModel.Username, viewModel.Password, viewModel.RememberMe, false);
                 if (result.Succeeded)
                 {
@@ -161,6 +181,28 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
 
+            if(user == null)
+            {
+                return Content("user  not found");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+/*add view for confirmed email*/
+                return Content("Email confirmat");
+            }
+            return Content("email-ul nun a putut fi confirmat");
+        }
     }
 }

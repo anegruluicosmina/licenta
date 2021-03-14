@@ -6,16 +6,18 @@
     var roleName = ViewBag.RoleName;
 }
 <p>@roleName</p>
+@if (roleId != null)
+{
+    @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId })
+}
+else
+{
+    @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
+}
+
 @if (Model.Any())
 {
-    if (roleId != null)
-    {
-        @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId })
-    }
-    else
-    {
-        @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
-     }
+
 
     <div>
         @foreach (var user in Model)

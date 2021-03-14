@@ -1,0 +1,11 @@
+﻿@model licenta.ViewModel.ChangeEmailViewModel
+
+@using (Html.BeginForm())
+{
+<div>
+    @Html.LabelFor(m => m.Email)
+    @Html.TextBoxFor(m => m.Email)
+    @Html.ValidationMessageFor(m => m.Email)
+</div>
+<input type ="submit" value="Salveaza"/>
+}

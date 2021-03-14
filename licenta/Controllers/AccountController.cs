@@ -117,6 +117,7 @@ namespace licenta.Controllers
             }
             return View(viewModel);
         }
+
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -125,11 +126,14 @@ namespace licenta.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Profile()
         {
             return View();
         }
+
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> EditUser()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -152,9 +156,10 @@ namespace licenta.Controllers
                 Description = user.Description
             };
 
-            return View(model);
+            return PartialView(model);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditUser(EditUserViewModel viewModel)
         {
             var user = await _userManager.FindByIdAsync(viewModel.Id);
@@ -167,7 +172,6 @@ namespace licenta.Controllers
             {
                 user.FirstName = viewModel.FirstName;
                 user.LastName = viewModel.LastName;
-                user.Email = viewModel.Email;
                 user.PhoneNumber = viewModel.PhoneNumber;
                 user.Description = viewModel.Description;
             }
@@ -274,6 +278,98 @@ namespace licenta.Controllers
                 return View("ResetPasswordConfirmation");
             }
          return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return RedirectToAction("Login");
+
+                var result = await _userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return PartialView();
+                }
+
+                await _signInManager.RefreshSignInAsync(user);
+                return Content("ChangePwdConfirmation");
+            }
+            return PartialView(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult ChangeEmail()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmail(ChangeEmailViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                if(user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+                user.UserName = viewModel.Email;
+                user.Email = viewModel.Email;
+                var resultUpdate = await _userManager.UpdateAsync(user);
+                if (resultUpdate.Succeeded)
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var confirmationLink = Url.Action("ConfirmChangeEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                    await _emailService.SendAsync(viewModel.Email, "verificare email", $"<a href = \"{confirmationLink}\">Confirma email</a>", true);
+
+                    return Content("Un email a fost trimis la adresa adaugata");
+                }
+                else
+                {
+                    return Content("Update nereusit");
+                }
+
+            }
+            return PartialView(viewModel);
+        }
+
+        public async Task<IActionResult> ConfirmChangeEmail( string userId, string token)
+        {
+            if(userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            
+            var user = await _userManager.FindByIdAsync(userId);
+                        
+            if (user == null)
+            {
+                return Content("user not found");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+                return Content("Email confirmat");     
+            
+            return Content("Confirmare nereusita");
         }
     }
 }

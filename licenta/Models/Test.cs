@@ -11,7 +11,10 @@ namespace licenta.Models
         public int NumberOfCorrectAnswers { get; set; }
 
         public int CategoryId { get; set; }
-
+        public Category Category { get; set; }
+        public string UserId { get; set; }
+        public DateTime Date { get; set; }
+        public bool Passed { get; set; }
         public Test()
         {
             Id = 0;

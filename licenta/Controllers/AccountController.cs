@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using licenta.Data;
 using licenta.Models;
 using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +18,14 @@ namespace licenta.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService)
+        public AccountController(ApplicationDbContext context,UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _context = context;
         }
 
         [HttpGet]
@@ -127,8 +130,16 @@ namespace licenta.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
+            var user = await _userManager.GetUserAsync(User);
+            var usercategories =  _context.Tests.Where(c => c.UserId == user.Id).Select(c =>new { c.CategoryId, c.Category.Name}).Distinct().ToList();
+            var dictionary = new Dictionary<int, string>();
+            foreach(var item in usercategories)
+            {
+                dictionary.Add(item.CategoryId, item.Name);
+            }
+            ViewBag.UserCategories = dictionary;
             return View();
         }
 
@@ -370,6 +381,111 @@ namespace licenta.Controllers
                 return Content("Email confirmat");     
             
             return Content("Confirmare nereusita");
+        }
+
+        public async Task<JsonResult> ProfileChart()
+        {
+            var user= await _userManager.GetUserAsync(User);
+            int nrUserTests = _context.Tests.Where(t => t.UserId == user.Id).Count();
+            int nrUserPassedTests = _context.Tests.Where(t => t.UserId == user.Id).Where(t => t.Passed == true).Count();
+
+
+            BarChartDataSet dataset = new BarChartDataSet()
+            {
+                data = new int[] { nrUserPassedTests, nrUserTests-nrUserPassedTests},
+                backgroundColor = new string[] {"#7195A3",
+                                                "#E14B3B"
+                },
+                borderColor = new string[] {"#184D68",
+                                            "#BF381A"
+                },
+                borderWidth = 1
+            };
+
+            BarChartData data = new BarChartData()
+            {
+                labels = new string[] { "Numarul de teste trecute", "Numarul de teste picate"},
+                datasets = new BarChartDataSet[] { dataset }
+            };
+
+            return Json(data);
+        }
+
+        public async Task<IActionResult> ProfileChartCategory(int categoryId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var tests = _context.Tests.Where(t => t.UserId == user.Id).Where(t => t.CategoryId == categoryId).ToList();
+            List<DateTime> dates = tests.Select(t => t.Date.Date).Distinct().ToList();
+            DateTime[] objects = dates.ConvertAll<DateTime>(item => (DateTime)item).ToArray();
+
+
+            List<int> passedExamensList = new List<int>();
+            List<int> examensList = new List<int>();
+            int[] allDateExamenList;
+
+            LineChartDataSet lineChartDataSet = new LineChartDataSet();
+
+            foreach(var date in dates)
+            {
+                passedExamensList.Add(tests.Where(c => c.Date.Date == date).Where(c => c.Passed == true).Count());
+                examensList.Add(tests.Where(c => c.Date.Date == date).Count());
+
+            }
+            int[] passedExamens = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();
+            int[] examens = examensList.ConvertAll<int>(item => (int)item).ToArray();
+            LineChartDataSet passedExamensData = new LineChartDataSet()
+            {
+                data = passedExamens,
+                label = "Examene trecute",
+                borderColor = "#e8c3b9",
+                backgroundColor = "#7195A3",
+                fill = false
+
+            };
+            LineChartDataSet examensData = new LineChartDataSet()
+            {
+                data = examens,
+                label = "Numarul total de examene",                
+                borderColor = "#3cba9f", 
+                backgroundColor= "#E14B3B",
+                fill = false
+
+            };
+            /* = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();*/
+            LineChartData dataset = new LineChartData()
+            {
+                labels = objects,
+                datasets = new LineChartDataSet[] { examensData , passedExamensData }
+
+            };
+            return Json(dataset);
+        }
+        public async Task<IActionResult> BarChartCategory(int categoryId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            int nrUserTests = _context.Tests.Where(t => t.UserId == user.Id).Where(c => c.CategoryId == categoryId).Count();
+            int nrUserPassedTests = _context.Tests.Where(t => t.UserId == user.Id).Where(t => t.Passed == true).Where(c => c.CategoryId == categoryId).Count();
+
+
+            BarChartDataSet dataset = new BarChartDataSet()
+            {
+                data = new int[] { nrUserTests ,nrUserPassedTests },
+                backgroundColor = new string[] {"#7195A3",
+                                                "#E14B3B"
+                },
+                borderColor = new string[] {"#184D68",
+                                            "#BF381A"
+                },
+                borderWidth = 1
+            };
+
+            BarChartData data = new BarChartData()
+            {
+                labels = new string[] { "Numarul de examene", "Numarul de teste trecute"  },
+                datasets = new BarChartDataSet[] { dataset }
+            };
+
+            return Json(data);
         }
     }
 }

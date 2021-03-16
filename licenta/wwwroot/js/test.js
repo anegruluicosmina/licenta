@@ -5,7 +5,7 @@ var questionsIds = [];
 var wrongQuestions = [];
 var index = -1;
 var answers = document.getElementById("answers");
-
+console.log(model);
 /*create a array to track questions*/
 for (var i = 0; i < model.questions.length; i++) {
     questionsIds.push(model.questions[i].id);
@@ -39,7 +39,7 @@ $("#btn_next_question").click(function () {
             } else {
     /*ADDDD BUTTONS TO TAKE ANOTHER TEST OR TO GO TO THE TEST PAGE*/
                 var data = take_data();
-                $("#result").text("Ai trecut examinarea cu următoarele rezultate:");
+                $("#result").text("Ai trecut examinarea cu următoarele rezultate1:");
                 $("#result").css("border-bottom", "2px solid #184D68");
                 save_test();
             /*btn_new_test();*/
@@ -55,7 +55,7 @@ $("#btn_next_question").click(function () {
             }
         } else { 
 /*if the user had the maximum number of wrong questions*/
-        $("#result").text("Ai picat examinarea cu următoarele rezultate:");
+        $("#result").text("Ai picat examinarea cu următoarele rezultate2:");
         $("#result").css("border-bottom", "2px solid #184D68");
         $("#question_container").text("");
         $("#anch_show").show();
@@ -88,12 +88,12 @@ $("#verify_answer").click(function () {
         }
 /*verify the number of wrong answered to show the proper message*/
         if (wrongQuestions.length > model.numberOfWrongAnswer) {
-            $("#result").text("Ai picat examinarea cu următoarele rezultate:");
+            $("#result").text("Ai picat examinarea cu următoarele rezultate3:");
             $("#result").css("background-color", "2px solid #184D68");
             /*btn_new_test();*/
             $("#btn_new_test").show();
         } else {
-            $("#result").text("Ai trecut examinarea cu următoarele rezultate:");
+            $("#result").text("Ai trecut examinarea cu următoarele rezultate4:");
             $("#result").css("background-color", "2px solid #184D68");
         /*btn_new_test();*/
             $("#btn_new_test").show();
@@ -147,7 +147,7 @@ function save_test() {
     $.ajax({
         type: "GET",
         url: baseUrl + 'questions/SaveTest',
-        data: { correctAnswers: correctAnswers, categoryId: model.categoryId },
+        data: { correctAnswers: correctAnswers, categoryId: model.categoryId, userId: model.userId },
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: errorFunc

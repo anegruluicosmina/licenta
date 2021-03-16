@@ -10,16 +10,21 @@ using licenta.Data;
 using licenta.Models;
 using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace licenta.Controllers
 {
     public class QuestionsController:Controller
     {
         private ApplicationDbContext _context;
-        public QuestionsController(ApplicationDbContext context)
+        private UserManager<ApplicationUser> _userManager;
+
+        public QuestionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
         // return the categories
         public async Task<IActionResult> Categories(int id)
         {
@@ -223,39 +228,49 @@ namespace licenta.Controllers
                 .OrderBy(r => Guid.NewGuid()).Take(numberOfQuestions)
                 .ToListAsync();
 
-
-            TestViewModel viewModel = new TestViewModel()
+            if(questionsInDb.Count == numberOfQuestions)
             {
-                Id = 1,
-                NumberOfQuestions = numberOfQuestions,
-                Questions = new List<QuestionViewModel>(),
-                NumberOfWrongAnswer =await _context.Categories
-                                            .Where(c => c.Id == id)
-                                            .Select(c => c.NumberOfWrongQuestions)
-                                            .SingleOrDefaultAsync(),
-                CategoryId = id
-            };
+                var user = await _userManager.GetUserAsync(User);
 
-            foreach (var question in questionsInDb)
-            {
-                QuestionViewModel questionModel = new QuestionViewModel
+                TestViewModel viewModel = new TestViewModel()
                 {
-                    Id = question.Id,
-                    Text = question.Text,
-                    Answers = question.Answers.Select(x => new AnswerViewModel()
-                    {
-                        // variable mapping here 
-                        Id = x.Id,
-                        Text = x.Text
-                    }).ToList(),
-                    Explanation = question.Explanation
+                    Id = 1,
+                    NumberOfQuestions = questionsInDb.Count(),
+                    Questions = new List<QuestionViewModel>(),
+                    NumberOfWrongAnswer = await _context.Categories
+                                                .Where(c => c.Id == id)
+                                                .Select(c => c.NumberOfWrongQuestions)
+                                                .SingleOrDefaultAsync(),
+                    CategoryId = id,
+                    UserId = user.Id
                 };
-                viewModel.Questions.Add(questionModel);                
+
+                foreach (var question in questionsInDb)
+                {
+                    QuestionViewModel questionModel = new QuestionViewModel
+                    {
+                        Id = question.Id,
+                        Text = question.Text,
+                        Answers = question.Answers.Select(x => new AnswerViewModel()
+                        {
+                            // variable mapping here 
+                            Id = x.Id,
+                            Text = x.Text
+                        }).ToList(),
+                        Explanation = question.Explanation
+                    };
+                    viewModel.Questions.Add(questionModel);
+                }
+
+                /*var questions = _mapper.Map<List<Question>, List<QuestionViewModel>>(questionsInDb);*/
+
+                return View(viewModel);
             }
-
-            /*var questions = _mapper.Map<List<Question>, List<QuestionViewModel>>(questionsInDb);*/
-
-            return View(viewModel);
+            else
+            {
+                return Content("Error");
+            }
+           
         }
 
         //check the correctness of an answer
@@ -286,13 +301,25 @@ namespace licenta.Controllers
         }
 
         //save result of test
-        public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId)
+        public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId, string userId)
         {
+            var categoryPassed = _context.Categories.Where(c => c.Id == Int32.Parse(categoryId)).FirstOrDefault();
+
             Test test = new Test
             {
                 NumberOfCorrectAnswers = Int32.Parse(correctAnswers),
-                CategoryId = Int32.Parse(categoryId)
+                CategoryId = Int32.Parse(categoryId),
+                UserId = userId,
+                Date = DateTime.Now
             };
+            if (Int32.Parse(correctAnswers) >= (categoryPassed.NumberOfQuestions - categoryPassed.NumberOfWrongQuestions))
+            {
+                test.Passed = true;
+            }
+            else
+            {
+                test.Passed = false;
+            }
             await _context.Tests.AddAsync(test);
             await _context.SaveChangesAsync();
             return Json("succes");

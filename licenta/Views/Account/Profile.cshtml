@@ -1,18 +1,35 @@
-﻿<div>
+﻿@{
+    var userCategories = ViewBag.UserCategories;
+}
+<div>
     <ul>
         <button type="submit" id="reset_pwd_btn">Reseteaza parola</button>
         <button type="submit" id="edit_info_btn">Editeaza profilul</button>
         <button type="submit" id="edit_email_btn">Editeaza email</button>
-
-        <li class="item">
-            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Profile">Un bla</a>
-        </li>
+        <button type="submit" id="chart_btn">Testele mele</button>
     </ul>
+    <div>
+        @foreach (var category in ViewBag.UserCategories)
+        {
+            <button type="submit" class="total_chart_ctg_btn" id="@category.Key">@category.Value total</button>
+            <button type="submit" class="chart_ctg_btn" id="@category.Key">@category.Value periodic</button>
+            @Html.ActionLink((string)category.Value, "ProfileChartCategory", "Account", new { categoryId = category.Key });
+        }
+    </div>
 </div>
 
-<div id="profile_ctn">
+<div id="profile_ctn"></div>
 
+@*<script src="~/lib/Chart.js/Chart.min.js"></script>*@
+<div id="chart_ctn">
+    <canvas id="myChart"></canvas>
 </div>
+<canvas id="lineChart"></canvas>
+
+
+
 @section Scripts{
+    <link href="~/lib/Chart.js/Chart.css" rel="stylesheet" />
+    <script type="module" src="~/lib/Chart.js/Chart.min.js"></script>
     <script src="~/js/profile.js"></script>
 }

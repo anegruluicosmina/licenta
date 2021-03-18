@@ -1,25 +1,61 @@
-﻿
+﻿$(document).ready(function () {
+    $("#chart_btn").css("border-bottom", "2px solid #184D68");
+    var data = {};
+    $.ajax({
+        url: baseUrl + 'Account/ProfileChart',
+        type: 'POST',
+        dataType: 'Json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data)
+    }).done(function (response) {
+        PopulateData(response);
+        $('#chart_ctn').modal('show');
+
+    }).fail(function (error) {
+        console.log(error);
+    });
+});
+
 var baseUrl = '@Url.Action("ChangePassword", "Account")';
 var urlEditInfo = '@Url.Action("EditUser", "Account")';
 var myChart;
 var baseUrl = "https://localhost:44368/";
+
 $('#reset_pwd_btn').click(function () {
-    $('#profile_ctn').load(baseUrl + "Account/ChangePassword");
+    $("#chart_ctn").hide();
+    $(".test_menu").hide();
+    $("#profile_form_ctn").show();
+    $('#profile_form_ctn').load(baseUrl + "Account/ChangePassword");
 })
 $("#edit_info_btn").click(function () {
-    $('#profile_ctn').load(baseUrl + "Account/EditUser");
+    $("#chart_ctn").hide();
+    $(".test_menu").hide();
+    $("#profile_form_ctn").show();
+    $('#profile_form_ctn').load(baseUrl + "Account/EditUser");
 })
 $("#edit_email_btn").click(function () {
-    $('#profile_ctn').load(baseUrl + "Account/ChangeEmail");
+    $("#chart_ctn").hide();
+    $(".test_menu").hide();
+    $("#profile_form_ctn").show();
+    $('#profile_form_ctn').load(baseUrl + "Account/ChangeEmail");
 })
-/*$("#chart_btn").click(function () {
-    $('#profile_ctn').load(baseUrl + "Account/ProfileChart");
-})*/
+
+$("#test_btn").click(function () {
+    $(".test_menu").show();
+    $("#chart_ctn").show();
+    $("#profile_form_ctn").hide();
+
+});
+
 $('#chart_btn').click(function () {
-
-    //Placeholder for input parameters
+    $('#chart_btn').css("border", "none");
+    $(".total_chart_ctg_btn").css("border", "none");
+    $(".chart_ctg_btn").css("border", "none");
+    $(this).css("border-bottom", "2px solid #184D68");
+    if ($(window).width() < 750) {
+        $(".test_menu").hide();
+    }
     var data = {};
-
     //Get chart data
     $.ajax({
         url: baseUrl + 'Account/ProfileChart',
@@ -29,7 +65,6 @@ $('#chart_btn').click(function () {
         data: JSON.stringify(data)
     }).done(function (response) {
         //Populate chart data and show the modal
-        console.log(response);
         PopulateData(response);
         $('#chart_ctn').modal('show');
 
@@ -38,7 +73,6 @@ $('#chart_btn').click(function () {
     });
 });
 function PopulateData(data) {
-    console.log(data);
     var ctx = document.getElementById("myChart");
     if (window.myChart instanceof Chart) {
         window.myChart.destroy();
@@ -47,22 +81,32 @@ function PopulateData(data) {
         type: 'pie',
         data: data,
         options: {
-            responsive: false,
+            title: {
+                display: true,
+                text: 'Rezultatele totale'
+            },
             legend: {
                 display: true,
-                position: 'right',
+                position: 'bottom',
                 labels: {
                     fontSize:15,
                 }
             },
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 };
 $(".chart_ctg_btn").click(function () {
-    //Placeholder for input parameters
+    $('#chart_btn').css("border", "none");
+    $(".total_chart_ctg_btn").css("border", "none");
+    $(".chart_ctg_btn").css("border", "none");
+    $(this).css("border-bottom", "2px solid #184D68");
+    if ($(window).width() < 750) {
+        $(".test_menu").hide();
+    }
     var data = {};
     var category = $(this).attr('id');
-    console.log(category);
     $.ajax({
         url: baseUrl + 'Account/ProfileChartCategory',
         type: 'GET',
@@ -70,7 +114,6 @@ $(".chart_ctg_btn").click(function () {
         contentType: 'application/json; charset=utf-8',
         data: { categoryId: category},
     }).done(function (response) {
-        console.log(response);
         PopulateDataLineChart(response);
 
     }).fail(function (error) {
@@ -79,7 +122,6 @@ $(".chart_ctg_btn").click(function () {
 });
 
 function PopulateDataLineChart(data) {
-    console.log(data);
     var ctx = document.getElementById("myChart");
     if (window.myChart instanceof Chart) {
         window.myChart.destroy();
@@ -87,17 +129,28 @@ function PopulateDataLineChart(data) {
      myChart = new Chart(ctx, {
         type: 'line',
         data: data,
-        options: {
-
+         options: {
+             title: {
+                 display: true,
+                 text: 'Evolutia liniara a progresului'
+             },
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 
 }
 $(".total_chart_ctg_btn").click(function () {
-    //Placeholder for input parameters
+    $('#chart_btn').css("border", "none");
+    $(".chart_ctg_btn").css("border", "none");
+    $(".total_chart_ctg_btn").css("border", "none");
+    $(this).css("border-bottom", "2px solid #184D68");
+    var windowWidth = $(window).width();
+    if ($(window).width() < 750) {
+        $(".test_menu").hide();
+    }
     var data = {};
     var category = $(this).attr('id');
-    console.log(category);
     $.ajax({
         url: baseUrl + 'Account/BarChartCategory',
         type: 'GET',
@@ -105,15 +158,12 @@ $(".total_chart_ctg_btn").click(function () {
         contentType: 'application/json; charset=utf-8',
         data: { categoryId: category },
     }).done(function (response) {
-        console.log(response);
         PopulateDataBarChart(response);
 
     }).fail(function (error) {
-        console.log(error);
     });
 });
 function PopulateDataBarChart(data) {
-    console.log(data);
     var ctx = document.getElementById("myChart");
     if (window.myChart instanceof Chart) {
         window.myChart.destroy();
@@ -122,13 +172,25 @@ function PopulateDataBarChart(data) {
         type: 'bar',
         data: data,
         options: {
+            title: {
+                display: true,
+                text: 'Rezultat totale pentru aceasta categorie'
+            },
             scales: {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
                     }
                 }]
-            }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 }

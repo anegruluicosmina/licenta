@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 namespace licenta.ViewModel
 {
+    public class PieChartData
+    {
+        public string[] labels { get; set; }
+        public BarChartDataSet[] datasets { get; set; }
+    }
     public class BarChartData
     {
         public string[] labels { get; set; }
@@ -21,7 +26,7 @@ namespace licenta.ViewModel
     }
     public class LineChartData
     {
-        public DateTime[] labels { get; set; }
+        public string[] labels { get; set; }
         public LineChartDataSet[] datasets { get; set; }
     } 
     public class LineChartDataSet

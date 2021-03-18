@@ -5,7 +5,7 @@
         <div class="container_questions">
             <div class="brand_ctn">
                 <ul>
-                    <li class="item" id="logo_img">
+                    <li class="item" id="logo_img" style="display:none">
                         <img src="~/Images/car.jpg" class="logo_img" />
                     </li>
                     <li class="item">
@@ -13,44 +13,16 @@
                     </li>
                 </ul>
             </div>
-            <div class="navigation_ctn">
-                <ul>
-                    <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Despre noi</a>
-                    </li>
-                    <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Instructori</a>
-                    </li>
-                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListRoles">Administreaza rolurile</a>
-                        </li>
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Vezi utilizatori</a>
-                        </li>
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
-                        </li>
-                    }
-                    else if(signInManager.IsSignedIn(User))
-                    {
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
-                        </li>
-                    }
-
-                </ul>
-            </div>
             <div class="profile_ctn">
+                <button onclick="show_menu()" id="show_menu_btn">Meniu</button>
                 <ul>
                     @if (signInManager.IsSignedIn(User))
                     {
                         <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Log out</a>
+                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Profile" id="profile_btn">Profil</a>
                         </li>
                         <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Profile">Profil</a>
+                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Log out</a>
                         </li>
                     }
                     else
@@ -64,7 +36,34 @@
                     }
                 </ul>
             </div>
-
+            <div class="navigation_ctn">
+                <ul id="menu_list">
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Despre noi</a>
+                    </li>
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Instructori</a>
+                    </li>
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListRoles">Roluri</a>
+                        </li>
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Utilizatori</a>
+                        </li>
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
+                        </li>
+                    }
+                    else if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="item">
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </nav>
 </header>

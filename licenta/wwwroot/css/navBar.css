@@ -13,36 +13,73 @@ ul {
     flex-direction: column;
     justify-content: space-between;
     background-color: #184D68;
+    padding: 5px 0px;
 }
 
 .brand_ctn, .navigation_ctn, .profile_ctn {
     display: flex;
-    padding: 5px;
+}
+#menu_list {
+    display: none;
+}
+#menu_list  ul{
+    position: static;
+}
+#show_menu_btn {
+    border: none;
+    background: #184D68;
+    font-size: 14px;
+    color: #edf4f5;
+    font-family: 'Montserrat', sans-serif;
+    width: 50%;
+    outline: none;
 }
 
 .brand_ctn ul, .navigation_ctn ul, .profile_ctn ul {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     list-style: none;
     padding: 0;
     height: 100%;
     width: 100%;
     justify-content: space-around;
 }
+.profile_ctn ul{
+    flex-direction: row;
+}
 .brand_ctn ul {
-    
+    padding: 3px 0px;
 }
-.brand_ctn ul li {
-    margin: 0px 20px 0px 0px;
+.profile_ctn ul li,.brand_ctn ul li{
+    text-align: center;
+    padding: 2px;
 }
-
+.navigation_ctn ul li {
+    text-align: left;
+    padding: 4px;
+}
 .brand_ctn ul li a, .navigation_ctn ul li a, .profile_ctn ul li a {
     text-decoration: none;
     color: #edf4f5;
+
 }
 @media only screen and (min-width: 900px) {
-    #logo_img{
-        display:block;
+    header{
+        height: 60px;
+    }
+    .navbar_container, .container_questions {
+        height: 100%;
+        padding: 0px;
+    }
+    #show_menu_btn{
+        display:none;
+    }
+    #menu_list {
+        display: flex;
+    }
+
+    #logo_img {
+        display: block;
     }
     .logo_img {
         height: 70px;
@@ -53,6 +90,10 @@ ul {
     .brand_ctn ul, .navigation_ctn ul, .profile_ctn ul {
         flex-direction: row;
         align-items: center;
+    }
+    .navigation_ctn ul li{
+        width: 100%;
+        text-align: center;
     }
     .brand_ctn ul{
         justify-content: space-evenly;

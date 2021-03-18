@@ -1,6 +1,6 @@
 ﻿@model licenta.ViewModel.EditUserViewModel
 
-<div>
+<div id="question_form_ctn">
     @using (Html.BeginForm("EditUser", "Account"))
     {
         @Html.HiddenFor(m => m.Id)
@@ -13,30 +13,33 @@
         <div class="form_group">
             @Html.LabelFor(m => m.LastName)
             @Html.TextBoxFor(m => m.LastName)
-            @Html.ValidationMessageFor(m => m.LastName)
+            @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "validation_mesg" })
         </div>
 
         <div class="form_group">
             @Html.LabelFor(m => m.Birthday)
             <input type="datetime" asp-for="@Model.Birthday" asp-format="{0:dd/MM/yyyy}" readonly />
-            @Html.ValidationMessageFor(m => m.Birthday)
+            @Html.ValidationMessageFor(m => m.Birthday, null, new { @class = "validation_mesg" })
         </div>
 
         <div class="form_group">
             @Html.LabelFor(m => m.PhoneNumber)
             @Html.TextBoxFor(m => m.PhoneNumber)
-            @Html.ValidationMessageFor(m => m.PhoneNumber)
+            @Html.ValidationMessageFor(m => m.PhoneNumber, null, new { @class = "validation_mesg" })
         </div>
         @if (User.IsInRole("Instructor"))
         {
             <div class="form_group">
                 @Html.LabelFor(m => m.Description)
                 @Html.TextAreaFor(m => m.Description)
-                @Html.ValidationMessageFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description, null, new { @class = "validation_mesg" })
             </div>
         }
 
 
-        <input type="submit" value="Salveaza modificarile" />
+        <input type="submit" class="save_button" value="Salveaza modificarile" />
     }
 </div>
+@section Style{
+    <link href="~/css/questionForm.css" rel="stylesheet" />
+}

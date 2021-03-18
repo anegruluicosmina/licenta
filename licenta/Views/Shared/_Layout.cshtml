@@ -14,6 +14,7 @@
     @*font*@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,300&display=swap" rel="stylesheet">
+
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/navBar.css" />
@@ -21,6 +22,8 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/stie.min.css" />
     </environment>
+    @*nav bar js*@
+    <script src="~/js/nav_bar.js"></script>
     @RenderSection("Style", required: false)
 
 </head>

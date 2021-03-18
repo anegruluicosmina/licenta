@@ -5,6 +5,9 @@
     margin: 10px;
     font-family: 'Montserrat', sans-serif;
 }
+#question_form_ctn form{
+    width: 300px;
+}
 .title {
     text-align: center;
     font-size: 18px;

@@ -45,10 +45,29 @@
 	left: 0;
 	top: 0;
 }
-#myChart {
-	display: block;
-	height: 300px !important;
-	width: 635px !important;
+#myChart{
+	min-height:160px;
+	min-width: 80px;
+/*	min-width: 100px;
+	max-height: 150px;*/
 	margin: 0 auto;
-	padding: 20px;
+}
+@media only screen and (min-width: 550px) {
+	#myChart {
+		display: block;
+		max-height: 200px;
+		max-width: 350px;
+		margin: 0 auto;
+		padding: 20px;
+	}
+}
+
+@media only screen and (min-width: 900px) {
+	#myChart {
+		display: block;
+		max-height: 300px !important;
+		max-width: 500px;
+		margin: 0 auto;
+		padding: 20px;
+	}
 }

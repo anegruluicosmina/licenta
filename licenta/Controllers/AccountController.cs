@@ -393,16 +393,16 @@ namespace licenta.Controllers
             BarChartDataSet dataset = new BarChartDataSet()
             {
                 data = new int[] { nrUserPassedTests, nrUserTests-nrUserPassedTests},
-                backgroundColor = new string[] {"#7195A3",
+                backgroundColor = new string[] {"#8FB258",
                                                 "#E14B3B"
                 },
-                borderColor = new string[] {"#184D68",
+                borderColor = new string[] {"#41924B",
                                             "#BF381A"
                 },
                 borderWidth = 1
             };
 
-            BarChartData data = new BarChartData()
+            PieChartData data = new PieChartData()
             {
                 labels = new string[] { "Numarul de teste trecute", "Numarul de teste picate"},
                 datasets = new BarChartDataSet[] { dataset }
@@ -416,12 +416,16 @@ namespace licenta.Controllers
             var user = await _userManager.GetUserAsync(User);
             var tests = _context.Tests.Where(t => t.UserId == user.Id).Where(t => t.CategoryId == categoryId).ToList();
             List<DateTime> dates = tests.Select(t => t.Date.Date).Distinct().ToList();
-            DateTime[] objects = dates.ConvertAll<DateTime>(item => (DateTime)item).ToArray();
 
+            List<string> dateList = new List<string>();
+            foreach(var date in dates)
+            {
+                dateList.Add(date.Date.ToString("d/M/yyyy"));
+            }
+            string[] labels = dateList.ToArray();
 
             List<int> passedExamensList = new List<int>();
             List<int> examensList = new List<int>();
-            int[] allDateExamenList;
 
             LineChartDataSet lineChartDataSet = new LineChartDataSet();
 
@@ -437,8 +441,8 @@ namespace licenta.Controllers
             {
                 data = passedExamens,
                 label = "Examene trecute",
-                borderColor = "#e8c3b9",
-                backgroundColor = "#7195A3",
+                borderColor = "#41924B",
+                backgroundColor = "#41924B",
                 fill = false
 
             };
@@ -446,15 +450,15 @@ namespace licenta.Controllers
             {
                 data = examens,
                 label = "Numarul total de examene",                
-                borderColor = "#3cba9f", 
-                backgroundColor= "#E14B3B",
+                borderColor = "#7195A3",
+                backgroundColor = "#7195A3",
                 fill = false
 
             };
             /* = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();*/
             LineChartData dataset = new LineChartData()
             {
-                labels = objects,
+                labels = labels,
                 datasets = new LineChartDataSet[] { examensData , passedExamensData }
 
             };
@@ -471,12 +475,12 @@ namespace licenta.Controllers
             {
                 data = new int[] { nrUserTests ,nrUserPassedTests },
                 backgroundColor = new string[] {"#7195A3",
-                                                "#E14B3B"
+                                                "#8FB258"
                 },
-                borderColor = new string[] {"#184D68",
-                                            "#BF381A"
+                borderColor = new string[] {"#7195A3",
+                                                "#8FB258"
                 },
-                borderWidth = 1
+                borderWidth = 2
             };
 
             BarChartData data = new BarChartData()

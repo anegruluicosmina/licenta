@@ -1,0 +1,55 @@
+﻿.page_title {
+    text-align: center;
+    padding: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+.page_ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.page_title {
+    padding: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+.page_ctn a {
+    padding: 10px;
+    margin: 10px;
+    text-decoration: none;
+    color: #3580a5;
+}
+.users_ctn{
+    display: flex;
+    flex-direction: column;
+}
+.user_data_ctn {
+    border: 1px solid #184D68;
+    padding: 11px 32px;
+}
+.user_info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+    font-weight: bolder;
+}
+.user_contact {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+.user_contact label{
+    padding: 5px 0px;
+}
+.user_data_ctn form button {
+    padding: 5px;
+    width: 100%;
+    border: none;
+    background: #184D68;
+    font-size: 16px;
+    line-height: 20px;
+    color: #EAEEEA;
+    border-radius: 4px;
+}

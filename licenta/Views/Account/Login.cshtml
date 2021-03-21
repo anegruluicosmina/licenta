@@ -4,27 +4,31 @@
     ViewBag.Title = "Autentificare";
 }
 
-<h1> Autentificare</h1>
+<p class="page_title"> Autentificare</p>
 
-@using (Html.BeginForm("Login", "Account"))
-{
-    @Html.ValidationSummary()
-    <div class="form_group">
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username)
-        @Html.ValidationMessageFor(m => m.Username)
-    </div>
-    <div class="form_group">
-        @Html.LabelFor(m => m.Password)
-        @Html.TextBoxFor(m => m.Password)
-        @Html.ValidationMessageFor(m => m.Password)
-    </div>
+<div id="form_ctn">
+    @using (Html.BeginForm("Login", "Account"))
+    {
+        @Html.ValidationSummary()
+        <div class="form_group">
+            @Html.LabelFor(m => m.Username)
+            @Html.TextBoxFor(m => m.Username)
+            @Html.ValidationMessageFor(m => m.Username, null, new { @class = "validation_mesg" })
+        </div>
+        <div class="form_group">
+            @Html.LabelFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "validation_mesg" })
+        </div>
 
-    <div class="form_group">
-        @Html.CheckBoxFor(m => m.RememberMe)
-        @Html.LabelFor(m => m.RememberMe)
-        @Html.ValidationMessageFor(m => m.Username)
-    </div>
-    <input type="submit" value="Autentificare" /> 
+        <div class="form_group form_check">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe)
+        </div>
+        <input type="submit" class="save_button" value="Autentificare" />
+    }
+    @Html.ActionLink("Parola uitata?", "ForgotPassword", "Account")
+</div>
+@section Style{
+    <link href="~/css/profile_forms.css" rel="stylesheet" />
 }
-@Html.ActionLink("Parola uitata?", "ForgotPassword","Account")

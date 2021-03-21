@@ -19,11 +19,14 @@ ul {
 .brand_ctn, .navigation_ctn, .profile_ctn {
     display: flex;
 }
-#menu_list {
+#navigation_ctn{
     display: none;
 }
-#menu_list  ul{
-    position: static;
+#menu_list {
+    position: absolute;
+    background: #184D68;
+    height: fit-content;
+    padding: 10px 0;
 }
 #show_menu_btn {
     border: none;
@@ -34,7 +37,15 @@ ul {
     width: 50%;
     outline: none;
 }
-
+#show_profile_menu_btn {
+    border: none;
+    background: #184D68;
+    font-size: 14px;
+    color: #edf4f5;
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    outline: none;
+}
 .brand_ctn ul, .navigation_ctn ul, .profile_ctn ul {
     display: flex;
     flex-direction: column;
@@ -63,6 +74,21 @@ ul {
     color: #edf4f5;
 
 }
+#profile_menu_nv {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: #184D68;
+}
+#profile_menu_nv ul {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+}
+#profile_menu_nv ul li{
+    text-align: start;
+}
 @media only screen and (min-width: 900px) {
     header{
         height: 60px;
@@ -74,10 +100,18 @@ ul {
     #show_menu_btn{
         display:none;
     }
+    #show_profile_menu_btn{
+        font-size: 16px;
+    }
     #menu_list {
         display: flex;
+        height: 60px;
+        padding: 0px;
+        width: inherit;
     }
-
+    #navigation_ctn {
+        display: flex;
+    }
     #logo_img {
         display: block;
     }
@@ -109,10 +143,34 @@ ul {
         margin: 0 4px;
     }
     .navigation_ctn {
-        width: 58%;
+        width: 40%;
     }
     .container_questions {
         flex-direction: row;
         justify-content: space-between;
+    }
+    #profile_menu_nv {
+        display: flex;
+        position: fixed;
+        flex-direction: column;
+        width: fit-content;
+        left: auto;
+        right: auto;
+        border-radius: 0px 0px 20px 20px;
+    }
+    #profile_menu_nv ul {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        margin: 7px;
+        padding: 10px 2px;
+        border-radius: 17px 0px;
+    }
+    #profile_menu_nv ul li{
+        text-align: start;
+    }
+    #profile_menu_nv ul li a{
+        text-align: start;
+        font-size: 14px;
     }
 }

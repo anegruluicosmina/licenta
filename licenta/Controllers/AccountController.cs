@@ -130,17 +130,26 @@ namespace licenta.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Profile()
+        public IActionResult Profile()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var usercategories =  _context.Tests.Where(c => c.UserId == user.Id).Select(c =>new { c.CategoryId, c.Category.Name}).Distinct().ToList();
-            var dictionary = new Dictionary<int, string>();
-            foreach(var item in usercategories)
-            {
-                dictionary.Add(item.CategoryId, item.Name);
-            }
-            ViewBag.UserCategories = dictionary;
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult ProfileMenu(string submit_btn)
+        {
+            switch (submit_btn) {
+                case "Schimba parola":
+                    return RedirectToAction("ChangePassword");
+                case "Editeaza profilul":
+                    return RedirectToAction("EditUser");
+                case "Schimba email":
+                    return RedirectToAction("ChangeEmail");
+                case "Testele mele":
+                    return RedirectToAction("TestsResults");
+                default:
+                    return RedirectToAction("Profile");
+            }
         }
 
         [HttpGet]
@@ -167,7 +176,7 @@ namespace licenta.Controllers
                 Description = user.Description
             };
 
-            return PartialView(model);
+            return View(model);
         }
         [HttpPost]
         [Authorize]
@@ -290,11 +299,43 @@ namespace licenta.Controllers
             }
          return View(viewModel);
         }
+        [HttpGet]
+        public async Task<IActionResult> TestsResults()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userTests = _context.Tests.Where(c => c.UserId == user.Id).Select(c => new { c.CategoryId, c.Category.Name, c.Date.Date }).ToList();
+            var usercategories = userTests.Select(t => new { t.CategoryId, t.Name }).Distinct().ToList();
+            var viewModel = new List<ProfileCategoriesViewModel>();
+            foreach (var category in usercategories)
+            {
+                var count = userTests.Where(t => t.CategoryId == category.CategoryId).Select(t => t.Date.Date).Distinct().Count();
+                if (count > 1)
+                {
+                    viewModel.Add(new ProfileCategoriesViewModel
+                    {
+                        CategoryId = category.CategoryId,
+                        CategoryName = category.Name,
+                        IsLinear = true
+                    });
+                }
+                else
+                {
+                    viewModel.Add(new ProfileCategoriesViewModel
+                    {
+                        CategoryId = category.CategoryId,
+                        CategoryName = category.Name,
+                        IsLinear = false
+                    });
+                }
+
+            }
+            return View(viewModel);
+        }
 
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            return PartialView();
+            return View();
         }
 
         [HttpPost]
@@ -314,19 +355,19 @@ namespace licenta.Controllers
                     {
                         ModelState.AddModelError("", error.Description);
                     }
-                    return PartialView();
+                    return View();
                 }
 
                 await _signInManager.RefreshSignInAsync(user);
                 return Content("ChangePwdConfirmation");
             }
-            return PartialView(viewModel);
+            return View(viewModel);
         }
 
         [HttpGet]
         public IActionResult ChangeEmail()
         {
-            return PartialView();
+            return View();
         }
 
         [HttpPost]
@@ -358,7 +399,7 @@ namespace licenta.Controllers
                 }
 
             }
-            return PartialView(viewModel);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> ConfirmChangeEmail( string userId, string token)
@@ -431,8 +472,8 @@ namespace licenta.Controllers
 
             foreach(var date in dates)
             {
-                passedExamensList.Add(tests.Where(c => c.Date.Date == date).Where(c => c.Passed == true).Count());
-                examensList.Add(tests.Where(c => c.Date.Date == date).Count());
+                passedExamensList.Add(tests.Where(c => c.Date.Date <= date).Where(c => c.Passed == true).Count());
+                examensList.Add(tests.Where(c => c.Date.Date <= date).Count());
 
             }
             int[] passedExamens = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();

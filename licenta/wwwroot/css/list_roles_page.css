@@ -1,0 +1,36 @@
+﻿.page_title {
+    text-align: center;
+    padding: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+.roles_ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 23px 0;
+}
+.roles_ctn a{
+    text-decoration: none;
+    color: #3580a5;
+}
+.role_ctn {
+    margin: 15px;
+    border: 1px solid black;
+    padding: 5px;
+    width: 265px;
+}
+.role_ctn div{
+    display: flex;
+    flex-direction: column;
+}
+.role_name {
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    padding: 3px;
+}
+.role_id {
+    padding: 2px;
+    font-size: 12px;
+}

@@ -4,7 +4,7 @@
     var roleId = ViewBag.RoleId;
     var roleName = ViewBag.RoleName;
 }
-<p>@roleName</p>
+<p class="page_title">@roleName</p>
 @using (Html.BeginForm("EditUserRole", "Administration", new { roleId = ViewBag.RoleId}, FormMethod.Post, null, null))
 {
     @for(int i=0; i<Model.Count; i++)

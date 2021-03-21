@@ -5,41 +5,44 @@
     var roleId = ViewBag.RoleId;
     var roleName = ViewBag.RoleName;
 }
-<p>@roleName</p>
-@if (roleId != null)
-{
-    @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId })
-}
-else
-{
-    @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
-}
+<div class="page_ctn">
+    <p class="page_title">Lista de utiliztori cu rolul de @roleName</p>
+    @if (roleId != null)
+    {
+        @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
+    }
+    else
+    {
+        @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
+    }
 
-@if (Model.Any())
-{
-
-
-    <div>
-        @foreach (var user in Model)
-        {
-            <div>
-                <label>@user.Id</label>
-                <label>@user.UserName</label>
-                <label>@user.FirstName @user.LastName</label>
-                <label>@user.Email</label>
-                <label>@user.PhoneNumber</label>
-                <label>@user.Birthday.ToShortDateString()</label>
-            </div>
-            <div>
-                @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
-                {
-                    <button type="submit">Sterge utilizator</button>
-                }
-            </div>
-        }
-    </div>
-}
-else
-{
-    <p>Niciun utilizator momentan</p>
+    @if (Model.Any())
+    {
+        <div class="users_ctn">
+            @foreach (var user in Model)
+            {
+                <div class="user_data_ctn">
+                    <div class="user_info">
+                        <label>@user.FirstName @user.LastName</label>
+                        <label>@user.Birthday.ToShortDateString()</label>
+                    </div>
+                    <div class="user_contact">
+                        <label>@user.UserName</label>
+                        <label>@user.PhoneNumber</label>
+                    </div>
+                    @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
+                    {
+                        <button type="submit">Sterge utilizator</button>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Niciun utilizator momentan</p>
+    }
+</div>
+@section Style{
+    <link href="~/css/user_in_role_page.css" rel="stylesheet" />
 }

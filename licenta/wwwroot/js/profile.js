@@ -21,40 +21,12 @@ var urlEditInfo = '@Url.Action("EditUser", "Account")';
 var myChart;
 var baseUrl = "https://localhost:44368/";
 
-$('#reset_pwd_btn').click(function () {
-    $("#chart_ctn").hide();
-    $(".test_menu").hide();
-    $("#profile_form_ctn").show();
-    $('#profile_form_ctn').load(baseUrl + "Account/ChangePassword");
-})
-$("#edit_info_btn").click(function () {
-    $("#chart_ctn").hide();
-    $(".test_menu").hide();
-    $("#profile_form_ctn").show();
-    $('#profile_form_ctn').load(baseUrl + "Account/EditUser");
-})
-$("#edit_email_btn").click(function () {
-    $("#chart_ctn").hide();
-    $(".test_menu").hide();
-    $("#profile_form_ctn").show();
-    $('#profile_form_ctn').load(baseUrl + "Account/ChangeEmail");
-})
-
-$("#test_btn").click(function () {
-    $(".test_menu").show();
-    $("#chart_ctn").show();
-    $("#profile_form_ctn").hide();
-
-});
 
 $('#chart_btn').click(function () {
     $('#chart_btn').css("border", "none");
     $(".total_chart_ctg_btn").css("border", "none");
     $(".chart_ctg_btn").css("border", "none");
     $(this).css("border-bottom", "2px solid #184D68");
-    if ($(window).width() < 750) {
-        $(".test_menu").hide();
-    }
     var data = {};
     //Get chart data
     $.ajax({
@@ -102,9 +74,6 @@ $(".chart_ctg_btn").click(function () {
     $(".total_chart_ctg_btn").css("border", "none");
     $(".chart_ctg_btn").css("border", "none");
     $(this).css("border-bottom", "2px solid #184D68");
-    if ($(window).width() < 750) {
-        $(".test_menu").hide();
-    }
     var data = {};
     var category = $(this).attr('id');
     $.ajax({
@@ -126,10 +95,18 @@ function PopulateDataLineChart(data) {
     if (window.myChart instanceof Chart) {
         window.myChart.destroy();
     }
+    
      myChart = new Chart(ctx, {
         type: 'line',
         data: data,
          options: {
+             scales: {
+                 yAxes: [{
+                     ticks: {
+                         stepSize: 1
+                     }
+                 }]
+             },
              title: {
                  display: true,
                  text: 'Evolutia liniara a progresului'
@@ -138,17 +115,12 @@ function PopulateDataLineChart(data) {
             maintainAspectRatio: false,
         }
     });
-
 }
 $(".total_chart_ctg_btn").click(function () {
     $('#chart_btn').css("border", "none");
     $(".chart_ctg_btn").css("border", "none");
     $(".total_chart_ctg_btn").css("border", "none");
     $(this).css("border-bottom", "2px solid #184D68");
-    var windowWidth = $(window).width();
-    if ($(window).width() < 750) {
-        $(".test_menu").hide();
-    }
     var data = {};
     var category = $(this).attr('id');
     $.ajax({
@@ -179,7 +151,8 @@ function PopulateDataBarChart(data) {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        stepSize: 1
                     }
                 }]
             },

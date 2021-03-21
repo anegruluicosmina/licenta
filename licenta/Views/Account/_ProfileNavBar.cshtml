@@ -1,0 +1,16 @@
+﻿@inject SignInManager<ApplicationUser> signInManager;
+<nav class="profile_menu_nv">
+    <ul>
+        @if (!User.IsInRole("Admin") && signInManager.IsSignedIn(User))
+        {
+            <li>
+                <button type="submit" id="test_btn">Testele mele</button>
+            </li>
+        }
+        @Html.ActionLink("ChangePassword", "ChangePassword", "Account")
+        <li><button type="submit" id="reset_pwd_btn">Reseteaza parola</button></li>
+        <li><button type="submit" id="edit_info_btn">Editeaza profilul</button></li>
+        <li><button type="submit" id="edit_email_btn">Editeaza email</button></li>
+    </ul>
+
+</nav>

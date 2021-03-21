@@ -1,6 +1,8 @@
 ﻿@model licenta.ViewModel.EditUserViewModel
-
-<div id="question_form_ctn">
+<p class="page_title">
+    Editeaza informatiile personale
+</p>
+<div id="form_ctn">
     @using (Html.BeginForm("EditUser", "Account"))
     {
         @Html.HiddenFor(m => m.Id)
@@ -41,5 +43,5 @@
     }
 </div>
 @section Style{
-    <link href="~/css/questionForm.css" rel="stylesheet" />
+    <link href="~/css/profile_forms.css" rel="stylesheet" />
 }

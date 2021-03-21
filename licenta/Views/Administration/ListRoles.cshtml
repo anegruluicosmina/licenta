@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<IdentityRole>
 
-@{ 
+@{
     ViewBag.Title = "All roles";
 }
-<h1>All roles </h1>
+<p class="page_title">All roles </p>
 
 @if (!Model.Any())
 {
@@ -13,19 +13,21 @@
 }
 else
 {
-    foreach(var role in Model)
-    {
-        <div>
-            <div>
-                @Html.Label(role.Id)
-                @Html.Label(role.Name)
-            </div>
-            <div>
+    <div class="roles_ctn">
+        @foreach (var role in Model)
+        {
+            <div class="role_ctn">
+                <div>
+                    @Html.Label(role.Name, null, new { @class = "role_name" })
+                    @Html.Label(role.Id, null, new { @class = "role_id" })
+                </div>
                 @Html.ActionLink("Lista utilizatori", "ListUsersInRole", "Administration", new { roleId = role.Id }, null)
             </div>
-        </div>
-    }
+        }
+        @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
+
+    </div>
 }
-<div>
-    @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
-</div>
+@section Style{
+    <link href="~/css/list_roles_page.css" type="text/css" rel="stylesheet" />
+}

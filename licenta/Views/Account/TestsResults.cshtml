@@ -1,0 +1,29 @@
+﻿@model IEnumerable<licenta.ViewModel.ProfileCategoriesViewModel>
+<div class="test_ctn">
+    <div class="test_menu">
+        <ul>
+            <li><button type="submit" id="chart_btn">Rezultate pe toata perioada</button></li>
+            @foreach (var category in Model)
+            {
+                <li><button type="submit" class="total_chart_ctg_btn" id="@category.CategoryId">Categoria @category.CategoryName total</button></li>
+                if (category.IsLinear == true)
+                {
+                    <li><button type="submit" class="chart_ctg_btn" id="@category.CategoryId">Categoria @category.CategoryName periodic</button></li>
+                }
+            }
+        </ul>
+    </div>
+    <div id="chart_ctn">
+        <canvas id="myChart" style="width: 512px; height: 256px"></canvas>
+    </div>
+    <div id="profile_form_ctn">
+    </div>
+</div>
+@section Scripts{
+    <link href="~/lib/Chart.js/Chart.css" rel="stylesheet" />
+    <script type="module" src="~/lib/Chart.js/Chart.min.js"></script>
+    <script src="~/js/profile.js"></script>
+}
+@section Style{
+    <link href="@Url.Content("~/css/profile_menu.css")" rel="stylesheet" type="text/css" />
+}

@@ -1,16 +1,18 @@
 ﻿@model licenta.ViewModel.ChangeEmailViewModel
-
-<div id="question_form_ctn">
+<p class="page_title">
+    Editeaza adresa de email
+</p>
+<div id="form_ctn">
     @using (Html.BeginForm())
     {
         <div class="form_group">
             @Html.LabelFor(m => m.Email)
             @Html.TextBoxFor(m => m.Email)
-            @Html.ValidationMessageFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "validation_mesg" })
         </div>
         <input type="submit" class="save_button" value="Salveaza" />
     }
 </div>
 @section Style{
-    <link href="~/css/questionForm.css" rel="stylesheet" />
+    <link href="~/css/profile_forms.css" rel="stylesheet" />
 }

@@ -28,6 +28,9 @@ namespace licenta.Models
         [StringLength(500, ErrorMessage = "Introduceti o valoarea de lungime mai scurta.")]
         public string Description { get; set; }
 
+        [Required]
+        [Display(Name ="Varsta")]
+        public int Age { get; set; }
         public List<Test> Tests { get; set; }
     }
 }

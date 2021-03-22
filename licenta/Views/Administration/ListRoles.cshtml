@@ -3,31 +3,33 @@
 @{
     ViewBag.Title = "All roles";
 }
-<p class="page_title">All roles </p>
+<div class="page_ctn">
+    <p class="page_title">Lista rolurilor</p>
 
-@if (!Model.Any())
-{
-    <div>
-        No roles created yet
-    </div>
-}
-else
-{
-    <div class="roles_ctn">
-        @foreach (var role in Model)
-        {
-            <div class="role_ctn">
-                <div>
-                    @Html.Label(role.Name, null, new { @class = "role_name" })
-                    @Html.Label(role.Id, null, new { @class = "role_id" })
+    @if (!Model.Any())
+    {
+        <div>
+            Momentan nu exista niciun rol
+        </div>
+    }
+    else
+    {
+        <div class="roles_ctn">
+            @foreach (var role in Model)
+            {
+                <div class="role_ctn">
+                    <div>
+                        @Html.Label(role.Name, null, new { @class = "role_name" })
+                        @Html.Label(role.Id, null, new { @class = "role_id" })
+                    </div>
+                    @Html.ActionLink("Lista utilizatori", "ListUsersInRole", "Administration", new { roleId = role.Id }, null)
                 </div>
-                @Html.ActionLink("Lista utilizatori", "ListUsersInRole", "Administration", new { roleId = role.Id }, null)
-            </div>
-        }
-        @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
+            }
 
-    </div>
-}
+        </div>
+    }
+    @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
+</div>
 @section Style{
     <link href="~/css/list_roles_page.css" type="text/css" rel="stylesheet" />
 }

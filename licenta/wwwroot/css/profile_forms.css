@@ -4,6 +4,13 @@
     font-weight: 700;
     letter-spacing: 1.5px;
 }
+.page_ctn {
+    text-align: center;
+}
+.page_ctn a{
+    text-decoration: none;
+    color: #3580a5;
+}
 #form_ctn {
     display: flex;
     flex-direction: column;
@@ -69,6 +76,7 @@
     line-height: 20px;
     color: #EAEEEA;
     border-radius: 4px;
+    outline: none;
 }
 
 .field-validation-error {
@@ -77,6 +85,15 @@
 }
 .form_check {
     display: contents;
+}
+.check_form {
+    display: flex;
+    flex-direction: column;
+    margin: 23px 27px;
+    text-align: start;
+}
+.form_check {
+    display: table-row;
 }
 @media only screen and (min-width: 600px) {
     #form_ctn {
@@ -111,5 +128,9 @@
         padding: 9px;
         font-size: 18px;
         line-height: 22px;
+    }
+    .check_form {
+        width: 400px;
+        margin: 30px auto;
     }
 }

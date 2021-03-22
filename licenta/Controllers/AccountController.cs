@@ -46,6 +46,8 @@ namespace licenta.Controllers
         {
             if (ModelState.IsValid)
             {
+                TimeSpan date = DateTime.Now - registerViewModel.Birthday;
+                var age = DateTime.MinValue + date;
                 var user = new ApplicationUser
                 {
                     UserName = registerViewModel.Email,
@@ -54,12 +56,18 @@ namespace licenta.Controllers
                     LastName = registerViewModel.LastName,
                     PhoneNumber = registerViewModel.PhoneNumber,
                     Birthday = registerViewModel.Birthday,
+                    Age = age.Year
 
                 };
                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
                 if (result.Succeeded)
                 {
+                    var addRoleResult = await _userManager.AddToRoleAsync(user, "Cursant");
+                    if (!addRoleResult.Succeeded)
+                    {
+                        return Content("Sory there has been a probleme contact the page admin");
+                    }
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
                     var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);

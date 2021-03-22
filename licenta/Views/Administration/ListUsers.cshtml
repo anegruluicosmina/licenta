@@ -6,7 +6,14 @@
     var roleName = ViewBag.RoleName;
 }
 <div class="page_ctn">
-    <p class="page_title">Lista de utiliztori cu rolul de @roleName</p>
+    @if (roleName == null)
+    {
+        <p class="page_title">Lista de utiliztorilor</p>
+    }
+    else
+    {
+        <p class="page_title">Lista de utiliztori cu rolul de @roleName</p>
+    }
     @if (roleId != null)
     {
         @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
@@ -23,12 +30,12 @@
             {
                 <div class="user_data_ctn">
                     <div class="user_info">
-                        <label>@user.FirstName @user.LastName</label>
-                        <label>@user.Birthday.ToShortDateString()</label>
+                        <label>Nume: @user.FirstName @user.LastName</label>
+                        <label>Varsta @user.Age ani</label>
                     </div>
                     <div class="user_contact">
-                        <label>@user.UserName</label>
-                        <label>@user.PhoneNumber</label>
+                        <label>Email: @user.UserName</label>
+                        <label>Numar de telefon: @user.PhoneNumber</label>
                     </div>
                     @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
                     {

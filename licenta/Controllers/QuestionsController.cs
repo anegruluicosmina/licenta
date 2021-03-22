@@ -11,6 +11,7 @@ using licenta.Models;
 using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
 
 namespace licenta.Controllers
 {
@@ -61,16 +62,18 @@ namespace licenta.Controllers
                 Text = questionInDb.Text,
                 CategoryId = questionInDb.CategoryId,
                 Explanation = questionInDb.Explanation,
+                ImagePath = questionInDb.ImagePath,
                 Answers = await _context.Answers.Where(a => a.QuestionId == id).ToListAsync(),
                 Categories = await _context.Categories.ToListAsync()
             };
             return View(viewModel);
         }
 
-        [Authorize(Roles ="Admin, Instructor")]
+        /*[Authorize(Roles ="Admin, Instructor")]*/
         //save the new or updated question
         public async Task<IActionResult> Save(Question viewModel)
-        {
+        { 
+            var files = HttpContext.Request.Form.Files;
             if (!ModelState.IsValid)
             {
 
@@ -82,7 +85,17 @@ namespace licenta.Controllers
                         Answers = viewModel.Answers.ToList()
                     });
             }
-            
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(viewModel.Image.FileName);
+            string extension = System.IO.Path.GetExtension(viewModel.Image.FileName);
+            var date = DateTime.Now.ToString("yymmssfff");
+            fileName = fileName + date  + extension;
+            viewModel.ImagePath = "/Images/" + fileName;
+            fileName = System.IO.Path.Combine(Environment.CurrentDirectory +"/wwwroot/Images/" + fileName);
+            using (var fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                await viewModel.Image.CopyToAsync(fileStream);
+            }
+
             if (viewModel.Id == 0)
             {
                 await _context.Question.AddAsync(viewModel);
@@ -98,7 +111,7 @@ namespace licenta.Controllers
                     .SingleAsync(q => q.Id == viewModel.Id);
 
                 questionInDb.Text = viewModel.Text;
-                questionInDb.Category = viewModel.Category;
+                /*questionInDb.Category = viewModel.Category;*/
                 questionInDb.Answers = viewModel.Answers.Select(x => new Answer()
                 {
                     // variable mapping here 

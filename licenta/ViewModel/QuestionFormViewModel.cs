@@ -1,4 +1,5 @@
 ﻿using licenta.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,6 +31,11 @@ namespace licenta.ViewModel
         [Display(Name = "Explicație")]
         [Required(ErrorMessage = "Introduceti o explicație pentru intrebare")]
         public string Explanation { get; set; }
+
+        [Display(Name ="Imagine")]
+        [DataType(DataType.Upload)]
+        public string ImagePath { get; set; }
+        public IFormFile Image { get; set; }
 
         public bool Saved { get; set; }
 

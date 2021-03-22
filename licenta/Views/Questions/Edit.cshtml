@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @model licenta.ViewModel.QuestionFormViewModel
 @{
     ViewBag.Title = "New";
@@ -10,7 +8,7 @@
 
     <p class="title">@Model.Title</p>
     @*using = for close tag for form*@
-    @using (Html.BeginForm("Save", "Questions", null, FormMethod.Post, true, new { id = "question_form" }))
+    @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @*using div to render responsive forms*@
         <div class="form_group">
@@ -40,18 +38,20 @@
         <div class="form_group">
             @Html.LabelFor(m => m.Explanation)
             @*new is for the attributes*@
-            @Html.TextAreaFor(m => m.Explanation,  new { @class = "explanation_txt"})
+            @Html.TextAreaFor(m => m.Explanation, new { @class = "explanation_txt" })
             @Html.ValidationMessageFor(m => m.Explanation, null, new { @class = "validation_mesg" })
         </div>
         <div class="form_group">
-            @Html.LabelFor(m => m.CategoryId)
-            @*new is for the attributes*@
+            @Html.LabelFor(m => m.ImagePath)
+            @Html.TextBoxFor(m => m.Image, new { type = "file"})
+        </div>
 
+        <div class="form_group">
+            @Html.LabelFor(m => m.CategoryId)
             @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Alege o categorie", new { @class = "form_control", id = "select_category" })
             @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "validation_mesg" })
 
         </div>
-
         @Html.HiddenFor(m => m.Id)
         @Html.AntiForgeryToken()
 
@@ -60,20 +60,6 @@
 
 </div>
 
-@*@section Scripts{
-    <script>
-        var lenght = 0;
-        function nextIteration() {
-            var questionForm = document.getElementById("answercontainer");
-            var newLabel = document.createElement("INPUT");
-            newLabel.setAttribute("type", "text");
-            newLabel.setAttribute("name", "Answers_" + lenght + "__Text")
-            newLabel.setAttribute("id", lenght);
-            lenght++;
-            questionForm.appendChild(newLabel);
-        }
-    </script>
-}*@
 @section  Style{ 
     <link href="~/css/questionForm.css"  rel="stylesheet" type="text/css" />
 }

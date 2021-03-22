@@ -39,7 +39,7 @@
 
     <div class="form_group">
         @Html.LabelFor(m => m.Birthday)
-        @Html.TextBoxFor(m => m.Birthday)
+        <input asp-for="@Model.Birthday" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
         @Html.ValidationMessageFor(m => m.Birthday, null, new { @class = "validation_mesg" })
     </div>
 

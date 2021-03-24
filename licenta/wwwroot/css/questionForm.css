@@ -101,5 +101,8 @@
         font-size: 18px;
         line-height: 22px;
     }
+    .extended_form {
+        width: 50% !important;
+    }
 }
 

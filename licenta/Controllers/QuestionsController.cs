@@ -29,13 +29,14 @@ namespace licenta.Controllers
         // return the categories
         public async Task<IActionResult> Categories(int id)
         {
+            var categories = await _context.Categories.ToListAsync();
             if (id == 0)
-            {                
-                var categoriesTest = await _context.Categories.ToListAsync();
-                return View("TestCategories", categoriesTest);
+            {                                
+                return View("TestCategories", categories);
             }
-            var categoriesEdit = await _context.Categories.ToListAsync();
-            return View("EditCategories", categoriesEdit);
+            var count =  _context.Question.Where(q => q.IsDisputed == true).Count();
+            ViewBag.Observations = count;
+            return View("EditCategories", categories);
 
         }
         //return the questions of a category
@@ -73,7 +74,6 @@ namespace licenta.Controllers
         //save the new or updated question
         public async Task<IActionResult> Save(Question viewModel)
         { 
-            var files = HttpContext.Request.Form.Files;
             if (!ModelState.IsValid)
             {
 
@@ -85,15 +85,18 @@ namespace licenta.Controllers
                         Answers = viewModel.Answers.ToList()
                     });
             }
-            string fileName = System.IO.Path.GetFileNameWithoutExtension(viewModel.Image.FileName);
-            string extension = System.IO.Path.GetExtension(viewModel.Image.FileName);
-            var date = DateTime.Now.ToString("yymmssfff");
-            fileName = fileName + date  + extension;
-            viewModel.ImagePath = "/Images/" + fileName;
-            fileName = System.IO.Path.Combine(Environment.CurrentDirectory +"/wwwroot/Images/" + fileName);
-            using (var fileStream = new FileStream(fileName, FileMode.Create))
+            if(viewModel.Image != null)
             {
-                await viewModel.Image.CopyToAsync(fileStream);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(viewModel.Image.FileName);
+                string extension = System.IO.Path.GetExtension(viewModel.Image.FileName);
+                var date = DateTime.Now.ToString("yymmssfff");
+                fileName = fileName + date + extension;
+                viewModel.ImagePath = "/Images/" + fileName;
+                fileName = System.IO.Path.Combine(Environment.CurrentDirectory + "/wwwroot/Images/" + fileName);
+                using (var fileStream = new FileStream(fileName, FileMode.Create))
+                {
+                    await viewModel.Image.CopyToAsync(fileStream);
+                }
             }
 
             if (viewModel.Id == 0)
@@ -111,6 +114,7 @@ namespace licenta.Controllers
                     .SingleAsync(q => q.Id == viewModel.Id);
 
                 questionInDb.Text = viewModel.Text;
+                questionInDb.IsDisputed = false;
                 /*questionInDb.Category = viewModel.Category;*/
                 questionInDb.Answers = viewModel.Answers.Select(x => new Answer()
                 {
@@ -349,6 +353,32 @@ namespace licenta.Controllers
                 .ToListAsync();
 
             return View(questionsInDb);
+        }
+        [HttpGet]
+        public async Task<IActionResult> WrongQuestion(int questionId)
+        {
+            var questionInDb = await _context.Question.Where(q => q.Id == questionId).SingleOrDefaultAsync();
+            questionInDb.IsDisputed = true;
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "Mesaj primit", id = "2" });
+        }
+        /*[HttpPost]*/
+        public async Task<IActionResult> DisputedQuestions()
+        {
+            var questionsInDb = await _context.Question
+                .Include(q => q.Answers)
+                .Include(q => q.Category)
+                .Where(q => q.IsDisputed == true)
+                .ToListAsync();
+
+            if(questionsInDb == null)
+            {
+                ViewBag.Observations = "none";
+                return View("Questions", questionsInDb);
+            }
+
+            return View("Questions",questionsInDb);
         }
     }
 }

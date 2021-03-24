@@ -71,7 +71,8 @@ else
                 @Html.Label(question.Explanation)
             </div>
             <div class="delete_ctn">
-                @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
+                <div>@Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })</div>
+                <div>@Html.ActionLink("Editare întrebarea", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })</div>
             </div>
         </div>
         }

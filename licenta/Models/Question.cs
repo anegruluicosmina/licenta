@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace licenta.Models
         [Required(ErrorMessage ="Trebuie sa adaugi o explicatie")]
         [StringLength(500)]
         public string Explanation { get; set; }
+
+        [DefaultValue("true")]
+        public bool IsDisputed { get; set; } 
 
         [StringLength(500)]
         public string  ImagePath { get; set; }        

@@ -3,6 +3,12 @@
     flex-direction: column;
     align-items: center;
 }
+#observation_ach {
+    text-decoration: none;
+    color: #B80028;
+    font-size: 18px;
+    line-height: 25px;
+}
 #categories_ctn {
     font-family: 'Montserrat', sans-serif;
     display: flex;

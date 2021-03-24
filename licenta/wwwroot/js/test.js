@@ -23,9 +23,10 @@ $("#btn_next_question").click(function () {
     $("#explanation").text("");
 /*for the first question shown in test*/
     if (index < 0) {
-    $(".wrong_correct_answ").show();
+        $(".wrong_correct_answ").show();
         $("#verify_answer").show();
         $("#btn_next_question").attr('value', 'Urmatoarea intrebare');
+        $("#attention_btn").show();
     }
 /*to resume unanswered questions*/
     if (index + 1 >= questionsIds.length) {
@@ -45,6 +46,7 @@ $("#btn_next_question").click(function () {
             /*btn_new_test();*/
                 $("#btn_new_test").show();
                 $("#question_container").text("");
+                $("#attention_btn").hide();
     /*show to wrong answered questions*/
                 if (wrongQuestions.length > 0) {
                     $("#anch_show").show();
@@ -59,6 +61,7 @@ $("#btn_next_question").click(function () {
         $("#result").css("border-bottom", "2px solid #184D68");
         $("#question_container").text("");
         $("#anch_show").show();
+        $("#attention_btn").hide();
         $("#anch_show").attr("href", baseUrl +"questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
         $("#btn_next_question").hide();
         $("#verify_answer").hide();
@@ -92,11 +95,13 @@ $("#verify_answer").click(function () {
             $("#result").css("background-color", "2px solid #184D68");
             /*btn_new_test();*/
             $("#btn_new_test").show();
+            $("#attention_btn").hide();
         } else {
             $("#result").text("Ai trecut examinarea cu următoarele rezultate4:");
             $("#result").css("background-color", "2px solid #184D68");
         /*btn_new_test();*/
             $("#btn_new_test").show();
+            $("#attention_btn").hide();
         }
         save_test();
     }
@@ -208,3 +213,16 @@ function verify_answers(data) {
         $("#error_message").text("erorare din verificarea răspunsului");
     }
 }
+$("#attention_btn").click(function () {
+    $.ajax({
+        type: "GET",
+        url: baseUrl + "questions/WrongQuestion",
+        data: { questionId: questionsIds[index]},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: successFunc,
+    });
+    function successFunc(data) {
+        $("#error_message").text("Observatia ta a fost salvata. Multumim!");
+    }
+})

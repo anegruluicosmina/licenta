@@ -103,14 +103,16 @@ ul {
     #show_profile_menu_btn{
         font-size: 16px;
     }
+
     #menu_list {
         display: flex;
         height: 60px;
         padding: 0px;
-        width: inherit;
+        width: 420px;
     }
     #navigation_ctn {
         display: flex;
+        justify-content: flex-end;
     }
     #logo_img {
         display: block;

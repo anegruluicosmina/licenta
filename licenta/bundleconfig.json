@@ -1,7 +1,8 @@
 [
   {
-    "outputFileName": "wwwroot/css/stie.min.css",
+    "outputFileName": "wwwroot/css/site.min.css",
     "inputFiles": [
+      "wwwroot/css/footer.css",
       "wwwroot/css/site.css",
       "wwwroot/css/navBar.css"
     ]

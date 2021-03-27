@@ -7,6 +7,9 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.page_ctn{
+    min-height: 85%;
+}
 /* Provide sufficient contrast against white background */
 /*a {
   color: #0366d6;
@@ -21,7 +24,7 @@ a.navbar-brand {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 @media (min-width: 768px) {
   html {

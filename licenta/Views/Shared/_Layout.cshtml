@@ -11,6 +11,8 @@
     <script src="~/lib/jquery-validate/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
+
+
     @*font*@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,300&display=swap" rel="stylesheet">
@@ -18,29 +20,28 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/navBar.css" />
+        <link rel="stylesheet" href="~/css/footer.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="~/css/stie.min.css" />
+        <link rel="stylesheet" href="~/css/site.min.css" />
     </environment>
-    @*nav bar js*@
-    <script src="~/js/nav_bar.js"></script>
-    @RenderSection("Style", required: false)
 
 </head>
 <body>
     @Html.Partial("_NavBar")
 
-    @RenderBody()
+    <div class="page_ctn">
+        @RenderBody()
+    </div>
 
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - licenta - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    @Html.Partial("_Footer")
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/nav_bar.js"></script>
+    @RenderSection("Style", required: false)
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,41 @@
+﻿<div class="footer">
+    <div class="footer_ctn">
+        <div class="footer_section about">
+            <h3 class="logo"><span>Name</span> Scoala</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Phasellus id semper risus.
+                In gravida posuere erat nec facilisis. Donec
+                vel lorem ex. Sed tempor quam non vestibulum molestie.
+            </p>
+            <p><span>Telefon</span> 0746825610</p>
+            <p><span>Email</span> adresadeemai@yahoo.com</p>
+            <p><span>Facebook</span> Profil Facebook</p>
+        </div>
+        <div class="footer_section links">
+            <h3>Navigheaza</h3>
+            @Html.ActionLink("Link1", "", "")
+            @Html.ActionLink("Link2", "")
+            @Html.ActionLink("Link3", "")
+            @Html.ActionLink("Link4", "")
+        </div>
+        <div class="footer_section contact">
+            <h3>Contacteaza-ne</h3>
+            @using (Html.BeginForm("", ""))
+            {
+                <div class="contact_form_group">
+                    <input type="email" id="form_email" placeholder="Adresa de email" />
+                </div>
+                <div class="contact_form_group">
+                    <textarea id="form_message" placeholder="Mesaj"></textarea>
+                </div>
+                <p id="error_message">
+                </p>
+            }
+            <input type="submit" values="Send" id="send_contact_form" />
+        </div>
+    </div>
+    <div class="footer_btm">
+        &copy; 2021 - licenta - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</div>

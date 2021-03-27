@@ -17,6 +17,7 @@
     align-items: center;
     margin: 0px 20px;
     font-family: 'Montserrat', sans-serif;
+    text-align: start;
 }
 
 #form_ctn form {
@@ -85,6 +86,9 @@
 }
 .form_check {
     display: contents;
+}
+.form_check input{
+    width: fit-content;
 }
 .check_form {
     display: flex;

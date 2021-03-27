@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using licenta.Data;
 using licenta.Models;
@@ -539,6 +540,18 @@ namespace licenta.Controllers
             };
 
             return Json(data);
+        }
+        public async Task<IActionResult> SendMessage(string email, string message)
+        {
+            if (email != null || message != null)
+            {
+                string subject = "Email from users without account";
+                string emailBody = "Email adress: <b>" +email + "</b></br>" + message;
+                await _emailService.SendAsync("drivingschool@yahoo.com",subject,emailBody, true);
+                return Json(new { error_message = "Am primit mesajul tau. Echipa va reveni cu un raspuns cat de curand. Multumim!"});
+            }
+            return Json(new {error_message = "Nu ai completata toate campurile" });
+
         }
     }
 }

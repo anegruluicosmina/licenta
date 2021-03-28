@@ -2,53 +2,72 @@
 
 @{
     ViewBag.Title = "Lista utilizatorlor";
+    var action = "ListUsers";
     var roleId = ViewBag.RoleId;
     var roleName = ViewBag.RoleName;
+    if (roleId != null)
+        action = "ListUsersInRole";
 }
 <div class="page_ctn">
-    @if (roleName == null)
-    {
-        <p class="page_title">Lista de utiliztorilor</p>
-    }
-    else
-    {
-        <p class="page_title">Lista de utiliztori cu rolul de @roleName</p>
-    }
-    @if (roleId != null)
-    {
-        @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
-    }
-    else
-    {
-        @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
-    }
+    <div class="search_ctn">
+        @using (Html.BeginForm(action, "Administration", FormMethod.Get))
+        {
+            <input name="roleId" type="hidden" value="@roleId" />
+            <input type="text" name="search" placeholder="cauta...">
+            <input type="number" name="minage" placeholder="min">
+            <input type="number" name="maxage" placeholder="max">
+            <input type="radio" name="order" value="ASC" /><text>ASC</text>
+            <input type="radio" name="order" value="DESC" /><text>DESC</text>
+            <input type="submit" value="Cauta" />
+        }
+    </div>
 
-    @if (Model.Any())
-    {
-        <div class="users_ctn">
-            @foreach (var user in Model)
-            {
-                <div class="user_data_ctn">
-                    <div class="user_info">
-                        <label>Nume: @user.FirstName @user.LastName</label>
-                        <label>Varsta @user.Age ani</label>
+    <div class="info_ctn">
+        @if (roleName == null)
+        {
+            <p class="page_title">Lista de utiliztorilor</p>
+        }
+        else
+        {
+            <p class="page_title">Lista de utiliztori cu rolul de @roleName</p>
+        }
+
+        @if (roleId != null)
+        {
+            @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
+        }
+        else
+        {
+            @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
+        }
+
+        @if (Model.Any())
+        {
+            <div class="users_ctn">
+                @foreach (var user in Model)
+                {
+                    <div class="user_data_ctn">
+                        <div class="user_info">
+                            <label>Nume: @user.FirstName @user.LastName</label>
+                            <label>Varsta @user.Age ani</label>
+                        </div>
+                        <div class="user_contact">
+                            <label>Email: @user.UserName</label>
+                            <label>Numar de telefon: @user.PhoneNumber</label>
+                        </div>
+                        @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
+                        {
+                            <button type="submit">Sterge utilizator</button>
+                        }
                     </div>
-                    <div class="user_contact">
-                        <label>Email: @user.UserName</label>
-                        <label>Numar de telefon: @user.PhoneNumber</label>
-                    </div>
-                    @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
-                    {
-                        <button type="submit">Sterge utilizator</button>
-                    }
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <p>Niciun utilizator momentan</p>
-    }
+                }
+            </div>
+        }
+        else
+        {
+            <p>Niciun utilizator momentan</p>
+        }
+    </div>
 </div>
 @section Style{
     <link href="~/css/user_in_role_page.css" rel="stylesheet" />

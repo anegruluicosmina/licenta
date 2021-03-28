@@ -57,19 +57,64 @@ namespace licenta.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListUsers()
+        public IActionResult ListUsers(string search, string order, int minage, int maxage)
         {
-            var users =  _userManager.Users.ToList();
-            return View(users);
+            if (maxage <= 0)
+                maxage = 150;
+            if(search == null && order == null)
+            {
+                var users = _userManager.Users
+                    .Where(u => u.Age >= minage && u.Age <= maxage)
+                    .ToList();
+                return View(users);
+            }
+            else if(search == null && order != null)
+            {
+                if(order == "ASC")
+                {
+                    var usersOder = _userManager.Users.Where(u => u.Age >= minage && u.Age <= maxage).OrderBy(u => u.LastName).ToList();
+                    return View(usersOder);
+                }
+                else
+                {
+                    var usersOder = _userManager.Users.Where(u => u.Age >= minage && u.Age <= maxage).OrderByDescending(u => u.LastName).ToList();
+                    return View(usersOder);
+                }
+
+            }else if(search != null && order != null)
+            {
+                if (order == "ASC")
+                {
+                    var usersSearchOder = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                            .OrderBy(u => u.LastName).ToList();
+                    return View(usersSearchOder);
+                }
+                else
+                {
+                    var usersSearchOder = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                            .OrderByDescending(u => u.LastName).ToList();
+                    return View(usersSearchOder);
+                }
+
+            }
+            var usersSearch = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                .ToList();
+            return View(usersSearch);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListUsersInRole(string roleId)
+        public async Task<IActionResult> ListUsersInRole(string roleId, string search, string order, int minage, int maxage)
         {
             ViewBag.roleId = roleId;
             var role = await _roleManager.FindByIdAsync(roleId);
             ViewBag.RoleName = role.Name;
             var users = new List<ApplicationUser>();
+
+            if (maxage <= 0)
+                maxage = 150;
 
             foreach (var user in _userManager.Users)
             {
@@ -79,6 +124,48 @@ namespace licenta.Controllers
                     users.Add(user);
                 }
             }
+
+            if (search == null && order == null)
+            {
+                var usersAll = users.Where(u => u.Age >= minage && u.Age <= maxage)
+                                    .ToList();
+                return View("ListUsers", usersAll);
+            }
+            else if (search == null && order != null)
+            {
+                if (order == "ASC")
+                {
+                    var usersOder = users.Where(u => u.Age >= minage && u.Age <= maxage).OrderBy(u => u.LastName).ToList();
+                    return View("ListUsers", usersOder);
+                }
+                else
+                {
+                    var usersOder = users.Where(u => u.Age >= minage && u.Age <= maxage).OrderByDescending(u => u.LastName).ToList();
+                    return View("ListUsers", usersOder);
+                }
+
+            }
+            else if (search != null && order != null)
+            {
+                if (order == "ASC")
+                {
+                    var usersSearchOder = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                            .OrderBy(u => u.LastName).ToList();
+                    return View("ListUsers", usersSearchOder);
+                }
+                else
+                {
+                    var usersSearchOder = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                            .OrderByDescending(u => u.LastName).ToList();
+                    return View("ListUsers", usersSearchOder);
+                }
+
+            }
+            var usersSearch = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
+                                                .Where(u => u.Age >= minage && u.Age <= maxage)
+                                                .ToList();
             return View("ListUsers", users);
         }
 

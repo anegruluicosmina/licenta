@@ -16,6 +16,7 @@
     @*font*@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,300&display=swap" rel="stylesheet">
+    @RenderSection("Style", required: false)
 
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -41,7 +42,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/nav_bar.js"></script>
-    @RenderSection("Style", required: false)
     @RenderSection("Scripts", required: false)
 </body>
 </html>

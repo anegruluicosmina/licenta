@@ -12,6 +12,31 @@
     text-align: center;
     font-size: 16px;
 }
+.search_ctn form {
+    display: flex;
+    flex-direction: row;
+    margin: 15px auto 0px;
+    width: 90%;
+}
+.search_ctn form input[type="text"]{    
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 18px;
+    width: inherit;
+    border: 2px solid #184D68;
+    outline: none;
+}
+.search_ctn form input[type="submit"]{    
+    font-size: 16px;
+    line-height: 24px;
+    border: none;
+    height: fit-content;
+    margin: auto 0;
+    padding: 0px 7px;
+    background-color: #184D68;
+    color: #edf4f5;
+    outline: none;
+}
 .questions_ctn {
     display: flex;
     flex-direction: column;
@@ -49,7 +74,7 @@
     padding: 12px 20px 0 20px;
 }
 .delete_ctn {
-    margin: 15px 0;
+    margin: 9px 0;
     padding: 8px;
     text-align: center;
     display: flex;
@@ -57,9 +82,9 @@
     justify-content: space-evenly;
 }
 .delete_ctn a{
-    margin: 15px 0;
-    padding: 8px;
-    font-size: 14px; 
+    margin: 11px 0;
+    padding: 9px;
+    font-size: 12px; 
     text-align: center;
     background: #184D68;
     color: #edf4f5;
@@ -86,7 +111,10 @@
     #no_data {
         font-size: 20px;
     }
-
+    .search_ctn {
+        width: 50%;
+        margin: 0 auto;
+    }
     .questions_ctn {
         display: flex;
         flex-direction: column;

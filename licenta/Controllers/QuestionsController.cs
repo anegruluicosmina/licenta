@@ -40,13 +40,26 @@ namespace licenta.Controllers
 
         }
         //return the questions of a category
-        public async Task<IActionResult> Questions(int id)
+        [HttpGet]
+        public async Task<IActionResult> Questions(int id, string search)
         {
-            var questionsInDb = await _context.Question
-                            .Include(c => c.Category).Where(c => c.CategoryId == id)
-                            .Include(q => q.Answers)
-                            .ToListAsync();
-            return View(questionsInDb);
+            
+            if (search!= null)
+            {
+                var questionsInDb = await _context.Question.Where(q => q.Text.Contains(search))
+                                                .Include(q => q.Category).Where(q => q.CategoryId == id)
+                                                .Include(q => q.Answers)
+                                                .ToListAsync();
+                return View(questionsInDb);
+            }
+            else
+            {
+                var questionsInDb = await _context.Question
+                .Include(c => c.Category).Where(c => c.CategoryId == id)
+                .Include(q => q.Answers)
+                .ToListAsync();
+                return View(questionsInDb);
+            }
         }
         //edit question
         [Authorize(Roles ="Admin, Instructor")]

@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "All roles";
 }
-<div class="page_ctn">
     <p class="page_title">Lista rolurilor</p>
 
     @if (!Model.Any())
@@ -29,7 +28,6 @@
         </div>
     }
     @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
-</div>
 @section Style{
     <link href="~/css/list_roles_page.css" type="text/css" rel="stylesheet" />
 }

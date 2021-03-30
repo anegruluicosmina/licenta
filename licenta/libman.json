@@ -13,6 +13,19 @@
     {
       "library": "Chart.js@2.9.4",
       "destination": "wwwroot/lib/Chart.js/"
+    },
+    {
+      "library": "signalr.js@2.4.1",
+      "destination": "wwwroot/signalr.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@3.1.13",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ]
     }
   ]
 }

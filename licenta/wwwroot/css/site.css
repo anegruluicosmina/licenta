@@ -7,8 +7,9 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-.page_ctn{
+.page_ctn {
     min-height: 85%;
+    padding: 12px 0;
 }
 /* Provide sufficient contrast against white background */
 /*a {

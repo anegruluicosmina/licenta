@@ -8,7 +8,7 @@
 
     var id = 0;
     var div_name = "";
-
+    var categoryId = ViewBag.CategoryId;
     foreach (var question in Model)
     {
         id = question.CategoryId;
@@ -19,6 +19,9 @@
 @section Style{
     <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
 }
+
+<div class = "btn_delete" >@Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = categoryId })</div>
+
 @if (!Model.Any())
 {
     <p id="no_data"> Pentru această categorie nu există întrebări.</p>
@@ -33,57 +36,57 @@ else
             <input type="submit" value="Cauta" />
         }
     </div>
-        <div class="questions_ctn">
-            @foreach (var question in Model)
-            {
-                <div class="question_ctn">
-                    @if (question.ImagePath == null)
-                    {
-                        div_name = "qst_ctn";
-                    }
-                    else
-                    {
-                        div_name = "qst_img_ctn";
-                    }
-                    <div class="@div_name">
-                        <div class="qst_asw_ctn">
-                            <div class="question_label">
-                                @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
-                            </div>
-                            <div class="answers_ctn">
-                                @foreach (var answer in question.Answers)
-                                {
-                                    <div>
-                                        @{
-                                            if (answer.IsCorrect)
-                                            {
-                                                <div class="correct_answer">
-                                                    @Html.Label(answer.Text)
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="answer">
-                                                    @Html.Label(answer.Text)
-                                                </div>
-                                            }
-                                        }
-                                    </div>
-                                }
-                            </div>
+    <div class="questions_ctn">
+        @foreach (var question in Model)
+        {
+            <div class="question_ctn">
+                @if (question.ImagePath == null)
+                {
+                    div_name = "qst_ctn";
+                }
+                else
+                {
+                    div_name = "qst_img_ctn";
+                }
+                <div class="@div_name">
+                    <div class="qst_asw_ctn">
+                        <div class="question_label">
+                            @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
                         </div>
-                        <img src="@question.ImagePath" width="150px" />
+                        <div class="answers_ctn">
+                            @foreach (var answer in question.Answers)
+                            {
+                                <div>
+                                    @{
+                                        if (answer.IsCorrect)
+                                        {
+                                            <div class="correct_answer">
+                                                @Html.Label(answer.Text)
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="answer">
+                                                @Html.Label(answer.Text)
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
-                    <div class="explanation_ctn">
-                        @Html.Label("Explicație:", null, new { @class = "label_exl" })
-                        @Html.Label(question.Explanation)
-                    </div>
-                    <div class="delete_ctn">
-                        @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
-                        @Html.ActionLink("Editare întrebarea", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
-                    </div>
+                    <img src="@question.ImagePath" width="150px" />
                 </div>
-            }
+                <div class="explanation_ctn">
+                    @Html.Label("Explicație:", null, new { @class = "label_exl" })
+                    @Html.Label(question.Explanation)
+                </div>
+                <div class="delete_ctn">
+                    @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
+                    @Html.ActionLink("Editare întrebarea", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
+                </div>
+            </div>
+        }
     </div>
 }
 

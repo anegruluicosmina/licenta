@@ -43,7 +43,7 @@ namespace licenta.Controllers
         [HttpGet]
         public async Task<IActionResult> Questions(int id, string search)
         {
-            
+            ViewBag.CategoryId = id;
             if (search!= null)
             {
                 var questionsInDb = await _context.Question.Where(q => q.Text.Contains(search))

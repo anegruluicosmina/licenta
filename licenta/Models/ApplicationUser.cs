@@ -32,5 +32,6 @@ namespace licenta.Models
         [Display(Name ="Varsta")]
         public int Age { get; set; }
         public List<Test> Tests { get; set; }
+        public IEnumerable<Message> Messages{ get; set; }
     }
 }

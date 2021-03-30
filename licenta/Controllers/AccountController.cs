@@ -553,5 +553,30 @@ namespace licenta.Controllers
             return Json(new {error_message = "Nu ai completata toate campurile" });
 
         }
+        public async Task<IActionResult> Chat()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUser = user.UserName;
+            IEnumerable<Message> messages = null;
+            return View(messages);
+        }
+        //save messages to database
+        public async Task<IActionResult> SaveMessage(Message message)
+        {
+            if (ModelState.IsValid)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    message.UserName = user.UserName;
+                    message.UserId = user.Id;
+                    await _context.AddAsync(message);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+
+            }
+            return StatusCode(400);
+        }
     }
 }

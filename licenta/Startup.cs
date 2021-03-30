@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using licenta.Data;
+using licenta.Hubs;
 using licenta.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +45,7 @@ namespace licenta
             services.AddMailKit(config => {
                 config.UseMailKit(mailKitOptions);
             });
-
+            services.AddSignalR();
             services.AddControllersWithViews();
         }
 
@@ -69,6 +70,15 @@ namespace licenta
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+ /*           app.UseSignalR(route =>
+            {
+                route.MapHub<ChatHub>("/Account/Chat");
+            });*/
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chathub");
+            });
 
             app.UseEndpoints(endpoints =>
             {

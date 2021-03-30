@@ -9,21 +9,20 @@ namespace licenta.Models
     public class Message
     {
         public int Id { get; set; }
+        public string UserId { get; set; }
 
         //just if it is not connected, if not is optional[Required]
         [EmailAddress]
-        public string Form { get; set; }
+        public string UserName { get; set; }
 
         [Required]
-        [StringLength(250)]
-        [Display(Name="Subiect")]
-        public string  Subject { get; set; }
-
-        [Required]
-        [StringLength(500)]
+        [StringLength(1000)]
         [Display(Name = "Mesaj")]
-        public string  Body { get; set; }
+        public string  Text { get; set; }
 
-        public MessageCategory Category { get; set; }
+        [Required]
+        [DataType(DataType.DateTime)]
+        public DateTime Date{ get; set; }
+
     }
 }

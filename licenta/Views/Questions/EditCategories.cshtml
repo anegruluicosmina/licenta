@@ -5,16 +5,17 @@
 @{ 
     var observations = ViewBag.Observations;
 }
-<div class="main_ctn">
-    @if (observations != null)
-    {
-        @Html.ActionLink((int)observations + " intrebari contestate", "DisputedQuestions", "Questions",null, new { id = "observation_ach"} )
-    }
-    <div class="category" id="new_ctg">
-        @Html.ActionLink("Întrebare nouă", "New", "Questions")
-    </div>
-    <div class="category" id="new_qst">
-        @Html.ActionLink("Categorie nouă", "NewCategory", "Questions")
+    <div class="action_ctn">
+        @if (observations != 0)
+        {
+        <div class = "action_btn">@Html.ActionLink((int)observations + " intrebari contestate", "DisputedQuestions", "Questions")</div>
+        }
+        <div class="action_btn" @*id="new_ctg"*@>
+            @Html.ActionLink("Întrebare nouă", "New", "Questions")
+        </div>
+        <div class="action_btn" @*id="new_qst"*@>
+            @Html.ActionLink("Categorie nouă", "NewCategory", "Questions")
+        </div>
     </div>
     <div id="categories_ctn">
 
@@ -22,11 +23,9 @@
         {
             <div class="category">
                 @Html.ActionLink("Categoria: " + category.Name, "Questions", "Questions", new { id = category.Id }, null)
-                @Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = category.Id }, new { @class = "btn_delete" })
             </div>
         }
     </div>
-</div>
 
 
 @section Style{

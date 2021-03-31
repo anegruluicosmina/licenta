@@ -18,50 +18,65 @@
                 {
                     <button onclick="show_menu()" id="show_menu_btn">Meniu</button>
                 }
-                <ul>
-
-                    @if (signInManager.IsSignedIn(User))
-                    {
-                        @if (!User.IsInRole("Admin"))
-                        {
+            <ul>
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <li class="navigation_ctn" id="navigation_ctn_large">
+                        <ul id="menu_list_large">
                             <li class="item">
-                                <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
+                                <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListRoles">Roluri</a>
                             </li>
-                        }
-                        <li class="item">
-                            <button onclick="show_profile_menu()" id="show_profile_menu_btn">Profil</button>
-                            <div id="profile_menu_nv" class="navigation_ctn" style="display: none">
-                                <ul id="profile_menu_list">
-                                    @if (!User.IsInRole("Admin") && signInManager.IsSignedIn(User))
-                                    {
-                                        <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="TestsResults">Testele mele</a></li>
-                                    }
-                                    <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangePassword">Schimba parola</a></li>
-                                    <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="EditUser">Editeaza profilul</a></li>
-                                    <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangeEmail">Editeaza email-ul</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Log out</a>
-                        </li>
-                    }
-                    else
+                            <li class="item">
+                                <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Utilizatori</a>
+                            </li>
+                            <li class="item">
+                                <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                }
+                @if (signInManager.IsSignedIn(User))
+                {
+                    @if (!User.IsInRole("Admin"))
                     {
                         <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Login">Log In</a>
-                        </li>
-                        <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="0">Test</a>
                         </li>
                     }
-                </ul>
+                    <li class="item">
+                        <button onclick="show_profile_menu()" id="show_profile_menu_btn">Profil</button>
+                        <div id="profile_menu_nv" class="navigation_ctn" style="display: none">
+                            <ul id="profile_menu_list">
+                                @if (!User.IsInRole("Admin") && signInManager.IsSignedIn(User))
+                                {
+                                    <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="TestsResults">Testele mele</a></li>
+                                }
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangePassword">Schimba parola</a></li>
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="EditUser">Editeaza profilul</a></li>
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangeEmail">Editeaza email-ul</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Log out</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Login">Log In</a>
+                    </li>
+                    <li class="item">
+                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                }
+            </ul>
             </div>
             @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
                 <div class="navigation_ctn" id="navigation_ctn">
                     <ul id="menu_list">
-
                         <li class="item">
                             <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListRoles">Roluri</a>
                         </li>

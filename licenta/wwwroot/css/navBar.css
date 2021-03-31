@@ -3,7 +3,10 @@
     height: 100vh;
     font-family: 'Montserrat', sans-serif;
 }
-#logo_img{
+#navigation_ctn_large {
+    display: none;
+}
+#logo_img {
     display: none;
 }
 ul {
@@ -23,11 +26,17 @@ ul {
 #navigation_ctn{
     display: none;
 }
+
 #menu_list {
     position: absolute;
     background: #184D68;
     height: fit-content;
     padding: 10px 0;
+}
+#menu_list_large {
+    background: #184D68;
+    height: fit-content;
+    /*padding: 10px 0;*/
 }
 #show_menu_btn {
     border: none;
@@ -90,6 +99,9 @@ ul {
 #profile_menu_nv ul li{
     text-align: start;
 }
+/*#profile_menu_list ul  li{
+    
+}*/
 @media only screen and (min-width: 900px) {
     header{
         height: 60px;
@@ -104,7 +116,11 @@ ul {
     #show_profile_menu_btn{
         font-size: 16px;
     }
-
+    .navigate_links_ctn {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
     #menu_list {
         display: flex;
         height: 60px;
@@ -112,6 +128,9 @@ ul {
         width: 420px;
     }
     #navigation_ctn {
+        display: none;
+    }
+    #navigation_ctn_large {
         display: flex;
         justify-content: flex-end;
     }
@@ -136,10 +155,20 @@ ul {
         justify-content: space-evenly;
     }
     .profile_ctn{
-        width: 25%;
+        /*width: 280px;*/
+        width: fit-content;
     }
     .profile_ctn ul {
         justify-content: space-around;
+    }
+     .profile_ctn ul li, ul li ul li {
+        width: 100px;
+    }
+    #navigation_ctn_large{
+        width: fit-content;
+    }
+    .profile_ctn ul li ul li {
+        width: 100px;
     }
     .navigation_ctn ul {
         justify-content: space-evenly;
@@ -171,6 +200,7 @@ ul {
     }
     #profile_menu_nv ul li{
         text-align: start;
+        width: 180px;
     }
     #profile_menu_nv ul li a{
         text-align: start;

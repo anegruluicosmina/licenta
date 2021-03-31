@@ -1,4 +1,15 @@
-/*class Message {
+var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+connection.on('receiveMessage', addMessageToChat);
+connection.start()
+    .catch(error => {
+        console.log(error.message)
+    });
+
+function sendMessageToHub(message) {
+    connection.invoke('sendMessage', message)
+}
+class Message {
     constructor(username, text, date) {
         this.username = username;
         this.text = text;
@@ -55,10 +66,12 @@ function addMessageToChat(message) {
     container.appendChild(text);
     container.appendChild(date);
     chat.appendChild(container);
-}*/
-"use strict";
+}
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+/*"use strict";
+
+import { error } from "jquery";
+
 
 //Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;
@@ -84,4 +97,4 @@ document.getElementById("sendButton").addEventListener("click", function (event)
         return console.error(err.toString());
     });
     event.preventDefault();
-});
+});*/

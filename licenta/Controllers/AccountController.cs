@@ -571,7 +571,7 @@ namespace licenta.Controllers
                     message.UserName = user.UserName;
                     message.UserId = user.Id;
                     await _context.AddAsync(message);
-                    await _context.SaveChangesAsync();
+                    /*await _context.SaveChangesAsync();*/
                     return Ok();
                 }
 

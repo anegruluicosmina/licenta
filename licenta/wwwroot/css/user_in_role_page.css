@@ -2,6 +2,7 @@
     text-align: center;
     font-weight: 700;
     letter-spacing: 1.5px;
+    font-size: 19px;
 }
 .page_ctn {
     display: flex;
@@ -118,13 +119,15 @@
 
     .user_data_ctn {
         width: 323px;
-        margin: 23px;
+        margin: 17px;
         font-size: 14px;
     }
 }
 @media only screen and (min-width: 800px) {
     .search_ctn {
-        width: 230px;
+        width: 260px;
+        align-self: stretch;
+        border-right: 1.5px solid #184D68;
     }
     .info_ctn {
         width: calc(100% - 230px);
@@ -140,5 +143,6 @@
 
     #filter_form {
         display: flex;
+        width: 89%;
     }
 }

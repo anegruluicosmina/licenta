@@ -69,7 +69,7 @@
 
 .save_button {
     padding: 7px;
-    margin: 30px 0px;
+    margin: 10px 0px;
     width: 100%;
     border: none;
     background: #184D68;
@@ -98,6 +98,7 @@
 }
 .form_check {
     display: table-row;
+    line-height:35px;
 }
 @media only screen and (min-width: 600px) {
     #form_ctn {
@@ -105,7 +106,7 @@
         margin: 0 auto;
     }
     .page_title{
-        font-size: 16px;
+        font-size: 19px;
     }
     .form_group label, #form_label {
         font-size: 16px;

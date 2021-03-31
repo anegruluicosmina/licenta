@@ -81,12 +81,18 @@
 @media only screen and (min-width: 900px) {
     .footer .footer_ctn {
         flex-direction: row;
-        min-height: 350px;
+        min-height: 300px;
     }
-    .footer .footer_ctn .footer_section{
-        flex: 1;
+    .about {
+        width: 40%;
     }
-    .about p{
+    .links {
+        width: 20%;
+    }
+    .contact {
+        width: 40%;
+    }
+    .about p {
         font-size: 11px;
     }
     .about p span{

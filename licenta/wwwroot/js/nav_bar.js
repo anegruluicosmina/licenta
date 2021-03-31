@@ -14,7 +14,7 @@ function show_profile_menu() {
         menu.style.display = "block";
         /*if admin is on mobile device do not show and menu list*/
         if ($(window).width() < 750) {
-            document.getElementById("menu_list").style.display = "none";
+            document.getElementById("navigation_ctn").style.display = "none";
         }
     } else {
         menu.style.display = "none";

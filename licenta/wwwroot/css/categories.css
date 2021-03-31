@@ -4,6 +4,11 @@
     align-items: center;
     padding: 3px;
 }
+#disputed_btn {
+    font-weight: bolder;
+    color: #B80028;
+    letter-spacing: 0.8px;
+}
 .action_ctn {
     font-family: 'Montserrat', sans-serif;
     display: flex;
@@ -62,6 +67,7 @@
 .btn_delete{
     border-left: 2px solid white;
 }
+
 @media only screen and (min-width: 600px) {
     .page_ctn {
         flex-direction: row;

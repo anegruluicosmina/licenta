@@ -137,7 +137,8 @@
         font-size: 20px;
     }
     .search_ctn {
-        width: 50%;
+        width: 83%;
+        max-width: 750px;
         margin: 0 auto;
     }
 

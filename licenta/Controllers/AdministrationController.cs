@@ -57,117 +57,76 @@ namespace licenta.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListUsers(string search, string order, int minage, int maxage)
+        public async Task<IActionResult> ListUsers(string search, string order, int minage, int maxage, int? page, string roleId)
         {
-            if (maxage <= 0)
-                maxage = 150;
-            if(search == null && order == null)
-            {
-                var users = _userManager.Users
-                    .Where(u => u.Age >= minage && u.Age <= maxage)
-                    .ToList();
-                return View(users);
-            }
-            else if(search == null && order != null)
-            {
-                if(order == "ASC")
-                {
-                    var usersOder = _userManager.Users.Where(u => u.Age >= minage && u.Age <= maxage).OrderBy(u => u.LastName).ToList();
-                    return View(usersOder);
-                }
-                else
-                {
-                    var usersOder = _userManager.Users.Where(u => u.Age >= minage && u.Age <= maxage).OrderByDescending(u => u.LastName).ToList();
-                    return View(usersOder);
-                }
 
-            }else if(search != null && order != null)
-            {
-                if (order == "ASC")
-                {
-                    var usersSearchOder = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                            .OrderBy(u => u.LastName).ToList();
-                    return View(usersSearchOder);
-                }
-                else
-                {
-                    var usersSearchOder = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                            .OrderByDescending(u => u.LastName).ToList();
-                    return View(usersSearchOder);
-                }
+            if (minage != 0)
+                ViewData["MinAge"] = minage;
 
-            }
-            var usersSearch = _userManager.Users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                .ToList();
-            return View(usersSearch);
-        }
+            if (maxage != 0)
+                ViewData["MaxAge"] = maxage;
 
-        [HttpGet]
-        public async Task<IActionResult> ListUsersInRole(string roleId, string search, string order, int minage, int maxage)
-        {
-            ViewBag.roleId = roleId;
-            var role = await _roleManager.FindByIdAsync(roleId);
-            ViewBag.RoleName = role.Name;
-            var users = new List<ApplicationUser>();
+            ViewData["SearchString"] = search;
+            ViewData["Order"] = order;
 
             if (maxage <= 0)
                 maxage = 150;
 
-            foreach (var user in _userManager.Users)
+            //retrieve users form db
+            IEnumerable<ApplicationUser> users;
+
+            if (!String.IsNullOrWhiteSpace(roleId))
             {
-                /*select users with specific roles*/
-                if (await _userManager.IsInRoleAsync(user, role.Name))
+                ViewBag.roleId = roleId;
+                var role = await _roleManager.FindByIdAsync(roleId);
+                ViewBag.RoleName = role.Name;
+                IList<ApplicationUser> usersRole = new List<ApplicationUser>();
+
+                foreach (var user in _userManager.Users)
                 {
-                    users.Add(user);
+                    /*select users with specific roles*/
+                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    {
+                        usersRole.Add(user);
+                    }
                 }
+                users = usersRole.ToList();
+            }
+            else
+            {
+                users = _userManager.Users
+                             .Where(u => u.Age >= minage && u.Age <= maxage).ToList();
             }
 
-            if (search == null && order == null)
+            //apply search restrictions 
+            if (search != null)
             {
-                var usersAll = users.Where(u => u.Age >= minage && u.Age <= maxage)
-                                    .ToList();
-                return View("ListUsers", usersAll);
+                search = search.Trim();
+                users = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search) || String.Concat(u.LastName , " " , u.FirstName).Contains(search) || String.Concat(u.FirstName , " " , u.LastName).Contains(search));
             }
-            else if (search == null && order != null)
+            //order the result 
+            if(!String.IsNullOrWhiteSpace(order))
             {
-                if (order == "ASC")
+                order = order.Trim();
+
+                if (order.Equals("ASC"))
                 {
-                    var usersOder = users.Where(u => u.Age >= minage && u.Age <= maxage).OrderBy(u => u.LastName).ToList();
-                    return View("ListUsers", usersOder);
+                    users = users.OrderBy(u => u.FirstName);
+                    ViewData["AscChecked"] = "checked"; //used to check radio button when the page refreshes 
                 }
-                else
+                else if(order.Equals("DESC"))
                 {
-                    var usersOder = users.Where(u => u.Age >= minage && u.Age <= maxage).OrderByDescending(u => u.LastName).ToList();
-                    return View("ListUsers", usersOder);
+                    users = users.OrderByDescending(u => u.FirstName);
+                    ViewData["DescChecked"] = "checked";//used to check radio button when the page refreshes 
                 }
 
             }
-            else if (search != null && order != null)
-            {
-                if (order == "ASC")
-                {
-                    var usersSearchOder = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                            .OrderBy(u => u.LastName).ToList();
-                    return View("ListUsers", usersSearchOder);
-                }
-                else
-                {
-                    var usersSearchOder = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                            .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                            .OrderByDescending(u => u.LastName).ToList();
-                    return View("ListUsers", usersSearchOder);
-                }
+            //feed the model with the items for the specific index of the page
+            var model = await PaginatedList<ApplicationUser>.CreateAsync(users, page ?? 1,12);
 
-            }
-            var usersSearch = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search))
-                                                .Where(u => u.Age >= minage && u.Age <= maxage)
-                                                .ToList();
-            return View("ListUsers", users);
+            return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)

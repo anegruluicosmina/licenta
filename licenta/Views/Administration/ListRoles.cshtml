@@ -21,7 +21,7 @@
                         @Html.Label(role.Name, null, new { @class = "role_name" })
                         @Html.Label(role.Id, null, new { @class = "role_id" })
                     </div>
-                    @Html.ActionLink("Lista utilizatori", "ListUsersInRole", "Administration", new { roleId = role.Id }, null)
+                    @Html.ActionLink("Lista utilizatori", "ListUsers", "Administration", new { roleId = role.Id }, null)
                 </div>
             }
 

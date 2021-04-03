@@ -1,7 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<licenta.Models.Question>
+﻿
+@using PagedList.Mvc;
+@using PagedList;
+@model licenta.ViewModel.PaginatedList<licenta.Models.Question>
 @{
 
     @*to take the id of the difficulty*@
@@ -9,18 +9,18 @@
     var id = 0;
     var div_name = "";
     var categoryId = ViewBag.CategoryId;
-    foreach (var question in Model)
-    {
-        id = question.CategoryId;
-        break;
-    }
-
+    @*foreach (var question in Model)
+        {
+            id = question.CategoryId;
+            break;
+        }
+    *@
 }
 @section Style{
     <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
 }
 
-<div class = "btn_delete" >@Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = categoryId })</div>
+<div class="btn_delete">@Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = categoryId })</div>
 
 @if (!Model.Any())
 {
@@ -28,14 +28,15 @@
 }
 else
 {
-
+    //form for search bar
     <div class="search_ctn">
         @using (Html.BeginForm("Questions", "Questions", FormMethod.Get))
         {
-            @Html.TextBox("search")
+            <input type="text" name="search" value="@ViewData["CurrentFilter"]"/>
             <input type="submit" value="Cauta" />
         }
     </div>
+    //div for all the questions
     <div class="questions_ctn">
         @foreach (var question in Model)
         {
@@ -50,9 +51,11 @@ else
                 }
                 <div class="@div_name">
                     <div class="qst_asw_ctn">
+                        @*you cand adit the questions by also clicking on the name*@
                         <div class="question_label">
                             @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
                         </div>
+                        @* div for the answers, if the answer is correct than color it *@
                         <div class="answers_ctn">
                             @foreach (var answer in question.Answers)
                             {
@@ -81,6 +84,7 @@ else
                     @Html.Label("Explicație:", null, new { @class = "label_exl" })
                     @Html.Label(question.Explanation)
                 </div>
+                @*div for delte and edit options of the quesiton*@
                 <div class="delete_ctn">
                     @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
                     @Html.ActionLink("Editare întrebarea", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
@@ -88,6 +92,25 @@ else
             </div>
         }
     </div>
+
+//if model does not have a previous or a next page to show desable the buttons    
+    var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
+    var nextDisabled = !Model.HasNextPage ? "none" : "block";
+
+//button for previous page
+    <a asp-action="Questions"
+       asp-route-page="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       style="display:@prevDisabled">
+        Previous
+    </a>
+//buttons for next page
+<a asp-action="Questions"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   style="display:@nextDisabled">
+    Next
+</a>
 }
 
 

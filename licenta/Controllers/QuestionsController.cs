@@ -12,7 +12,8 @@ using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
-
+using PagedList;
+using PagedList.Mvc;
 namespace licenta.Controllers
 {
     public class QuestionsController:Controller
@@ -41,25 +42,38 @@ namespace licenta.Controllers
         }
         //return the questions of a category
         [HttpGet]
-        public async Task<IActionResult> Questions(int id, string search)
+        public async Task<IActionResult> Questions(int id, string search, string currentFilter,int? page)
         {
-            ViewBag.CategoryId = id;
-            if (search!= null)
+            ViewBag.CategoryId = id;            
+
+            //if the search is string is != null, it means while search string was chnaged during paging, this means that the page must be reset to 1 
+            if (search != null)
             {
-                var questionsInDb = await _context.Question.Where(q => q.Text.Contains(search))
-                                                .Include(q => q.Category).Where(q => q.CategoryId == id)
-                                                .Include(q => q.Answers)
-                                                .ToListAsync();
-                return View(questionsInDb);
+                page = 1;
             }
             else
             {
-                var questionsInDb = await _context.Question
-                .Include(c => c.Category).Where(c => c.CategoryId == id)
-                .Include(q => q.Answers)
-                .ToListAsync();
-                return View(questionsInDb);
+                search = currentFilter;
             }
+            ViewData["CurrentFilter"] = search;
+            //retrieve data from db
+            var questionsInDb = _context.Question
+                            .Include(c => c.Category)
+                            .Where(c => c.CategoryId == id)
+                            .Include(q => q.Answers);
+
+            //if search string is not null, select the data that contains search string
+            if (!String.IsNullOrEmpty(search))
+            {
+                questionsInDb = questionsInDb.Where(q => q.Text.Contains(search)).Include(c => c.Category).Include(q => q.Answers);
+            }
+
+            int pageSize = 8;
+
+            var model = await PaginatedList<Question>.CreateAsync(questionsInDb.ToList(), page ?? 1, pageSize);
+
+            return View(model);
+
         }
         //edit question
         [Authorize(Roles ="Admin, Instructor")]

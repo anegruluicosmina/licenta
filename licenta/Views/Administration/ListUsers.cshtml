@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@model licenta.ViewModel.PaginatedList<ApplicationUser>
 
 @{
     ViewBag.Title = "Lista utilizatorlor";
@@ -13,13 +13,14 @@
     @using (Html.BeginForm(action, "Administration", FormMethod.Get, new { id = "filter_form" }))
     {
         <input name="roleId" type="hidden" value="@roleId" />
+        <input name="page" type="hidden" value="1" />
         <p>Cauta in foaie</p>
-        <input type="text" name="search" placeholder="cauta...">
+        <input type="text" name="search" placeholder="cauta..." value="@ViewData["SearchString"]">
         <p>Varsta</p>
-        <input type="number" name="minage" placeholder="min">
-        <input type="number" name="maxage" placeholder="max">
-        <div><input type="radio" name="order" value="ASC" /><text>ASC</text></div>
-        <div><input type="radio" name="order" value="DESC" /><text>DESC</text></div>
+        <input type="number" name="minage" placeholder="min" value="@ViewData["MinAge"]">
+        <input type="number" name="maxage" placeholder="max" value="@ViewData["MaxAge"]">
+        <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"]/><text>ASC</text></div>
+        <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"]/><text>DESC</text></div>
         <input type="submit" value="Cauta" />
     }
 </div>
@@ -64,6 +65,27 @@
                 </div>
             }
         </div>
+
+        var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
+        var nextDisabled = !Model.HasNextPage ? "none" : "block";
+
+        <a asp-action="ListUsers"
+           asp-route-search="@ViewData["SearchString"]"
+           asp-route-order=" @ViewData["Order"]"
+           asp-route-minage="@ViewData["MinAge"]"
+           asp-route-maxage="@ViewData["MaxAge"]"
+           asp-route-page="@(Model.PageIndex - 1)"
+           style="display:@prevDisabled">Previous</a>
+
+        <a asp-action="ListUsers"
+           asp-route-search="@ViewData["SearchString"]"
+           asp-route-order=" @ViewData["Order"]"
+           asp-route-minage="@ViewData["MinAge"]"
+           asp-route-maxage="@ViewData["MaxAge"]"
+           asp-route-page="@(Model.PageIndex + 1)"
+           style="display:@nextDisabled">Next</a>
+
+
     }
     else
     {

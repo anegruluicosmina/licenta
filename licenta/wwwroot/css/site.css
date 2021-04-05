@@ -11,6 +11,25 @@ a.navbar-brand {
     min-height: 85%;
     padding: 12px 0;
 }
+.page_ctn a {
+    padding: 10px;
+    margin: 10px;
+    text-decoration: none;
+    color: #3580a5;
+}
+.paging_ctn {
+    display: flex;
+    width: fit-content;
+    margin: 8px auto;
+}
+.paging_btn {
+    margin: 0 22px;
+}
+.paging_ctn p {
+    color: #3580a5;
+    padding: 10px;
+    margin: 10px;
+}
 /* Provide sufficient contrast against white background */
 /*a {
   color: #0366d6;

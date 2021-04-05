@@ -16,7 +16,6 @@
     @*font*@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,300&display=swap" rel="stylesheet">
-    @RenderSection("Style", required: false)
 
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -26,6 +25,7 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/site.min.css" />
     </environment>
+    @RenderSection("Style", required: false)
 
 </head>
 <body>

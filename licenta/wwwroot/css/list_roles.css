@@ -1,6 +1,9 @@
 ﻿.page_ctn a {
     text-decoration: none;
     color: #3580a5;
+    font-size: 17px;
+    margin:0px;
+    padding: 0px;
 }
 .page_title {
     font-size: 19px;
@@ -31,14 +34,14 @@
     flex-direction: column;
 }
 .role_name {
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 1px;
     font-weight: 600;
     padding: 3px;
 }
 .role_id {
     padding: 2px;
-    font-size: 12px;
+    font-size: 13px;
 }
 @media only screen and (min-width: 600px) {
     .roles_ctn {

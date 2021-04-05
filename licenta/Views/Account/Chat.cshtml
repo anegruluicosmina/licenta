@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Message>
 @{
     var userName = User.Identity.Name;
+    var messageSender = "Sender";
 }
 <div>
     -->
@@ -12,13 +13,14 @@
                 @foreach (var message in Model.OrderBy(m => m.Date))
                 {
                     string containerClass, timePosition, textAlign, contColor, offset;
-                    if (userName == message.UserName)
+                    if (userName == message.SenderUsername)
                     {
                         containerClass = "container darker";
                         timePosition = "time-right text-light";
                         textAlign = "text-right text-white";
                         contColor = "bg-primary";
                         offset = "col-md-6 offeset-md-6";
+                        messageSender = message.SenderUsername;
                     }
                     else
                     {
@@ -27,11 +29,12 @@
                         textAlign = "text-left";
                         contColor = "bg-light";
                         offset = "";
+                        messageSender = message.ReceiverUsername;
                     }
                     <div class="row">
                         <div class="@offset">
                             <div class="@containerClass @contColor">
-                                <p class="sender @textAlign">@message.UserName</p>
+                                <p class="sender @textAlign">@messageSender</p>
                                 <p class="@textAlign">@message.Text</p>
                                 <span class="@timePosition">@message.Date.ToString()</span>
                             </div>
@@ -41,16 +44,14 @@
                 }
             }
             <div class="col-md-12">
-                <form data-ajax-methode="POST">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <input name="Text" class="form-control" id="messageText" />
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Send" id="submitButton" class="btn" />
                     </div>
-                    <input type="hidden" value="@userName" name="username" />
-                </form>
+                    <input type="hidden" value="@userName" name="SenderUsername" id="senderUsername"/>
+                    <input type="hidden" value="user1@gmail.com" name="ReceiverUsername" id="receiverUsername"/>
             </div>
 
         </div>
@@ -85,7 +86,7 @@
                           data-ajax="true"*@
 @section Scripts{
     <script>
-    const userName = "@ViewBag.CurrentUserName";
+        const SenderUsername = "@ViewBag.CurrentUser";
     </script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     @*<script src="~/js/signalR_handler_request.js"></script>*@

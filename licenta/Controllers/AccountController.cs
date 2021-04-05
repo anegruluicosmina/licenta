@@ -557,22 +557,29 @@ namespace licenta.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             ViewBag.CurrentUser = user.UserName;
-            IEnumerable<Message> messages = null;
+            IEnumerable<Message> messages = null;// await _context.Messages.ToListAsync();
             return View(messages);
         }
+
+
         //save messages to database
-        public async Task<IActionResult> SaveMessage(Message message)
+        [HttpGet]
+        public async Task<IActionResult> SaveMessage(string senderUsername, string receiverUsername, string text)
         {
+            Message message = new Message
+            {
+                SenderUsername = senderUsername,
+                ReceiverUsername = receiverUsername,
+                Text = text,
+                Date = DateTime.Now
+            };
             if (ModelState.IsValid)
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    message.UserName = user.UserName;
-                    message.UserId = user.Id;
-                    await _context.AddAsync(message);
+                    /*await _context.AddAsync(message);*/
                     /*await _context.SaveChangesAsync();*/
-                    return Ok();
+                    return Json(new { message ="ok"});
                 }
 
             }

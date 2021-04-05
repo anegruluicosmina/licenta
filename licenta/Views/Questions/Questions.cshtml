@@ -97,20 +97,29 @@ else
     var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
     var nextDisabled = !Model.HasNextPage ? "none" : "block";
 
-//button for previous page
-    <a asp-action="Questions"
-       asp-route-page="@(Model.PageIndex - 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       style="display:@prevDisabled">
-        Previous
-    </a>
-//buttons for next page
-<a asp-action="Questions"
-   asp-route-page="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   style="display:@nextDisabled">
-    Next
-</a>
+<div class="paging_ctn">
+    @*button for previous page*@
+    <div class="paging_btn">
+        <a asp-action="Questions"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           style="display:@prevDisabled">
+            Înapoi
+        </a>
+    </div>
+    <div>
+        <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+    </div>
+    @*buttons for next page*@
+    <div class="paging_btn">
+        <a asp-action="Questions"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           style="display:@nextDisabled">
+            Next
+        </a>
+    </div>
+</div>
 }
 
 

@@ -69,6 +69,8 @@
         var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
         var nextDisabled = !Model.HasNextPage ? "none" : "block";
 
+<div class="paging_ctn">
+    <div class="paging_btn">
         <a asp-action="ListUsers"
            asp-route-search="@ViewData["SearchString"]"
            asp-route-order=" @ViewData["Order"]"
@@ -76,7 +78,11 @@
            asp-route-maxage="@ViewData["MaxAge"]"
            asp-route-page="@(Model.PageIndex - 1)"
            style="display:@prevDisabled">Previous</a>
-
+    </div>
+    <div>
+        <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+    </div>
+    <div class="paging_btn">
         <a asp-action="ListUsers"
            asp-route-search="@ViewData["SearchString"]"
            asp-route-order=" @ViewData["Order"]"
@@ -84,6 +90,8 @@
            asp-route-maxage="@ViewData["MaxAge"]"
            asp-route-page="@(Model.PageIndex + 1)"
            style="display:@nextDisabled">Next</a>
+    </div>
+</div>
 
 
     }

@@ -1,38 +1,66 @@
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 connection.on('receiveMessage', addMessageToChat);
-connection.start()
-    .catch(error => {
-        console.log(error.message)
-    });
 
-function sendMessageToHub(message) {
-    connection.invoke('sendMessage', message)
+connection.start()
+        .catch(error => {
+            console.log(error.message)
+        });
+
+function sendMessageToHub(senderUsername, message) {
+    connection.invoke('sendMessage', senderUsername, message)
 }
+
 class Message {
-    constructor(username, text, date) {
-        this.username = username;
+    constructor(senderUsername, receiverUsername, text, date) {
+        this.senderUsername = senderUsername;
+        this.receiverUsername = receiverUsername;
         this.text = text;
         this.date = date;
     }
 }
 
-const username = userName;
-const textInput = document.getElementById("messageText");
+const senderUsername = SenderUsername;
+let text = document.getElementById("messageText");
+let receiverUsername = document.getElementById("receiverUsername");
+
 const chat = document.getElementById("chat");
 const messageQueue = [];
+console.log("receiverUsername" + receiverUsername);
+console.log("senderUsername" + senderUsername);
+console.log("text" + text);
 
 document.getElementById('submitButton').addEventListener('click', () => {
-    var currentDate = new Date();
-    date.innerHtTML = (currentDate.getMonth() + 1) + "/"
-        + currentDate.getDate() + "/"
-        + currentDate.getFullYear() + " "
-        + currentDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', });
+    //save message in db
+    $.ajax({
+        type: "GET",
+        url: baseUrl + 'account/SaveMessage',
+        data: { senderUsername: senderUsername, receiverUsername: receiverUsername.value, text: text.value },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: successFunc,
+        error: errorFunc
+    });
+    function successFunc(data) {
+        //clear the input field
+        clearInputField();
+        //
+        sendMessage();
+        console.log(data);
+        console.log("message sent successfully");
+        //succes
+    }
+    function errorFunc(data) {
+        console.log(data);
+        console.log("message sent without success ");
+        //show in message ctn there was a problem sending the message 
+    }
 });
 
-function clearInputField(){
-    messageQueue.push(textInput.value);
-    textInput.value = '';
+function clearInputField() {
+    var text = document.getElementById("messageText").value;
+    messageQueue.push(text);
+    text.value = '';
 }
 function sendMessage() {
 
@@ -40,20 +68,26 @@ function sendMessage() {
     if (text.trim() === "") return;
 
     let date = new Date();
-    let message = new Message(username, text);
-    sendMessageToHub(message);
+    sendMessageToHub(senderUsername ,text);
 }
-function addMessageToChat(message) {
-    let isCurrentUserMessage = message.username === username;
+//add message to chat
+function addMessageToChat(message, who) {
+
+    let isCurrentUserMessage = "";
+    if (who === senderUsername) {
+        isCurrentUserMessage = true;
+    } else {
+        isCurrentUserMessage = false;
+    }
 
     let container = document.createElement('p');
     container.className = isCurrentUserMessage ? "container darker" : "container";
 
     let sender = document.createElement('p');
     sender.className = "sender";
-    sender.innerHTML = message.userName;
+    sender.innerHTML = senderUsername;
     let text = document.createElement('p');
-    text.innerHTML = message.text;
+    text.innerHTML = message;
 
     let date = document.createElement('span');
     date.className = isCurrentUserMessage ? "time-left" : "time-right";
@@ -67,34 +101,3 @@ function addMessageToChat(message) {
     container.appendChild(date);
     chat.appendChild(container);
 }
-
-/*"use strict";
-
-import { error } from "jquery";
-
-
-//Disable send button until connection is established
-document.getElementById("sendButton").disabled = true;
-
-connection.on("ReceiveMessage", function (user, message) {
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg;
-    var li = document.createElement("li");
-    li.textContent = encodedMsg;
-    document.getElementById("messagesList").appendChild(li);
-});
-
-connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
-});
-
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});*/

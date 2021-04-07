@@ -571,14 +571,15 @@ namespace licenta.Controllers
                 SenderUsername = senderUsername,
                 ReceiverUsername = receiverUsername,
                 Text = text,
+                IsSeen = false,
                 Date = DateTime.Now
             };
             if (ModelState.IsValid)
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    /*await _context.AddAsync(message);*/
-                    /*await _context.SaveChangesAsync();*/
+                    await _context.AddAsync(message);
+                    await _context.SaveChangesAsync();
                     return Json(new { message ="ok"});
                 }
 

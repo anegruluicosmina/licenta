@@ -7,8 +7,8 @@ connection.start()
             console.log(error.message)
         });
 
-function sendMessageToHub(senderUsername, message) {
-    connection.invoke('sendMessage', senderUsername, message)
+function sendMessageToHub(receiverUsername, message) {
+    connection.invoke('sendMessage', receiverUsername, message)
 }
 
 class Message {
@@ -26,9 +26,6 @@ let receiverUsername = document.getElementById("receiverUsername");
 
 const chat = document.getElementById("chat");
 const messageQueue = [];
-console.log("receiverUsername" + receiverUsername);
-console.log("senderUsername" + senderUsername);
-console.log("text" + text);
 
 document.getElementById('submitButton').addEventListener('click', () => {
     //save message in db
@@ -68,12 +65,13 @@ function sendMessage() {
     if (text.trim() === "") return;
 
     let date = new Date();
-    sendMessageToHub(senderUsername ,text);
+    sendMessageToHub(receiverUsername.value, text);
 }
 //add message to chat
 function addMessageToChat(message, who) {
-
+    console.log("start" + who);
     let isCurrentUserMessage = "";
+
     if (who === senderUsername) {
         isCurrentUserMessage = true;
     } else {
@@ -85,7 +83,39 @@ function addMessageToChat(message, who) {
 
     let sender = document.createElement('p');
     sender.className = "sender";
-    sender.innerHTML = senderUsername;
+    console.log("end" + who);
+    sender.innerHTML = who;
+    let text = document.createElement('p');
+    text.innerHTML = message;
+
+    let date = document.createElement('span');
+    date.className = isCurrentUserMessage ? "time-left" : "time-right";
+    var currentDate = new Date();
+    date.innerHTML =
+        + currentDate.getDate() + "/"
+        + currentDate.getFullYear() + " "
+        + currentDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', });
+    container.appendChild(sender);
+    container.appendChild(text);
+    container.appendChild(date);
+    chat.appendChild(container);
+}
+function addMessageToChatFromFired(message, who) {
+
+    let isCurrentUserMessage = "";
+
+    if (who === senderUsername) {
+        isCurrentUserMessage = true;
+    } else {
+        isCurrentUserMessage = false;
+    }
+
+    let container = document.createElement('p');
+    container.className = isCurrentUserMessage ? "container darker" : "container";
+
+    let sender = document.createElement('p');
+    sender.className = "sender";
+    sender.innerHTML = who;
     let text = document.createElement('p');
     text.innerHTML = message;
 

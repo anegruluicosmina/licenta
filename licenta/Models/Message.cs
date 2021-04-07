@@ -23,7 +23,7 @@ namespace licenta.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime Date{ get; set; }
-
+        public bool IsSeen { get; set; } = false;
 
     }
 }

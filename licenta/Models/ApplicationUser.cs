@@ -35,5 +35,6 @@ namespace licenta.Models
         public ICollection<Message> Messages{ get; set; }
 
         public ICollection<Connection> Connections { get; set; }
+
     }
 }

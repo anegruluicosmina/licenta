@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using licenta.Data;
 using licenta.Models;
 using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace licenta.Controllers
 {
@@ -15,10 +17,13 @@ namespace licenta.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        private readonly ApplicationDbContext _context;
+
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _context = context;
         }
         [HttpGet]
         public IActionResult CreateRole()
@@ -59,7 +64,7 @@ namespace licenta.Controllers
         [HttpGet]
         public async Task<IActionResult> ListUsers(string search, string order, int minage, int maxage, int? page, string roleId)
         {
-
+            //if minage > maxage
             if (minage != 0)
                 ViewData["MinAge"] = minage;
 
@@ -292,6 +297,43 @@ namespace licenta.Controllers
 
                 return View("ListUsersInRole", new { roleId = roleId });
             }
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> FindUser(string searchString)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            List<object> users = new List<object>();
+
+            if (currentUser == null)
+                return StatusCode(404);
+
+
+            if(searchString == null)
+            {
+                return Json(new { message = "nimic trimis" });
+            }
+            else
+            {
+                var usersInDB = await _context.Users.Where(u => (u.UserName.Contains(searchString) || u.FirstName.Contains(searchString) || u.LastName.Contains(searchString)))
+                    .OrderBy(u => u.Email)
+                    .ToListAsync();
+                if(await _userManager.IsInRoleAsync(currentUser, "Cursant"))
+                {
+                    foreach (var user in usersInDB)
+                    {
+                        if (await _userManager.IsInRoleAsync(user, "Instructor"))
+                        {
+                            users.Add(new { 
+                                userName = user.UserName,
+                                lastName = user.LastName,
+                                firstName = user.FirstName
+                            });
+                        }
+                    }
+                }
+
+                return Json(users);
+            }            
         }
     }
 }

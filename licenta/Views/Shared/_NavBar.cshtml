@@ -19,7 +19,7 @@
                     <button onclick="show_menu()" id="show_menu_btn">Meniu</button>
                 }
             <ul>
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Instructor")))
                 {
                     <li class="navigation_ctn" id="navigation_ctn_large">
                         <ul id="menu_list_large">
@@ -73,7 +73,7 @@
                 }
             </ul>
             </div>
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Instructor")))
             {
                 <div class="navigation_ctn" id="navigation_ctn">
                     <ul id="menu_list">

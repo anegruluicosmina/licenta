@@ -9,6 +9,7 @@ using licenta.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NETCore.MailKit.Core;
 
@@ -267,7 +268,7 @@ namespace licenta.Controllers
 
                     return View("ForgotPasswordConfirmation");
                 }
-                return View("ForgotPasswordConfirmation");
+                return Content("HEeeei");
             }
             return View(viewModel);
         }
@@ -553,14 +554,77 @@ namespace licenta.Controllers
             return Json(new {error_message = "Nu ai completata toate campurile" });
 
         }
-        public async Task<IActionResult> Chat()
+        public async Task<IActionResult> Conversations()
         {
             var user = await _userManager.GetUserAsync(User);
-            ViewBag.CurrentUser = user.UserName;
-            IEnumerable<Message> messages = null;// await _context.Messages.ToListAsync();
-            return View(messages);
+            ICollection<UserConversationsViewModel> conversationsViewModels = new List<UserConversationsViewModel>();
+           
+            if (user != null)
+            {
+                ViewBag.CurrentUser = user.UserName;
+                //take from db conversations of form {receiver||sender}
+                var messages = await _context.Messages.Where(m => m.ReceiverUsername == user.Email || m.SenderUsername == user.Email)
+                    .Select(m => new { m.ReceiverUsername, m.SenderUsername })
+                    .Distinct()
+                    .ToListAsync();
+
+                //create a list of friends the user has communicated with 
+                List<string> friends = new List<string>();
+
+                foreach(var item in messages)
+                {
+                    if (item.ReceiverUsername != user.Email)
+                    {
+                        if (!friends.Contains(item.ReceiverUsername))
+                            friends.Add(item.ReceiverUsername);
+                    }
+                    else if(item.SenderUsername != user.Email)
+                    {
+                        if (!friends.Contains(item.SenderUsername))
+                            friends.Add(item.SenderUsername);
+                    }                      
+                }
+                //for each friend take from db the last message
+                foreach(var friend in friends)
+                {
+                    var convo = await _context.Messages.Where(m => (m.ReceiverUsername == user.Email && m.SenderUsername == friend) || (m.ReceiverUsername == friend && m.SenderUsername == user.Email))
+                        .OrderByDescending(m => m.Date)
+                        .FirstOrDefaultAsync();
+
+                    conversationsViewModels.Add(new UserConversationsViewModel
+                    {
+                        Name = friend,
+                        Sender = convo.SenderUsername,
+                        Text = convo.Text,
+                        Time = convo.Date,
+                        IsSeen = convo.IsSeen
+                    });
+                }
+                //order the conersations by date
+                conversationsViewModels.OrderBy(c => c.Time);
+
+                return View(conversationsViewModels);
+            }
+            return StatusCode(404);
+
         }
 
+        public async Task<IActionResult> Chat(string friend)
+        {
+            if(friend != null)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                ViewBag.CurrentUser = user.UserName;
+                ViewBag.Friend = friend;
+
+                IEnumerable<Message> messages = await _context.Messages
+                    .Where(m => (m.ReceiverUsername == user.UserName && m.SenderUsername == friend) || (m.ReceiverUsername == friend && m.SenderUsername == user.UserName))
+                    .OrderBy(m => m.Date)
+                    .ToListAsync();
+                return View(messages);
+            }
+            return StatusCode(404);
+        }
 
         //save messages to database
         [HttpGet]

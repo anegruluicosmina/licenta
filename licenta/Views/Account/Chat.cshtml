@@ -1,16 +1,14 @@
 ﻿@model IEnumerable<Message>
 @{
     var userName = User.Identity.Name;
-    var messageSender = "Sender";
 }
 <div>
-    -->
     @*ceva div in care are un titlu*@
     <div class="row">
         <div class="col-md-12" id="chat">
             @if (Model != null)
             {
-                @foreach (var message in Model.OrderBy(m => m.Date))
+                @foreach (var message in Model)
                 {
                     string containerClass, timePosition, textAlign, contColor, offset;
                     if (userName == message.SenderUsername)
@@ -20,7 +18,6 @@
                         textAlign = "text-right text-white";
                         contColor = "bg-primary";
                         offset = "col-md-6 offeset-md-6";
-                        messageSender = message.SenderUsername;
                     }
                     else
                     {
@@ -29,12 +26,11 @@
                         textAlign = "text-left";
                         contColor = "bg-light";
                         offset = "";
-                        messageSender = message.ReceiverUsername;
                     }
                     <div class="row">
                         <div class="@offset">
                             <div class="@containerClass @contColor">
-                                <p class="sender @textAlign">@messageSender</p>
+                                <p class="sender @textAlign">@message.SenderUsername</p>
                                 <p class="@textAlign">@message.Text</p>
                                 <span class="@timePosition">@message.Date.ToString()</span>
                             </div>
@@ -51,44 +47,17 @@
                         <input type="submit" value="Send" id="submitButton" class="btn" />
                     </div>
                     <input type="hidden" value="@userName" name="SenderUsername" id="senderUsername"/>
-                    <input type="hidden" value="user10@gmail.com" name="ReceiverUsername" id="receiverUsername"/>
+                    <input type="hidden" value="@ViewBag.friend" name="ReceiverUsername" id="receiverUsername"/>
             </div>
         </div>
     </div>
 </div>
-@*<div class="container">
-        <div class="row">&nbsp;</div>
-        <div class="row">
-            <div class="col-6">&nbsp;</div>
-            <div class="col-6">
-                User..........<input type="text" id="userInput" />
-                <br />
-                Message...<input type="text" id="messageInput" />
-                <input type="button" id="sendButton" value="Send Message" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <hr />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">&nbsp;</div>
-            <div class="col-6">
-                <ul id="messagesList"></ul>
-            </div>
-        </div>
-    </div>
-        asp-action="SaveMessage"
-                          data-ajax-begin="CrealInputField" data-ajax-complete=""
-                          data-ajax-failer="alert('Fail')" data-ajax-succes="sendMessage"
-                          data-ajax="true"*@
+
 @section Scripts{
     <script>
         const SenderUsername = "@ViewBag.CurrentUser";
     </script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
-    @*<script src="~/js/signalR_handler_request.js"></script>*@
     <script src="~/js/chat.js"></script>
 
 }

@@ -1,0 +1,48 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<licenta.ViewModel.UserConversationsViewModel>
+@{ 
+    var isSeen = "";
+}
+    <div class="search_ctn" style="border: 1px solid black">
+        <input type="text" name="search" placeholder="cauta..." id="search_string" />
+        <input type="submit" value="Cauta" id="find_people" />
+    </div>
+
+    <form class="result_ctn" asp-action="Chat" asp-controller="Account">
+    </form>
+
+@if (!Model.Any())
+{
+    <p>Nu sunt conversatii</p>
+}
+else
+{
+<form class="conversations_ctn" asp-action="Chat">
+    @foreach(var conversation in Model)
+    {
+        if(conversation.IsSeen == false)
+        {
+            isSeen = "message_seen";
+        }
+        <button type="submit" class="convo_ctn @isSeen" style="border: 1px solid black" name="friend" value="@conversation.Name">
+            <div class="friend">
+                <p>@conversation.Name</p>
+            </div>
+            <div>
+                <p> @conversation.Sender</p>
+            </div>
+            <div>
+                <p>@conversation.Text</p>
+            </div>
+            <div>
+                <p>@conversation.Time</p>
+            </div>
+        </button>
+    }
+</form>
+}
+@section Scripts{ 
+<script src="~/js/conversation.js"></script>
+}

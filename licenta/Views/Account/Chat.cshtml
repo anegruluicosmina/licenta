@@ -1,57 +1,57 @@
 ﻿@model IEnumerable<Message>
 @{
     var userName = User.Identity.Name;
+    var date = DateTime.Now.ToString("dd MMMM");
 }
-<div>
-    @*ceva div in care are un titlu*@
-    <div class="row">
-        <div class="col-md-12" id="chat">
-            @if (Model != null)
-            {
-                @foreach (var message in Model)
-                {
-                    string containerClass, timePosition, textAlign, contColor, offset;
-                    if (userName == message.SenderUsername)
-                    {
-                        containerClass = "container darker";
-                        timePosition = "time-right text-light";
-                        textAlign = "text-right text-white";
-                        contColor = "bg-primary";
-                        offset = "col-md-6 offeset-md-6";
-                    }
-                    else
-                    {
-                        containerClass = "container";
-                        timePosition = "time-left";
-                        textAlign = "text-left";
-                        contColor = "bg-light";
-                        offset = "";
-                    }
-                    <div class="row">
-                        <div class="@offset">
-                            <div class="@containerClass @contColor">
-                                <p class="sender @textAlign">@message.SenderUsername</p>
-                                <p class="@textAlign">@message.Text</p>
-                                <span class="@timePosition">@message.Date.ToString()</span>
-                            </div>
-                        </div>
-                    </div>
 
+    @*ceva div in care are un titlu*@
+<div class="chat_ctn">
+    <div class="messages_ctn" id="chat">
+        @if (Model != null)
+        {
+            @foreach (var message in Model)
+            {
+                @*check if the day the message was sent is different, if so show the day *@
+                if (!date.Equals(message.Date.ToString("dd MMMM")))
+                {
+                    <p class="msg_date">@message.Date.ToString("dd MMMM")</p>
+                    date = message.Date.ToString("dd MMMM");
                 }
+                @*dynamic class assignment depending on who sent the message *@
+                string containerClass, msg_date;
+                if (userName == message.SenderUsername)
+                {
+                    containerClass = "dark_message_ctn";
+                }
+                else
+                {
+                    containerClass = "light_message_ctn";
+                }
+                @*container for each message *@
+                <div class="@containerClass">
+                    <p class="msg_text">@message.Text</p>
+                    <p class="msg_date">@message.Date.ToString("H:mm")</p>
+                </div>
+
             }
-            <div class="col-md-12">
-                    <div class="form-group">
-                        <input name="Text" class="form-control" id="messageText" />
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Send" id="submitButton" class="btn" />
-                    </div>
-                    <input type="hidden" value="@userName" name="SenderUsername" id="senderUsername"/>
-                    <input type="hidden" value="@ViewBag.friend" name="ReceiverUsername" id="receiverUsername"/>
-            </div>
+        }
+    </div>
+@*container to send a new message*@
+    <div class="send_msg_ctn">
+@*input field*@
+        <div class="form_group_input">
+            <input name="Text" class="form-control" id="messageText" />
         </div>
+@*send button*@
+        <div class="form_group_submit">
+            <button type="submit" id="submitButton" class="btn" ><img src="~/Images/Icons/send.png" /></button>
+        </div>
+@*hidden field for who is the sender and who receives the message*@
+        <input type="hidden" value="@userName" name="SenderUsername" id="senderUsername" />
+        <input type="hidden" value="@ViewBag.friend" name="ReceiverUsername" id="receiverUsername" />
     </div>
 </div>
+
 
 @section Scripts{
     <script>
@@ -59,5 +59,7 @@
     </script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>
-
+}
+@section Style{ 
+<link href="~/css/chat.css" type="text/css" rel="stylesheet"/>
 }

@@ -310,29 +310,41 @@ namespace licenta.Controllers
 
             if(searchString == null)
             {
-                return Json(new { message = "nimic trimis" });
+                return Json("");
             }
             else
             {
                 var usersInDB = await _context.Users.Where(u => (u.UserName.Contains(searchString) || u.FirstName.Contains(searchString) || u.LastName.Contains(searchString)))
                     .OrderBy(u => u.Email)
                     .ToListAsync();
-                if(await _userManager.IsInRoleAsync(currentUser, "Cursant"))
+                if (await _userManager.IsInRoleAsync(currentUser, "Cursant"))
                 {
                     foreach (var user in usersInDB)
                     {
                         if (await _userManager.IsInRoleAsync(user, "Instructor"))
                         {
-                            users.Add(new { 
+                            users.Add(new {
                                 userName = user.UserName,
                                 lastName = user.LastName,
                                 firstName = user.FirstName
                             });
                         }
                     }
+                    return Json(users);
                 }
-
-                return Json(users);
+                else
+                {
+                    foreach (var user in usersInDB)
+                    {
+                         users.Add(new
+                         {
+                            userName = user.UserName,
+                            lastName = user.LastName,
+                            firstName = user.FirstName
+                         });
+                    }
+                    return Json(users);
+                }
             }            
         }
     }

@@ -2,16 +2,21 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<licenta.ViewModel.UserConversationsViewModel>
-@{ 
+@{
     var isSeen = "";
+    var username = User.Identity.Name;
 }
-    <div class="search_ctn" style="border: 1px solid black">
+@*container to find a friend to send message*@
+<div class="search_ctn">
+    <div class="search_form_ctn">
         <input type="text" name="search" placeholder="cauta..." id="search_string" />
         <input type="submit" value="Cauta" id="find_people" />
     </div>
 
+    @*when user searches for a friend a button will be displayed with the informations about that user, the form will send him to the chat action*@
     <form class="result_ctn" asp-action="Chat" asp-controller="Account">
     </form>
+</div>
 
 @if (!Model.Any())
 {
@@ -19,30 +24,58 @@
 }
 else
 {
-<form class="conversations_ctn" asp-action="Chat">
-    @foreach(var conversation in Model)
-    {
-        if(conversation.IsSeen == false)
+    @*contains the users with who the logged user communicated*@
+    <form class="conversations_ctn" asp-action="Chat">
+        @foreach (var conversation in Model)
         {
-            isSeen = "message_seen";
+            @*if the message has been seen or fi the sender is the logged user do not color container*@
+            if (conversation.IsSeen == true || conversation.Sender.Equals(username))
+            {
+                isSeen = "";
+            }
+            else
+            {
+                isSeen = "message_not_seen";
+            }
+@*for each conversation show a button to send the user to a page with that conversation*@
+            <button type="submit" class="convo_ctn @isSeen" name="friend" value="@conversation.Name">
+                <div class="friend">
+                    <p>@conversation.Name</p>
+                </div>
+                <div class="message_txt">
+                    <div class="sender_ctn">
+                        @if (conversation.Sender == User.Identity.Name)
+                        {
+                            <p>Tu:</p>
+                        }
+                        else
+                        {
+                            <p> @conversation.Sender:</p>
+                        }
+                    </div>
+                    <div class="text_ctn">
+                        <p>@conversation.Text</p>
+                    </div>
+                </div>
+                <div class="message_time">
+@*if the message has been send in the current day do not show the date*@
+                    @if (conversation.Time.Date.Equals(DateTime.Now.Date))
+                    {
+                        <p>Azi @conversation.Time.ToString("H:mm")</p>
+                    }
+                    else
+                    {
+                        <p>@conversation.Time.ToString("dd MMM H:mm")</p>
+
+                    }
+                </div>
+            </button>
         }
-        <button type="submit" class="convo_ctn @isSeen" style="border: 1px solid black" name="friend" value="@conversation.Name">
-            <div class="friend">
-                <p>@conversation.Name</p>
-            </div>
-            <div>
-                <p> @conversation.Sender</p>
-            </div>
-            <div>
-                <p>@conversation.Text</p>
-            </div>
-            <div>
-                <p>@conversation.Time</p>
-            </div>
-        </button>
-    }
-</form>
+    </form>
 }
-@section Scripts{ 
-<script src="~/js/conversation.js"></script>
+@section Style{ 
+<link href="~/css/conversations.css" type="text/css" rel="stylesheet"/>
+}
+@section Scripts{
+    <script src="~/js/conversation.js"></script>
 }

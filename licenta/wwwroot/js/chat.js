@@ -11,14 +11,6 @@ function sendMessageToHub(receiverUsername, message) {
     connection.invoke('sendMessage', receiverUsername, message)
 }
 
-class Message {
-    constructor(senderUsername, receiverUsername, text, date) {
-        this.senderUsername = senderUsername;
-        this.receiverUsername = receiverUsername;
-        this.text = text;
-        this.date = date;
-    }
-}
 
 const senderUsername = SenderUsername;
 let text = document.getElementById("messageText");
@@ -43,20 +35,16 @@ document.getElementById('submitButton').addEventListener('click', () => {
         clearInputField();
         //
         sendMessage();
-        console.log(data);
-        console.log("message sent successfully");
         //succes
     }
     function errorFunc(data) {
-        console.log(data);
-        console.log("message sent without success ");
         //show in message ctn there was a problem sending the message 
     }
 });
 
 function clearInputField() {
-    var text = document.getElementById("messageText").value;
-    messageQueue.push(text);
+    var text = document.getElementById("messageText");
+    messageQueue.push(text.value);
     text.value = '';
 }
 function sendMessage() {
@@ -69,7 +57,6 @@ function sendMessage() {
 }
 //add message to chat
 function addMessageToChat(message, who) {
-    console.log("start" + who);
     let isCurrentUserMessage = "";
 
     if (who === senderUsername) {
@@ -78,56 +65,20 @@ function addMessageToChat(message, who) {
         isCurrentUserMessage = false;
     }
 
-    let container = document.createElement('p');
-    container.className = isCurrentUserMessage ? "container darker" : "container";
+    let container = document.createElement('div');
+    container.className = isCurrentUserMessage ? "dark_message_ctn" : "light_message_ctn";
 
     let sender = document.createElement('p');
-    sender.className = "sender";
-    console.log("end" + who);
-    sender.innerHTML = who;
+
     let text = document.createElement('p');
     text.innerHTML = message;
 
     let date = document.createElement('span');
-    date.className = isCurrentUserMessage ? "time-left" : "time-right";
+    date.className = "msg_date";
     var currentDate = new Date();
-    date.innerHTML =
-        + currentDate.getDate() + "/"
-        + currentDate.getFullYear() + " "
-        + currentDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', });
-    container.appendChild(sender);
+    date.innerHTML = currentDate.getHours() + ":" + currentDate.getMinutes();
+   
     container.appendChild(text);
     container.appendChild(date);
-    chat.appendChild(container);
-}
-function addMessageToChatFromFired(message, who) {
-
-    let isCurrentUserMessage = "";
-
-    if (who === senderUsername) {
-        isCurrentUserMessage = true;
-    } else {
-        isCurrentUserMessage = false;
-    }
-
-    let container = document.createElement('p');
-    container.className = isCurrentUserMessage ? "container darker" : "container";
-
-    let sender = document.createElement('p');
-    sender.className = "sender";
-    sender.innerHTML = who;
-    let text = document.createElement('p');
-    text.innerHTML = message;
-
-    let date = document.createElement('span');
-    date.className = isCurrentUserMessage ? "time-left" : "time-right";
-    var currentDate = new Date();
-    date.innerHTML =
-        + currentDate.getDate() + "/"
-        + currentDate.getFullYear() + " "
-        + currentDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', });
-    container.appendChild(sender);
-    container.appendChild(text);
-    container.appendChild(date);
-    chat.appendChild(container);
+    chat.prepend(container);
 }

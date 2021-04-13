@@ -617,10 +617,13 @@ namespace licenta.Controllers
                 ViewBag.CurrentUser = user.UserName;
                 ViewBag.Friend = friend;
 
-                IEnumerable<Message> messages = await _context.Messages
+                var messages = await _context.Messages
                     .Where(m => (m.ReceiverUsername == user.UserName && m.SenderUsername == friend) || (m.ReceiverUsername == friend && m.SenderUsername == user.UserName))
-                    .OrderBy(m => m.Date)
+                    .OrderByDescending(m => m.Date)
                     .ToListAsync();
+                foreach (var message in messages)
+                    message.IsSeen = true;
+                _context.SaveChangesAsync();
                 return View(messages);
             }
             return StatusCode(404);

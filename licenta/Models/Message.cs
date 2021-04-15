@@ -10,9 +10,11 @@ namespace licenta.Models
     public class Message
     {
         public int Id { get; set; }
-
+        [Required]
+        [MaxLength(50)]
         public string SenderUsername { get; set; }
-
+        [Required]
+        [MaxLength(50)]
         public string ReceiverUsername { get; set; }
 
         [Required]

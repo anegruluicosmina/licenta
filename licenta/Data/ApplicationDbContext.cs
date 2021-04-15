@@ -17,6 +17,7 @@ namespace licenta.Data
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

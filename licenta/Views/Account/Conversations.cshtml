@@ -37,7 +37,7 @@ else
             {
                 isSeen = "message_not_seen";
             }
-@*for each conversation show a button to send the user to a page with that conversation*@
+            @*for each conversation show a button to send the user to a page with that conversation*@
             <button type="submit" class="convo_ctn @isSeen" name="friend" value="@conversation.Name">
                 <div class="friend">
                     <p>@conversation.Name</p>
@@ -50,7 +50,7 @@ else
                         }
                         else
                         {
-                            <p> @conversation.Sender:</p>
+                            <div><p> @conversation.Sender</p><p>:</p></div>
                         }
                     </div>
                     <div class="text_ctn">
@@ -58,7 +58,7 @@ else
                     </div>
                 </div>
                 <div class="message_time">
-@*if the message has been send in the current day do not show the date*@
+                    @*if the message has been send in the current day do not show the date*@
                     @if (conversation.Time.Date.Equals(DateTime.Now.Date))
                     {
                         <p>Azi @conversation.Time.ToString("H:mm")</p>
@@ -73,8 +73,8 @@ else
         }
     </form>
 }
-@section Style{ 
-<link href="~/css/conversations.css" type="text/css" rel="stylesheet"/>
+@section Style{
+    <link href="~/css/conversations.css" type="text/css" rel="stylesheet" />
 }
 @section Scripts{
     <script src="~/js/conversation.js"></script>

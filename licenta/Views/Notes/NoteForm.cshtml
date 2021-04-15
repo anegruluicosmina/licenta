@@ -1,0 +1,29 @@
+﻿@model licenta.ViewModel.NoteViewModel
+@{ 
+}
+
+@using (Html.BeginForm("SaveNote", "Notes"))
+{
+    @Html.ValidationSummary()
+<div>
+    @Html.LabelFor(m => m.Date)
+    <input asp-for="@Model.Date" type="date" class="form-control" value="@Model.Date.Date.ToString("yyyy-MM-dd")" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+    @Html.ValidationMessageFor(m => m.Date)
+</div>
+<div>
+    @Html.LabelFor(m => m.StartTime)
+    <input asp-for="@Model.StartTime" type="time" asp-format="{0:hh-mm}" class="form-control" value="@Model.StartTime.TimeOfDay.ToString(@"hh\:mm")" />
+    @Html.ValidationMessageFor(m => m.StartTime)
+</div>
+    <div>
+        @Html.LabelFor(m => m.EndTime)
+        <input asp-for="@Model.EndTime" type="time" asp-format="{0:hh-mm}" class="form-control" value="@Model.EndTime.TimeOfDay.ToString(@"hh\:mm")" />
+        @Html.ValidationMessageFor(m => m.EndTime)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+    </div>
+    <button type="submit">Salveaza</button>
+}

@@ -601,30 +601,44 @@ namespace licenta.Controllers
                     });
                 }
                 //order the conersations by date
-                conversationsViewModels.OrderBy(c => c.Time);
+                var model = conversationsViewModels.OrderByDescending(c => c.Time).ToList();
 
-                return View(conversationsViewModels);
+                return View(model);
             }
             return StatusCode(404);
 
         }
-
+        //returns messages with the friend and info about friend
         public async Task<IActionResult> Chat(string friend)
         {
             if(friend != null)
             {
+                //find friend in db
+                var infoFriend = await _userManager.FindByNameAsync(friend);
+                if (infoFriend == null)
+                    return StatusCode(404);
+
+                var viewModel = new ChatViewModel()
+                {
+                    Username = infoFriend.UserName,
+                    LastName = infoFriend.LastName,
+                    FirstName = infoFriend.FirstName,
+                    PhoneNumber = infoFriend.PhoneNumber
+                };
                 var user = await _userManager.GetUserAsync(User);
                 ViewBag.CurrentUser = user.UserName;
                 ViewBag.Friend = friend;
-
+                //retrieve from db messages with friend
                 var messages = await _context.Messages
                     .Where(m => (m.ReceiverUsername == user.UserName && m.SenderUsername == friend) || (m.ReceiverUsername == friend && m.SenderUsername == user.UserName))
                     .OrderByDescending(m => m.Date)
                     .ToListAsync();
+                //mark each message as seen
                 foreach (var message in messages)
                     message.IsSeen = true;
                 _context.SaveChangesAsync();
-                return View(messages);
+                viewModel.Messages = messages;
+                return View(viewModel);
             }
             return StatusCode(404);
         }
@@ -633,6 +647,11 @@ namespace licenta.Controllers
         [HttpGet]
         public async Task<IActionResult> SaveMessage(string senderUsername, string receiverUsername, string text)
         {
+
+            if (senderUsername == null || receiverUsername == null || text == null)
+            {
+                return Json(new { message = "empty fields" });
+            }
             Message message = new Message
             {
                 SenderUsername = senderUsername,

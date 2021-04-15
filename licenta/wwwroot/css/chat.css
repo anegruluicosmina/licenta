@@ -1,52 +1,70 @@
-﻿.page_ctn{
+﻿.page_ctn {
     height: 80vh;
 }
+
+.friend_ctn {
+    display: none;
+}
+
 .chat_ctn {
     height: 94%;
     margin: 0 auto;
     width: 90%;
     max-width: 550px;
+    padding: 5px 15px 0px 15px;
 }
+
+.friend_contact {
+    padding: 0 0px 0 12px;
+}
+
 .messages_ctn {
     display: flex;
     flex-direction: column-reverse;
     overflow-y: auto;
     height: 90%;
+    font-size: 14px;
 }
+
 .send_msg_ctn {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 15px;
 }
+
 .form_group_input {
-    width: 80%;
-}
-.form_group_input input {
-    width: 100%;
-    border: none;
-    background: #D5E1DD;
-    line-height: 31px;
-    font-size: 16px;
-    outline: none;
-    border-radius: 6px 0px 0px 6px;
-}
-.form_group_submit {
-    width: 20%;
-}
-.form_group_submit button {
-    width: 100%;
-    border: none;
-    background-color: #184D68;
-    outline: none;
-    color: #edf4f5;
-    padding: 0;
-    border-radius: 0px 6px 6px 0px;
+    width: 84%;
 }
 
-.form_group_submit button img{
-    height: 29px;
+    .form_group_input input {
+        width: 100%;
+        border: none;
+        background: #D5E1DD;
+        line-height: 31px;
+        font-size: 16px;
+        outline: none;
+        border-radius: 6px 0px 0px 6px;
+    }
+
+.form_group_submit {
+    width: 15%;
 }
+
+    .form_group_submit button {
+        width: 100%;
+        border: none;
+        background-color: #184D68;
+        outline: none;
+        color: #edf4f5;
+        padding: 0;
+        border-radius: 0px 6px 6px 0px;
+    }
+
+        .form_group_submit button img {
+            height: 29px;
+        }
+
 .dark_message_ctn {
     display: flex;
     flex-direction: column;
@@ -58,14 +76,17 @@
     border-radius: 3px;
     padding-right: 16px;
 }
-.dark_message_ctn p{
-    margin: 0;
-     padding: 2px 0;
-}
+
+    .dark_message_ctn p {
+        margin: 0;
+        padding: 5px 0 0px 10px;
+    }
+
 .msg_text {
     padding-bottom: 6px;
     padding-top: 4px;
 }
+
 .light_message_ctn {
     display: flex;
     flex-direction: column;
@@ -77,24 +98,47 @@
     border-radius: 3px;
     padding-left: 16px;
 }
-.light_message_ctn p{
-    margin: 0;
-}
-.msg_date{
+
+    .light_message_ctn p {
+        margin: 0;
+        padding: 5px 0 0px 0px;
+    }
+
+.msg_date {
     font-size: 10px;
-    text-align:center;
+    text-align: center;
 }
+
 @media only screen and (min-width: 600px) {
-    .chat_ctn {       
+    .page_ctn {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .friend_ctn {
+        display: block;
+        min-width: 300px;
+    }
+
+    .friend_name {
+        display: flex;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        justify-content: center;
+    }
+
+    .chat_ctn {
         border-left: 3px solid #184D68;
         border-right: 3px solid #184D68;
         border-top: 2px solid #184D68;
-        padding: 0 15px;
     }
+
     .form_group_input input {
         line-height: 40px;
         font-size: 16px;
     }
+
     .form_group_submit button img {
         height: 37px;
     }

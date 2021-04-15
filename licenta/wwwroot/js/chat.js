@@ -3,9 +3,9 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 connection.on('receiveMessage', addMessageToChat);
 
 connection.start()
-        .catch(error => {
-            console.log(error.message)
-        });
+    .catch(error => {
+        console.log(error.message)
+    });
 
 function sendMessageToHub(receiverUsername, message) {
     connection.invoke('sendMessage', receiverUsername, message)
@@ -20,22 +20,31 @@ const chat = document.getElementById("chat");
 const messageQueue = [];
 
 document.getElementById('submitButton').addEventListener('click', () => {
-    //save message in db
-    $.ajax({
-        type: "GET",
-        url: baseUrl + 'account/SaveMessage',
-        data: { senderUsername: senderUsername, receiverUsername: receiverUsername.value, text: text.value },
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: successFunc,
-        error: errorFunc
-    });
+
+    if (text.value != "" && senderUsername != "" && receiverUsername.value != "") {
+        //save message in db
+        $.ajax({
+            type: "GET",
+            url: baseUrl + 'account/SaveMessage',
+            data: { senderUsername: senderUsername, receiverUsername: receiverUsername.value, text: text.value },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+    }
+
     function successFunc(data) {
-        //clear the input field
-        clearInputField();
-        //
-        sendMessage();
-        //succes
+        if (data.message === "ok") {
+            //clear the input field
+            clearInputField();
+            //
+            sendMessage();
+            //succes
+        } else {
+            document.getElementById("messageText").value = "A aparut o eroare";
+            console.log(data.message);
+        }
     }
     function errorFunc(data) {
         //show in message ctn there was a problem sending the message 
@@ -77,8 +86,12 @@ function addMessageToChat(message, who) {
     date.className = "msg_date";
     var currentDate = new Date();
     date.innerHTML = currentDate.getHours() + ":" + currentDate.getMinutes();
-   
+
     container.appendChild(text);
     container.appendChild(date);
-    chat.prepend(container);
+    if (chat.hasChildNodes) {
+        chat.prepend(container);
+    } else {
+        chat.append(container);
+    }
 }

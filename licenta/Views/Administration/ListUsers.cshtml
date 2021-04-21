@@ -12,14 +12,14 @@
     {
         <input name="roleId" type="hidden" value="@roleId" />
         <input name="page" type="hidden" value="1" />
-        <p>Cauta in foaie</p>
-        <input type="text" name="search" placeholder="cauta..." value="@ViewData["SearchString"]">
-        <p>Varsta</p>
+        <p>Filtrare</p>
+        <input type="text" name="search" placeholder="caută..." value="@ViewData["SearchString"]">
+        <p>Vârsta</p>
         <input type="number" name="minage" placeholder="min" value="@ViewData["MinAge"]">
         <input type="number" name="maxage" placeholder="max" value="@ViewData["MaxAge"]">
-        <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"]/><text>ASC</text></div>
-        <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"]/><text>DESC</text></div>
-        <input type="submit" value="Cauta" />
+        <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"]/><text>Alfabetic</text></div>
+        <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"]/><text>Invers alfabetic</text></div>
+        <input type="submit" value="Caută" />
     }
 </div>
 
@@ -35,11 +35,11 @@
 
     @if (roleId != null)
     {
-        @Html.ActionLink("Modifica utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
+        @Html.ActionLink("Modifică utilizatorii cu acest rol", "EditUserRole", "Administration", new { roleId = roleId }, new { })
     }
     else
     {
-        @Html.ActionLink("Adauga un nou utilizator", "Register", "Account")
+        @Html.ActionLink("Adaugă un nou utilizator", "Register", "Account")
     }
 
     @if (Model.Any())
@@ -58,7 +58,7 @@
                     </div>
                     @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
                     {
-                        <button type="submit">Sterge utilizator</button>
+                        <button type="submit">Șterge utilizator</button>
                     }
                 </div>
             }
@@ -100,6 +100,7 @@
 </div>
 @section Style{
     <link href="~/css/user_in_role_page.css" rel="stylesheet" />
+    <link href="~/css/filter_menu.css" rel="stylesheet" />
 }
 @section Scripts{
     <script src="~/js/filter.js"></script>

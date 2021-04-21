@@ -1,29 +1,58 @@
-﻿@model List<licenta.ViewModel.UserRoleViewModel>
+﻿@model IList<licenta.ViewModel.UserRoleViewModel>
 
 @{
     var roleId = ViewBag.RoleId;
     var roleName = ViewBag.RoleName;
 }
-<div class="page_ctn">
-    <p class="page_title">Editeaza utilizatorii cu rolul de @roleName</p>
-    @Html.ActionLink("Anuleaza", "ListUsersInRole", "Administration", new { roleId = roleId }, null)
+    <div class="search_ctn">
+        <button id="filters_menu_btn">Filtre</button>
 
-    <div class="form_ctn check_form">
-        @using (Html.BeginForm("EditUserRole", "Administration", new { roleId = ViewBag.RoleId }, FormMethod.Post, null, null))
+        @using (Html.BeginForm("EditUserRole", "Administration", FormMethod.Get, new { id = "filter_form" }))
         {
-            @for (int i = 0; i < Model.Count; i++)
-            {
-                <div class="form_group form_check">
-                    @Html.HiddenFor(m => m[i].UserId)
-                    @Html.HiddenFor(m => m[i].UserName)
-                    <input asp-for="@Model[i].IsSelected" />
-                    <label asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
-                </div>
-            }
-            <input type="submit" class="save_button" value="Salveaza" />
+            <input name="roleId" type="hidden" value="@roleId" />
+            <p>Filtrare</p>
+            <input type="text" name="search" value="@ViewData["searchString"]" placeholder="caută..." />
+            <p>Roluri</p>
+            <div><input type="radio" name="inRole" value="inRole" @ViewData["inRoleChecked"] /><text>Utilizatorii în rol</text></div>
+            <div><input type="radio" name="inRole" value="notInRole" @ViewData["notInRoleCheked"] /><text>Utilizatorii care nu sunt în rol</text></div>
+            <div><input type="radio" name="inRole" value="allChecked" @ViewData["allChecked"] /><text>Toți utilizatorii</text></div>
+            <p>Ordine</p>
+            <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"] /><text>Alfabetic</text></div>
+            <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"] /><text>Invers alfabetic</text></div>
+            <input type="submit" value="Caută" />
         }
     </div>
-</div>
+    <div class="main_ctn">
+        <p class="page_title">Editează utilizatorii cu rolul de @roleName</p>
+        <div class="link_ctn">@Html.ActionLink("Anuleaza", "ListUsers", "Administration", new { roleId = roleId }, null)</div>
+
+        @if (!Model.Any())
+        {
+            <p>Nu exista astfel de utilizatori.</p>
+        }
+        else
+        {
+            <div class="form_ctn check_form">
+                @using (Html.BeginForm("EditUserRole", "Administration", new { roleId = ViewBag.RoleId }, FormMethod.Post, null, null))
+                {
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <div class="form_group form_check">
+                            @Html.HiddenFor(m => m[i].UserId)
+                            @Html.HiddenFor(m => m[i].UserName)
+                            <input asp-for="@Model[i].IsSelected" />
+                            <label asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
+                        </div>
+                    }
+                    <input type="submit" class="save_button" value="Salveaza" />
+                }
+            </div>
+        }
+    </div>
 @section Style{
-    <link href="~/css/profile_forms.css" rel="stylesheet" />
+    <link href="~/css/edit_roles.css" rel="stylesheet" />
+    <link href="~/css/filter_menu.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script src="~/js/filter.js"></script>
 }

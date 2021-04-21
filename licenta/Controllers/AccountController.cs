@@ -571,6 +571,7 @@ namespace licenta.Controllers
                 //create a list of friends the user has communicated with 
                 List<string> friends = new List<string>();
 
+
                 foreach(var item in messages)
                 {
                     if (item.ReceiverUsername != user.Email)
@@ -582,7 +583,11 @@ namespace licenta.Controllers
                     {
                         if (!friends.Contains(item.SenderUsername))
                             friends.Add(item.SenderUsername);
-                    }                      
+                    } else if(item.SenderUsername == user.Email && item.ReceiverUsername ==  user.Email)
+                        {
+                            if (!friends.Contains(item.SenderUsername))
+                                friends.Add(item.SenderUsername);
+                        }                   
                 }
                 //for each friend take from db the last message
                 foreach(var friend in friends)
@@ -603,7 +608,7 @@ namespace licenta.Controllers
                 //order the conersations by date
                 var model = conversationsViewModels.OrderByDescending(c => c.Time).ToList();
 
-                return View(model);
+                return View("Chat", model);
             }
             return StatusCode(404);
 
@@ -616,15 +621,8 @@ namespace licenta.Controllers
                 //find friend in db
                 var infoFriend = await _userManager.FindByNameAsync(friend);
                 if (infoFriend == null)
-                    return StatusCode(404);
+                    return StatusCode(400);
 
-                var viewModel = new ChatViewModel()
-                {
-                    Username = infoFriend.UserName,
-                    LastName = infoFriend.LastName,
-                    FirstName = infoFriend.FirstName,
-                    PhoneNumber = infoFriend.PhoneNumber
-                };
                 var user = await _userManager.GetUserAsync(User);
                 ViewBag.CurrentUser = user.UserName;
                 ViewBag.Friend = friend;
@@ -637,10 +635,11 @@ namespace licenta.Controllers
                 foreach (var message in messages)
                     message.IsSeen = true;
                 _context.SaveChangesAsync();
-                viewModel.Messages = messages;
-                return View(viewModel);
+
+                var model = messages.Select(m => new { m.SenderUsername, m.Text, m.Date}).ToList();
+                return Json(model);
             }
-            return StatusCode(404);
+            return StatusCode(400);
         }
 
         //save messages to database
@@ -660,17 +659,10 @@ namespace licenta.Controllers
                 IsSeen = false,
                 Date = DateTime.Now
             };
-            if (ModelState.IsValid)
-            {
-                if (User.Identity.IsAuthenticated)
-                {
-                    await _context.AddAsync(message);
-                    await _context.SaveChangesAsync();
-                    return Json(new { message ="ok"});
-                }
-
-            }
-            return StatusCode(400);
+            
+            await _context.AddAsync(message);             
+            await _context.SaveChangesAsync();            
+            return Json(new { message ="ok"});
         }
     }
 }

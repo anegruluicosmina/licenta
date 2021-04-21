@@ -40,7 +40,7 @@ namespace licenta.Hubs
                 var sender = _context.Users.Where(u => u.UserName == senderName).Include(u => u.Connections).FirstOrDefault();
                 if (sender == null)
                 {
-                    //user does not found in db
+                    //user not found in db
                 }
                 else
                 {

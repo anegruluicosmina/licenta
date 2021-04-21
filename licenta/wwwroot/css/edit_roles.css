@@ -1,0 +1,157 @@
+﻿.page_title {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 19px;
+}
+
+.page_ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    align-items: center;
+}
+
+.page_ctn a {
+    text-decoration: none;
+    color: #3580a5;
+}
+.main_ctn {
+    margin: 0 auto;
+}
+.link_ctn {
+    width: 100%;
+    text-align: center;
+}
+#form_ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 20px;
+    font-family: 'Montserrat', sans-serif;
+    text-align: start;
+}
+
+#form_ctn form {
+    width: 90%;
+}
+
+#form_ctn a {
+    color: #3580a5;
+}
+
+.form_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form_group label, #form_label {
+    padding: 4px;
+    font-size: 14px;
+    margin: 4px;
+    color: #231f20;
+}
+
+.title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    width: 100%;
+}
+
+
+.form_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form_group label, #form_label {
+    padding: 4px;
+    font-size: 13px;
+    margin: 4px;
+}
+
+.form_group input {
+    font-size: 14px;
+    border: none;
+    outline: none;
+    background-color: #F2F5ED;
+    border-radius: 2px;
+    margin: 3px;
+    padding: 5px;
+    border-bottom: 2px solid #184D68;
+}
+
+.save_button {
+    padding: 7px;
+    margin: 10px 0px;
+    width: 100%;
+    border: none;
+    background: #184D68;
+    font-size: 16px;
+    line-height: 20px;
+    color: #EAEEEA;
+    border-radius: 4px;
+    outline: none;
+}
+
+.field-validation-error {
+    color: #F1433F;
+    margin: 2px;
+}
+
+.form_check {
+    display: contents;
+}
+
+.form_check input {
+    width: fit-content;
+}
+
+.check_form {
+    display: flex;
+    flex-direction: column;
+    margin: 23px 27px;
+    text-align: start;
+}
+
+.form_check {
+    display: table-row;
+    line-height: 35px;
+}
+
+@media only screen and (min-width: 600px) {
+    .page_ctn {
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+    }
+    #form_ctn {
+        width: 380px;
+        margin: 0 auto;
+    }
+
+    .page_title {
+        font-size: 19px;
+    }
+
+    .form_group label, #form_label {
+        font-size: 16px;
+    }
+
+    .form_group input {
+        font-size: 15px;
+        padding: 8px;
+    }
+    .save_button {
+        padding: 9px;
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .check_form {
+        width: 400px;
+        margin: 30px auto;
+        align-items: center;
+    }
+}

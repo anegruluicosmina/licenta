@@ -68,8 +68,10 @@ namespace licenta.Controllers
             if (minage != 0)
                 ViewData["MinAge"] = minage;
 
+
             if (maxage != 0)
                 ViewData["MaxAge"] = maxage;
+
 
             ViewData["SearchString"] = search;
             ViewData["Order"] = order;
@@ -92,7 +94,8 @@ namespace licenta.Controllers
                     /*select users with specific roles*/
                     if (await _userManager.IsInRoleAsync(user, role.Name))
                     {
-                        usersRole.Add(user);
+                        if(user.Age >= minage && user.Age <= maxage)
+                            usersRole.Add(user);
                     }
                 }
                 users = usersRole.ToList();
@@ -188,11 +191,30 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+        //retrieves users from the database to change their roles 
         [HttpGet]
-        public async Task<IActionResult> EditUserRole(string roleId)
+        public async Task<IActionResult> EditUserRole(string roleId, string search, string inRole, string order)
         {
-            ViewBag.RoleId = roleId;
+            if (inRole == "inRole")
+                ViewData["inRoleChecked"] = "checked";
 
+            if (inRole == "notInRole")
+                ViewData["notInRoleCheked"] = "checked";
+
+            if (inRole == "allChecked")
+                ViewData["allChecked"] = "checked";
+
+            if(inRole == null)
+            {
+                inRole = "allChecked";
+                ViewData["allChecked"] = "checked";
+            }
+
+            if (search != null)
+                ViewData["searchString"] = search;
+
+            ViewBag.RoleId = roleId;
+            //retrieve the role from db
             var role = await _roleManager.FindByIdAsync(roleId);
             ViewBag.RoleName = role.Name;
             if(role == null)
@@ -205,23 +227,74 @@ namespace licenta.Controllers
 
             foreach(var user in _userManager.Users)
             {
-                var userRoleViewModel = new UserRoleViewModel
+                //if the user searched for a string and the username does not contain the string continue the iteration
+                if (search != null && !user.UserName.Substring(0, user.UserName.IndexOf('@')).Contains(search.Trim()))
+                    continue;
+                else //if the searc!= null sau daca username containes the searched string
                 {
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                };
-                /*if user is selected in the given role*/
-                if(await _userManager.IsInRoleAsync(user, role.Name))
-                {
-                    userRoleViewModel.IsSelected = true;
+                    //if user is in role (verification is mandatory because we need to know whether to select the checkbox)
+                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    {
+                        //if user is in role and the checkbox for inRole is ckeched the add the user
+                        if (inRole == "inRole")
+                        {
+                            viewModel.Add(new UserRoleViewModel
+                            {
+                                IsSelected = true,
+                                UserId = user.Id,
+                                UserName = user.UserName
+                            });
+                        }
+                        else if(inRole == "allChecked")
+                        { //if all checked is checked and the user is in the role than add the user in the beginning
+                            viewModel.Insert(0, new UserRoleViewModel
+                            {
+                                IsSelected = true,
+                                UserId = user.Id,
+                                UserName = user.UserName
+                            });
+                        }
+                    }
+                    else
+                    {//if the user is not in role and the notInRole is cheked than add the user
+                        if (inRole == "notInRole")
+                        {
+                            viewModel.Add(new UserRoleViewModel
+                            {
+                                IsSelected = false,
+                                UserId = user.Id,
+                                UserName = user.UserName
+                            });
+                        }
+                        else if (inRole == "allChecked")
+                        {//if the use is not in role and allChekcked is selected then add the user in the end of the list
+                            viewModel.Add(new UserRoleViewModel
+                            {
+                                IsSelected = false,
+                                UserId = user.Id,
+                                UserName = user.UserName
+                            });
+                        }
+                    }
                 }
-                else
-                {
-                    userRoleViewModel.IsSelected = false;
-                }
-                viewModel.Add(userRoleViewModel);
             }
-            return View(viewModel);
+
+            //order the results
+            if(order == "ASC")
+            {
+                ViewData["AscChecked"] = "checked";
+                return View(viewModel.OrderBy(m => m.UserName).ToList());
+            }
+            else if(order == "DESC")
+            {
+                ViewData["DescChecked"] = "checked";
+                return View(viewModel.OrderByDescending(m => m.UserName).ToList());
+            }
+            else
+            {
+                return View(viewModel);
+            }
+
         }
 
         [HttpPost]

@@ -1,50 +1,81 @@
-﻿@model licenta.ViewModel.ChatViewModel
+﻿@model IEnumerable<licenta.ViewModel.UserConversationsViewModel>
 @{
     var userName = User.Identity.Name;
     var date = DateTime.Now.ToString("dd MMMM");
+    var isSeen = "";
 }
 
 <div class="friend_ctn">
-    <div class="friend_name">
-        <p>@Model.LastName</p>
-        <p>@Model.FirstName</p>
+    <div class="search_ctn">
+        <div class="search_form_ctn">
+            <input type="text" name="search" placeholder="cauta..." id="search_string" />
+            <input type="submit" value="Cauta" id="find_people" />
+        </div>
+
+        @*when user searches for a friend a button will be displayed with the informations about that user, the form will send him to the chat action*@
+        <div class="result_ctn" id="result_ctn">
+        </div>
     </div>
-    <div class="friend_contact">
-        <p><span>Email:</span> @Model.Username</p>
-        <p><span>Telefon: </span>@Model.PhoneNumber</p>
-    </div>
-</div>
-@*ceva div in care are un titlu*@
-<div class="chat_ctn">
-    <div class="messages_ctn" id="chat">
-        @if (Model.Messages != null)
-        {
-            @foreach (var message in Model.Messages)
+
+    @if (!Model.Any())
+    {
+        <p>Nu sunt conversatii</p>
+    }
+    else
+    {
+        @*contains the users with who the logged user communicated*@
+        <div class="conversations_ctn" id="conversations_ctn">
+            @foreach (var conversation in Model)
             {
-                @*check if the day the message was sent is different, if so show the day *@
-                if (!date.Equals(message.Date.ToString("dd MMMM")))
+                @*if the message has been seen or fi the sender is the logged user do not color container*@
+                if (conversation.IsSeen == true || conversation.Sender.Equals(userName))
                 {
-                    <p class="msg_date">@message.Date.ToString("dd MMMM")</p>
-                    date = message.Date.ToString("dd MMMM");
-                }
-                @*dynamic class assignment depending on who sent the message *@
-                string containerClass, msg_date;
-                if (userName == message.SenderUsername)
-                {
-                    containerClass = "dark_message_ctn";
+                    isSeen = "";
                 }
                 else
                 {
-                    containerClass = "light_message_ctn";
+                    isSeen = "message_not_seen";
                 }
-                @*container for each message *@
-                <div class="@containerClass">
-                    <p class="msg_text">@message.Text</p>
-                    <p class="msg_date">@message.Date.ToString("H:mm")</p>
-                </div>
+                @*for each conversation show a button to send the user to a page with that conversation*@
+                <button type="submit" class="convo_ctn @isSeen " friend="@conversation.Name"@* name="@conversation.Name"*@ id="@conversation.Name">
+                    <div class="friend">
+                        <p>@conversation.Name</p>
+                    </div>
+                    <div class="message_txt">
+                        <div class="sender_ctn">
+                            @if (conversation.Sender == User.Identity.Name)
+                            {
+                                <p>Tu:</p>
+                            }
+                            else
+                            {
+                                <p> @conversation.Sender</p>
+                            }
+                        </div>
+                        <div class="text_ctn">
+                            <p>@conversation.Text</p>
+                        </div>
+                    </div>
+                    <div class="message_time">
+                        @*if the message has been send in the current day do not show the date*@
+                        @if (conversation.Time.Date.Equals(DateTime.Now.Date))
+                        {
+                            <p>Azi @conversation.Time.ToString("H:mm")</p>
+                        }
+                        else
+                        {
+                            <p>@conversation.Time.ToString("dd MMM H:mm")</p>
 
+                        }
+                    </div>
+                </button>
             }
-        }
+        </div>
+    }
+</div>
+<div class="chat_ctn">
+    <div class="messages_ctn" id="chat">
+
     </div>
     @*container to send a new message*@
     <div class="send_msg_ctn">
@@ -58,7 +89,7 @@
         </div>
         @*hidden field for who is the sender and who receives the message*@
         <input type="hidden" value="@userName" name="SenderUsername" id="senderUsername" />
-        <input type="hidden" value="@Model.Username" name="ReceiverUsername" id="receiverUsername" />
+        <input type="hidden" name="ReceiverUsername" id="receiverUsername" />
     </div>
 </div>
 
@@ -66,6 +97,7 @@
 @section Scripts{
     <script>
         const SenderUsername = "@ViewBag.CurrentUser";
+        const CurrentUser = "@userName";
     </script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>

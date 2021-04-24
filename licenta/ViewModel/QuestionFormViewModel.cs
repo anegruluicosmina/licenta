@@ -12,16 +12,16 @@ namespace licenta.ViewModel
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Introduceti un text pentru intrebare")]
-        [Display(Name ="Textul intrebarii")]
+        [Required(ErrorMessage = "Introduceți un text pentru întrebare")]
+        [Display(Name ="Textul întrebării")]
         public string Text { get; set; }
 
-        [MinOneCorrectAnswer (ErrorMessage ="uauua")]
+        [MinOneCorrectAnswer]
         public List<Answer> Answers { get; set; }
 
         public List<Category> Categories { get; set; }
 
-        [Required(ErrorMessage = "Alege o categorie.")]
+        [Required(ErrorMessage = "Alege o categorie")]
         [StringLength(255)]
         [Display(Name = "Categorie")]
         public int CategoryId { get; set; }
@@ -29,7 +29,7 @@ namespace licenta.ViewModel
         public int NumberOfAnswers { get; set; } = 3;
 
         [Display(Name = "Explicație")]
-        [Required(ErrorMessage = "Introduceti o explicație pentru intrebare")]
+        [Required(ErrorMessage = "Introduceți o explicație pentru întrebare")]
         public string Explanation { get; set; }
 
         [Display(Name ="Imagine")]
@@ -45,7 +45,7 @@ namespace licenta.ViewModel
             get
             {
                 if (Id == 0)
-                    return "Adaugare intrebare noua";
+                    return "Adăugare întrebare nouă";
                 return "Editare intrebare";
             }
         }

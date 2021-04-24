@@ -32,9 +32,37 @@ else
     <div class="search_ctn">
         @using (Html.BeginForm("Questions", "Questions", FormMethod.Get))
         {
-            <input type="text" name="search" value="@ViewData["CurrentFilter"]"/>
-            <input type="submit" value="Cauta" />
+            <input type="text" name="search" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Caută" />
         }
+    </div>
+
+    //if model does not have a previous or a next page to show desable the buttons
+    var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
+    var nextDisabled = !Model.HasNextPage ? "none" : "block";
+
+    <div class="paging_ctn">
+        @*button for previous page*@
+        <div class="paging_btn">
+            <a asp-action="Questions"
+               asp-route-page="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               style="display:@prevDisabled">
+                Înapoi
+            </a>
+        </div>
+        <div>
+            <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+        </div>
+        @*buttons for next page*@
+        <div class="paging_btn">
+            <a asp-action="Questions"
+               asp-route-page="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               style="display:@nextDisabled">
+                Next
+            </a>
+        </div>
     </div>
     //div for all the questions
     <div class="questions_ctn">
@@ -87,39 +115,35 @@ else
                 @*div for delte and edit options of the quesiton*@
                 <div class="delete_ctn">
                     @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
-                    @Html.ActionLink("Editare întrebarea", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
+                    @Html.ActionLink("Editează întrebare", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
                 </div>
             </div>
         }
     </div>
 
-//if model does not have a previous or a next page to show desable the buttons    
-    var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
-    var nextDisabled = !Model.HasNextPage ? "none" : "block";
-
-<div class="paging_ctn">
-    @*button for previous page*@
-    <div class="paging_btn">
-        <a asp-action="Questions"
-           asp-route-page="@(Model.PageIndex - 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           style="display:@prevDisabled">
-            Înapoi
-        </a>
+    <div class="paging_ctn">
+        @*button for previous page*@
+        <div class="paging_btn">
+            <a asp-action="Questions"
+               asp-route-page="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               style="display:@prevDisabled">
+                Înapoi
+            </a>
+        </div>
+        <div>
+            <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+        </div>
+        @*buttons for next page*@
+        <div class="paging_btn">
+            <a asp-action="Questions"
+               asp-route-page="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               style="display:@nextDisabled">
+                Next
+            </a>
+        </div>
     </div>
-    <div>
-        <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
-    </div>
-    @*buttons for next page*@
-    <div class="paging_btn">
-        <a asp-action="Questions"
-           asp-route-page="@(Model.PageIndex + 1)"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           style="display:@nextDisabled">
-            Next
-        </a>
-    </div>
-</div>
 }
 
 

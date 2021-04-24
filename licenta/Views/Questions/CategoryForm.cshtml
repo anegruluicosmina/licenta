@@ -6,8 +6,9 @@
     ViewBag.Title = "New";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div id="question_form_ctn">
-    <p class="title">@Model.Title</p>
+<p class="title">@Model.Title</p>
+
+<div id="form_ctn">
     @*using = for close tag for form*@
     @using (Html.BeginForm("SaveCategory", "Questions", null, FormMethod.Post, true, new { id = "question_form" }))
     {
@@ -32,10 +33,10 @@
         @Html.HiddenFor(m => m.Id)
         @Html.AntiForgeryToken()
 
-        <button type="submit" class="save_button"> Save</button>
+        <button type="submit" class="save_button"> Salvează</button>
     }
 
 </div>
-@section Style{ 
-    <link href="~/css/questionForm.css" rel="stylesheet" />
+@section Style{
+    <link href="~/css/profile_forms.css" rel="stylesheet" />
 }

@@ -1,6 +1,6 @@
 ﻿@model licenta.ViewModel.ChangeEmailViewModel
 <p class="page_title">
-    Editeaza adresa de email
+    Editează adresa de email
 </p>
 <div id="form_ctn">
     @using (Html.BeginForm())
@@ -10,7 +10,7 @@
             @Html.TextBoxFor(m => m.Email)
             @Html.ValidationMessageFor(m => m.Email, null, new { @class = "validation_mesg" })
         </div>
-        <input type="submit" class="save_button" value="Salveaza" />
+        <input type="submit" class="save_button" value="Salvează" />
     }
 </div>
 @section Style{

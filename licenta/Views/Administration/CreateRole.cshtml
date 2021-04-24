@@ -5,7 +5,7 @@
 @{
     ViewBag.Title = "Creaza un nou rol";
 }
-<div>
+<div class="main_ctn">
     @using (Html.BeginForm("CreateRole", "Administration", null, FormMethod.Post, true, new { id = "question_form" }))
     {
 
@@ -22,4 +22,5 @@
 </div>
 @section Style{
     <link href="~/css/questionForm.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/create_role.css" rel="stylesheet" />
 }

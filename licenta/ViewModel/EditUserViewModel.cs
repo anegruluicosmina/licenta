@@ -10,7 +10,7 @@ namespace licenta.ViewModel
     {
         public string Id { get; set; }
         [Display(Name = "Nume")]
-        [Required(ErrorMessage = "Introduceți numele dvs de familie.")]
+        [Required(ErrorMessage = "Introduceți numele dvs. de familie")]
         public string LastName { get; set; }
 
 

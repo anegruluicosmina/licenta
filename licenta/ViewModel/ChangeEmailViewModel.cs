@@ -8,9 +8,9 @@ namespace licenta.ViewModel
 {
     public class ChangeEmailViewModel
     {
-        [Required(ErrorMessage = "Trebuie inserata o adresa de email.")]
-        [EmailAddress(ErrorMessage ="Trebuie inserata o adresa de email.")]
-        [Display(Name ="Introduceti noua adresa de email.")]
+        [Required(ErrorMessage = "Trebuie inserată o adresa de email")]
+        [EmailAddress(ErrorMessage ="Trebuie inserată o adresa de email")]
+        [Display(Name ="Introduceți noua adresa de email")]
         public string Email { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace licenta.ViewModel
             }
              return (ok)
                 ? ValidationResult.Success
-                : new ValidationResult("Ar trebuie sa ai cel putin un răspuns corect.");
+                : new ValidationResult("Ar trebuie să ai cel puțin un răspuns corect.");
         }
     }
 }

@@ -32,11 +32,23 @@ namespace licenta.Controllers
         {
             var categories = await _context.Categories.ToListAsync();
             if (id == 0)
-            {                                
-                return View("TestCategories", categories);
+            {
+                var listedCategories = new List<Category>();
+                foreach(var category in categories)
+                {
+                    var countQuestions = _context.Question.Where(q => q.CategoryId == category.Id).Count();
+                    if(countQuestions> category.NumberOfQuestions)
+                    {
+                        listedCategories.Add(category);
+                    }
+                }
+                return View("TestCategories", listedCategories);
             }
+
             var count =  _context.Question.Where(q => q.IsDisputed == true).Count();
+
             ViewBag.Observations = count;
+
             return View("EditCategories", categories);
 
         }
@@ -391,7 +403,7 @@ namespace licenta.Controllers
             return Json(new { message = "Mesaj primit", id = "2" });
         }
         /*[HttpPost]*/
-        public async Task<IActionResult> DisputedQuestions()
+        public async Task<IActionResult> DisputedQuestions(int? page)
         {
             var questionsInDb = await _context.Question
                 .Include(q => q.Answers)
@@ -405,7 +417,11 @@ namespace licenta.Controllers
                 return View("Questions", questionsInDb);
             }
 
-            return View("Questions",questionsInDb);
+            int pageSize = 8;
+
+            var model = await PaginatedList<Question>.CreateAsync(questionsInDb.ToList(), page ?? 1, pageSize);
+
+            return View("Questions",model);
         }
     }
 }

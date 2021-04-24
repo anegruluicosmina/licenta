@@ -18,7 +18,7 @@ namespace licenta.ViewModel
         [Display(Name="Numărul de întrebări dintr-un test")]
         [Required(ErrorMessage ="Acest câmp trebuie completat")]
         [RegularExpression(@"[0-9]*$", ErrorMessage = "Introdu un număr.")]
-        [Range(3, 1000, ErrorMessage = "valoarea trebuie sa fie de minim 3.")]
+        [Range(3, 1000, ErrorMessage = "Valoarea trebuie sa fie de minim 3.")]
         public int NumberOfQuestions { get; set; }
 
         [Display(Name ="Numărul de întrebări la care se poate greși într-un test.")]
@@ -31,7 +31,7 @@ namespace licenta.ViewModel
             get
             {
                 if (Id == 0)
-                    return "Adaugare categorie nouă";
+                    return "Adăugare categorie nouă";
                 return "Editare întrebare";
             }
         }

@@ -8,20 +8,20 @@ namespace licenta.ViewModel
 {
     public class ChangePasswordViewModel
     {
-        [Required(ErrorMessage ="Adaugati parola curenta.")]
-        [Display(Name ="Parola curenta")]
+        [Required(ErrorMessage ="Adăugați parola curentă")]
+        [Display(Name ="Parola curentă")]
         [DataType(DataType.Password)]
         public string CurrentPassword { get; set; }
 
-        [Required(ErrorMessage ="Adaugati parola noua.")]
-        [Display(Name = "Parola noua")]
+        [Required(ErrorMessage ="Adaugați parola nouă.")]
+        [Display(Name = "Parola nouă")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
-        [Required(ErrorMessage ="Trebuie sa adaugati cconfirmarea parolei.")]
+        [Required(ErrorMessage ="Trebuie să adăugați confirmarea parolei")]
         [Display(Name = "Confirmarea parolei noi")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage ="Parola comparata nu se potriveste cu parola noua.")]
+        [Compare("NewPassword", ErrorMessage ="Parola comparată nu se potrivește cu parola nouă")]
         public string ConfirmNewPassword { get; set; }
     }
 }

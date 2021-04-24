@@ -6,6 +6,10 @@
 }
 .page_ctn {
     text-align: center;
+    background-image: url('../Images/Icons/t.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 .page_ctn a{
     text-decoration: none;
@@ -18,8 +22,17 @@
     margin: 0px 20px;
     font-family: 'Montserrat', sans-serif;
     text-align: start;
+    background: #184D68;
+    padding: 25px 5px;
+    border-radius: 5px;
 }
-
+.validation_summ_ctn {
+    color: #F1433F;
+}
+.validation_summ_ctn ul{
+    list-style: none;
+    padding: 0;
+}
 #form_ctn form {
     width: 90%;
 }
@@ -54,6 +67,7 @@
     padding: 4px;
     font-size: 13px;
     margin: 4px;
+    color: #EAEEEA;
 }
 
 .form_group input {
@@ -72,10 +86,10 @@
     margin: 10px 0px;
     width: 100%;
     border: none;
-    background: #184D68;
+    background: #EAEEEA;
     font-size: 16px;
     line-height: 20px;
-    color: #EAEEEA;
+    color: #184D68;
     border-radius: 4px;
     outline: none;
 }
@@ -102,7 +116,7 @@
 }
 @media only screen and (min-width: 600px) {
     #form_ctn {
-        width: 380px;
+        width: 430px;
         margin: 0 auto;
     }
     .page_title{

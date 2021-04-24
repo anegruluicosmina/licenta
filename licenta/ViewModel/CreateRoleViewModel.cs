@@ -9,6 +9,7 @@ namespace licenta.ViewModel
     public class CreateRoleViewModel
     {
         [Required]
+        [Display(Name ="Numele rolului")]
         public string RoleName { get; set; }
     }
 }

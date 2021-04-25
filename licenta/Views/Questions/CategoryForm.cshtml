@@ -29,6 +29,11 @@
             @Html.TextBoxFor(m => m.NumberOfWrongQuestions, new { @class = "explanation_txt" })
             @Html.ValidationMessageFor(m => m.NumberOfWrongQuestions, null, new { @class = "validation_mesg" })
         </div>
+        <div class="form_group">
+            @Html.LabelFor(m => m.Time)
+            @Html.TextBoxFor(m => m.Time, new { @class = "explanation_txt" })
+            @Html.ValidationMessageFor(m => m.Time, null, new { @class = "validation_mesg" })
+        </div>
 
         @Html.HiddenFor(m => m.Id)
         @Html.AntiForgeryToken()

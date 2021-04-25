@@ -84,7 +84,6 @@ $(".chart_ctg_btn").click(function () {
         data: { categoryId: category},
     }).done(function (response) {
         PopulateDataLineChart(response);
-
     }).fail(function (error) {
         console.log(error);
     });

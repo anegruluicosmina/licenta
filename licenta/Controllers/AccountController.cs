@@ -144,7 +144,7 @@ namespace licenta.Controllers
         {
             return View();
         }
-
+/*
         [HttpPost]
         public IActionResult ProfileMenu(string submit_btn)
         {
@@ -160,7 +160,7 @@ namespace licenta.Controllers
                 default:
                     return RedirectToAction("Profile");
             }
-        }
+        }*/
 
         [HttpGet]
         [Authorize]
@@ -477,6 +477,7 @@ namespace licenta.Controllers
 
             List<int> passedExamensList = new List<int>();
             List<int> examensList = new List<int>();
+            List<int> failedExamensList = new List<int>();
 
             LineChartDataSet lineChartDataSet = new LineChartDataSet();
 
@@ -484,10 +485,12 @@ namespace licenta.Controllers
             {
                 passedExamensList.Add(tests.Where(c => c.Date.Date <= date).Where(c => c.Passed == true).Count());
                 examensList.Add(tests.Where(c => c.Date.Date <= date).Count());
+                failedExamensList.Add(tests.Where(c => c.Date.Date <= date).Where(c => c.Passed == false).Count());
 
             }
             int[] passedExamens = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();
             int[] examens = examensList.ConvertAll<int>(item => (int)item).ToArray();
+            int[] failedExamens = failedExamensList.ConvertAll<int>(item => (int)item).ToArray();
             LineChartDataSet passedExamensData = new LineChartDataSet()
             {
                 data = passedExamens,
@@ -506,11 +509,20 @@ namespace licenta.Controllers
                 fill = false
 
             };
+            LineChartDataSet failedExamendData = new LineChartDataSet()
+            {
+                data = failedExamens,
+                label = "Numarul de examene picate",
+                borderColor = "#BF381A",
+                backgroundColor = "#BF381A",
+                fill = false
+
+            };
             /* = passedExamensList.ConvertAll<int>(item => (int)item).ToArray();*/
             LineChartData dataset = new LineChartData()
             {
                 labels = labels,
-                datasets = new LineChartDataSet[] { examensData , passedExamensData }
+                datasets = new LineChartDataSet[] { examensData , passedExamensData, failedExamendData }
 
             };
             return Json(dataset);

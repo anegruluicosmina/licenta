@@ -21,6 +21,7 @@ namespace licenta.ViewModel
         public Category Category { get; set; }
 
         public int CategoryId { get; set; }
+        public string ImagePath { get; set; }
 
         public List<AnswerViewModel> Answers { get; set; }
     }

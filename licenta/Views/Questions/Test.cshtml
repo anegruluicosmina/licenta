@@ -10,36 +10,52 @@
 <div class="container">
     <div id="test_container">
         <p id="result"> </p>
-        <div class="qst_left">
+        @*div to keep track of the answers*@
+    <div class="qst_left">
+        <div class="count_ctn">
+            <p id="countdown_ctn">@Model.Time:0</p>
+        </div>
+        <div class="question_header">
             <p>Întrebari ramase</p>
             <p id="nr_questions"> @Model.NumberOfQuestions</p>
         </div>
+    </div>
         <div class="wrong_correct_answ" style="display: none;">
             <div class="correct_answers">
-                <p>Raspunsuri corecte<p>
+                <p>Răspunsuri corecte<p>
                 <p id="correct_answers"> 0</p>
             </div>
             <div class="wrong_answers">
-                <p>Raspunsuri gresite</p>
+                <p>Răspunsuri greșite</p>
                 <p id="wrong_answers"> 0</p>
             </div>
         </div>
+        @*container for questions and answers*@
         <div id="question_container">
-            <p id="question_text"></p>
-            <br />
-            <div id="answers"></div>
-            <p id="error_message"></p>
-            <p id="explanation"> </p>
-        </div>
-        <div id="test_buttons">
-            <input type="submit" style=" display: none;" id="attention_btn" value="!!" />
             <div>
-                <input type="submit" id="show_explanation" value="Vezi explicatia" style=" display: none;" />
-                <input type="submit" name="submitButton" value="Verifica" style="display: none;" id="verify_answer" />
+                <p id="question_text"></p>
+                <br />
+                <div id="answers"></div>
             </div>
-            <input type="submit" id="btn_next_question" value="Start Test" />
+            <div id="question_img">
+            </div>
+        </div>
+        @*for errors and responses*@
+        <p id="error_message"></p>
+        <p id="explanation"> </p>
+
+        <div id="test_buttons">
+            <button type="submit" style=" display: none;" id="attention_btn">
+                <img src="~/Images/Icons/exclamation.png" />
+                <span class="tooltiptext">Atenționează dacă întrebarea este greșită</span>
+            </button>
+            <div>
+                <input type="submit" id="show_explanation" value="Vezi explicația" style=" display: none;" />
+                <input type="submit" name="submitButton" value="Verifică" style="display: none;" id="verify_answer" />
+            </div>
+            <input type="submit" id="btn_next_question" value="Începe testul" />
             <input type="submit" id="btn_new_test" style=" display: none;" value="Dă un alt test" />
-            <a href="" id="anch_show" style="display: none;">Vezi intrebarile gresite</a>
+            <a href="" id="anch_show" style="display: none;">Vezi întrebările greșite</a>
         </div>
 
     </div>

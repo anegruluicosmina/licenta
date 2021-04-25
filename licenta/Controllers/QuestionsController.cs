@@ -278,6 +278,9 @@ namespace licenta.Controllers
             var numberOfQuestions = _context.Categories
                             .First(c => c.Id == id)
                             .NumberOfQuestions;
+            var time = _context.Categories
+                            .First(c => c.Id == id)
+                            .Time;
 
             var questionsInDb = await _context.Question.Where(q => q.CategoryId == id)
                 .Include(q => q.Answers)
@@ -298,7 +301,8 @@ namespace licenta.Controllers
                                                 .Select(c => c.NumberOfWrongQuestions)
                                                 .SingleOrDefaultAsync(),
                     CategoryId = id,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    Time = time
                 };
 
                 foreach (var question in questionsInDb)
@@ -313,7 +317,8 @@ namespace licenta.Controllers
                             Id = x.Id,
                             Text = x.Text
                         }).ToList(),
-                        Explanation = question.Explanation
+                        Explanation = question.Explanation,
+                        ImagePath = question.ImagePath
                     };
                     viewModel.Questions.Add(questionModel);
                 }

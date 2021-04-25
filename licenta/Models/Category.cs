@@ -21,6 +21,9 @@ namespace licenta.Models
         [Required (ErrorMessage = "Trebuie sa adaugi care este numarul minim de intrebari care pot fi gesite la un test pentru aceasta categorie.")]
         public int NumberOfWrongQuestions { get; set; }
 
+        [Required]
+        public int Time { get; set; }
+
         public ICollection<Question> Question { get; set; }
     }
 }

@@ -17,14 +17,18 @@ namespace licenta.ViewModel
 
         [Display(Name="Numărul de întrebări dintr-un test")]
         [Required(ErrorMessage ="Acest câmp trebuie completat")]
-        [RegularExpression(@"[0-9]*$", ErrorMessage = "Introdu un număr.")]
-        [Range(3, 1000, ErrorMessage = "Valoarea trebuie sa fie de minim 3.")]
+        [RegularExpression(@"[0-9]*$", ErrorMessage = "Introdu un număr")]
+        [Range(3, 1000, ErrorMessage = "Valoarea trebuie sa fie de minim 3")]
         public int NumberOfQuestions { get; set; }
 
-        [Display(Name ="Numărul de întrebări la care se poate greși într-un test.")]
-        [Required(ErrorMessage ="Acest câmp trebuie completat.")]
-        [RegularExpression(@"[0-9]*$", ErrorMessage = "Introdu un număr.")]
+        [Display(Name ="Numărul de întrebări la care se poate greși într-un test")]
+        [Required(ErrorMessage ="Acest câmp trebuie completat")]
+        [RegularExpression(@"[0-9]*$", ErrorMessage = "Introdu un număr")]
         public int NumberOfWrongQuestions { get; set; }
+
+        [Display(Name = "Timp(în minute)")]
+        [Required(ErrorMessage ="Acest câmp trebuie completat")]
+        public int Time { get; set; }
 
         public string Title
         {

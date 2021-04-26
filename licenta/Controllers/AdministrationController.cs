@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using licenta.Data;
 using licenta.Models;
@@ -110,7 +111,7 @@ namespace licenta.Controllers
             if (search != null)
             {
                 search = search.Trim();
-                users = users.Where(u => u.Email.Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search) || String.Concat(u.LastName , " " , u.FirstName).Contains(search) || String.Concat(u.FirstName , " " , u.LastName).Contains(search));
+                users = users.Where(u => u.Email.Substring(0, u.Email.IndexOf('@')).Contains(search) || u.FirstName.Contains(search) || u.LastName.Contains(search) || String.Concat(u.LastName , " " , u.FirstName).Contains(search) || String.Concat(u.FirstName , " " , u.LastName).Contains(search));
             }
             //order the result 
             if(!String.IsNullOrWhiteSpace(order))
@@ -339,36 +340,33 @@ namespace licenta.Controllers
 
             return RedirectToAction("ListUsersInRole", new { roleId = roleId });
         }
-        public async Task<IActionResult> DeleteUser(string userId, string? roleId)
+
+        //delete user from db
+
+        public async Task<IActionResult> DeleteUser(string userId)
         {
+            //find user in db
             var user = await _userManager.FindByIdAsync(userId);
 
             if(user == null)
             {
-                ViewBag.ErrorMessage = "Utilizatorul cu acest id nu poate fi gasit";
-                return Content("Not found");
+                return Json(new { error = "Error", errors = "Utilizatorul nu poate fi găsit" });
             }
             else
-            {
+            {//delete user
                 var result = await _userManager.DeleteAsync(user);
 
                 if (result.Succeeded)
                 {
-                    if(roleId == null)
-                        return RedirectToAction("ListUsers");
-                    
-                    return RedirectToAction("ListUsersInRole", new { roleId = roleId });
-
+                    return Json("Succes");
                 }
+                //in case there are errors send them to caller
+                List<string> errors = new List<string>();
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    errors.Add(error.Description);
                 }
-
-                if (roleId == null)
-                    return View("ListUsers");
-
-                return View("ListUsersInRole", new { roleId = roleId });
+                return Json(new { error = "Error", errors = JsonSerializer.Serialize(errors)});
             }
         }
         [AllowAnonymous]

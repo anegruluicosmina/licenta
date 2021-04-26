@@ -56,7 +56,10 @@ namespace licenta.Controllers
         [HttpGet]
         public async Task<IActionResult> Questions(int id, string search, string currentFilter,int? page)
         {
-            ViewBag.CategoryId = id;            
+            var categoryName = _context.Categories.Where(c => c.Id == id).Select(c => c.Name).FirstOrDefault();
+
+            ViewBag.CategoryId = id;
+            ViewBag.CategoryName = categoryName;
 
             //if the search is string is != null, it means while search string was chnaged during paging, this means that the page must be reset to 1 
             if (search != null)
@@ -240,6 +243,8 @@ namespace licenta.Controllers
             return View("CategoryForm", viewModel);
         }
 
+
+        //delete question from db by question id
         [Authorize(Roles = "Admin, Instructor")]
         public async Task<IActionResult> DeleteQuestion (int id)
         {
@@ -247,18 +252,26 @@ namespace licenta.Controllers
                                         .Include(q => q.Answers)
                                         .SingleOrDefaultAsync(q => q.Id == id);
 
+            if (questionInDb == null)
+                return Json(new { type = "Error", Message = "Întrebarea nu a fost găsită" });
+
             _context.Answers.RemoveRange(questionInDb.Answers);
             _context.Question.Remove(questionInDb);
 
             _context.SaveChanges();
 
-            return RedirectToAction("Categories", new { id = 1 });
+            return Json(new { type = "Succes"});
         }
 
+
+        //delete category from db by category id
         [Authorize(Roles ="Admin, Instructor")]
         public IActionResult DeleteCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(c => c.Id == id);
+
+            if(category == null)
+                return Json(new { type = "Error", Message = "Categoria nu a fost găsită" });
 
             var questions = _context.Question.Where(q => q.CategoryId == id).Include(q => q.Answers).ToList();
             foreach (var question in questions)
@@ -269,7 +282,7 @@ namespace licenta.Controllers
             _context.Categories.Remove(category);
             var res = _context.SaveChanges();
 
-            return RedirectToAction("Categories", new { id = 1});
+            return Json(new { type = "Succes" });
         }
 
          //return view and data o a test

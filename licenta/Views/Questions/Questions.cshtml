@@ -6,144 +6,157 @@
 
     @*to take the id of the difficulty*@
 
-    var id = 0;
     var div_name = "";
     var categoryId = ViewBag.CategoryId;
-    @*foreach (var question in Model)
-        {
-            id = question.CategoryId;
-            break;
-        }
-    *@
+    var categoryName = ViewBag.CategoryName;
+
 }
 @section Style{
     <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
 }
-
-<div class="btn_delete">@Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = categoryId })</div>
-
 @if (!Model.Any())
 {
-    <p id="no_data"> Pentru această categorie nu există întrebări.</p>
+    <div class="empty_main_ctn">
+        <div class="btn_delete">
+            <button class="delete_category_btn" categoryId="@categoryId">Șterge categoria</button>
+            @*@Html.ActionLink("Șterge categoria", "DeleteCategory", "Questions", new { id = categoryId })*@
+        </div>
+        <p id="no_data"> Pentru această categorie nu există întrebări.</p>
+    </div>
 }
 else
 {
-    //form for search bar
-    <div class="search_ctn">
-        @using (Html.BeginForm("Questions", "Questions", FormMethod.Get))
-        {
-            <input type="text" name="search" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Caută" />
+    <div class="left_ctn">
+        <div class="btn_delete"><button class="delete_category_btn" categoryId="@categoryId">Șterge categoria</button></div>
+        @*form for search bar*@
+        <div class="search_ctn">
+            @using (Html.BeginForm("Questions", "Questions", FormMethod.Get))
+            {
+                <input type="text" name="search" value="@ViewData["CurrentFilter"]" />
+                <input type="submit" value="Caută" />
+            }
+        </div>
+    </div>
+
+    <div class="main_ctn">
+        @{
+            //if model does not have a previous or a next page to show desable the buttons
+            var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
+            var nextDisabled = !Model.HasNextPage ? "none" : "block";
         }
-    </div>
 
-    //if model does not have a previous or a next page to show desable the buttons
-    var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
-    var nextDisabled = !Model.HasNextPage ? "none" : "block";
 
-    <div class="paging_ctn">
         @*button for previous page*@
-        <div class="paging_btn">
-            <a asp-action="Questions"
-               asp-route-page="@(Model.PageIndex - 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               style="display:@prevDisabled">
-                Înapoi
-            </a>
-        </div>
-        <div>
-            <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
-        </div>
-        @*buttons for next page*@
-        <div class="paging_btn">
-            <a asp-action="Questions"
-               asp-route-page="@(Model.PageIndex + 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               style="display:@nextDisabled">
-                Next
-            </a>
-        </div>
-    </div>
-    //div for all the questions
-    <div class="questions_ctn">
-        @foreach (var question in Model)
-        {
-            <div class="question_ctn">
-                @if (question.ImagePath == null)
-                {
-                    div_name = "qst_ctn";
-                }
-                else
-                {
-                    div_name = "qst_img_ctn";
-                }
-                <div class="@div_name">
-                    <div class="qst_asw_ctn">
-                        @*you cand adit the questions by also clicking on the name*@
-                        <div class="question_label">
-                            @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
-                        </div>
-                        @* div for the answers, if the answer is correct than color it *@
-                        <div class="answers_ctn">
-                            @foreach (var answer in question.Answers)
-                            {
-                                <div>
-                                    @{
-                                        if (answer.IsCorrect)
-                                        {
-                                            <div class="correct_answer">
-                                                @Html.Label(answer.Text)
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="answer">
-                                                @Html.Label(answer.Text)
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <img src="@question.ImagePath" width="150px" />
-                </div>
-                <div class="explanation_ctn">
-                    @Html.Label("Explicație:", null, new { @class = "label_exl" })
-                    @Html.Label(question.Explanation)
-                </div>
-                @*div for delte and edit options of the quesiton*@
-                <div class="delete_ctn">
-                    @Html.ActionLink("Șterge întrebarea", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
-                    @Html.ActionLink("Editează întrebare", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
-                </div>
+        <div class="paging_ctn">
+            <div class="paging_btn">
+                <a asp-action="Questions"
+                   asp-route-page="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   style="display:@prevDisabled">
+                    Înapoi
+                </a>
             </div>
-        }
-    </div>
+            <div>
+                <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+            </div>
+            @*buttons for next page*@
+            <div class="paging_btn">
+                <a asp-action="Questions"
+                   asp-route-page="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   style="display:@nextDisabled">
+                    Next
+                </a>
+            </div>
+        </div>
+        @*//div for all the questions*@
+        <div class="questions_ctn">
+            @foreach (var question in Model)
+            {
+                <div class="question_ctn">
+                    @if (question.ImagePath == null)
+                    {
+                        div_name = "qst_ctn";
+                    }
+                    else
+                    {
+                        div_name = "qst_img_ctn";
+                    }
+                    <div class="@div_name">
+                        <div class="qst_asw_ctn">
+                            @*you cand adit the questions by also clicking on the name*@
+                            <div class="question_label">
+                                @Html.ActionLink(question.Text, "Edit", "Questions", new { id = question.Id }, null)
+                            </div>
+                            @* div for the answers, if the answer is correct than color it *@
+                            <div class="answers_ctn">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <div>
+                                        @{
+                                            if (answer.IsCorrect)
+                                            {
+                                                <div class="correct_answer">
+                                                    @Html.Label(answer.Text)
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="answer">
+                                                    @Html.Label(answer.Text)
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <img src="@question.ImagePath" width="150px" />
+                    </div>
+                    <div class="explanation_ctn">
+                        @Html.Label("Explicație:", null, new { @class = "label_exl" })
+                        @Html.Label(question.Explanation)
+                    </div>
+                    @*div for delte and edit options of the quesiton*@
+                    <div class="delete_ctn">
+                        <button class="delete_btn" questionId="@question.Id">Șterge întrebarea</button>
+                        @*@Html.ActionLink("", "DeleteQuestion", "Questions", new { id = question.Id }, new { @class = "delete_btn" })*@
+                        @Html.ActionLink("Editează întrebare", "Edit", "Questions", new { id = question.Id }, new { @class = "delete_btn" })
+                    </div>
+                </div>
+            }
+        </div>
 
-    <div class="paging_ctn">
-        @*button for previous page*@
-        <div class="paging_btn">
-            <a asp-action="Questions"
-               asp-route-page="@(Model.PageIndex - 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               style="display:@prevDisabled">
-                Înapoi
-            </a>
-        </div>
-        <div>
-            <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
-        </div>
-        @*buttons for next page*@
-        <div class="paging_btn">
-            <a asp-action="Questions"
-               asp-route-page="@(Model.PageIndex + 1)"
-               asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               style="display:@nextDisabled">
-                Next
-            </a>
+        <div class="paging_ctn">
+            @*button for previous page*@
+            <div class="paging_btn">
+                <a asp-action="Questions"
+                   asp-route-page="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   style="display:@prevDisabled">
+                    Înapoi
+                </a>
+            </div>
+            <div>
+                <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+            </div>
+            @*buttons for next page*@
+            <div class="paging_btn">
+                <a asp-action="Questions"
+                   asp-route-page="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   style="display:@nextDisabled">
+                    Next
+                </a>
+            </div>
         </div>
     </div>
 }
 
-
+@section Scripts{
+    <script>
+    const categoryName = "@categoryName";
+    </script>
+    <script src="~/js/delete_question.js"></script>
+    <script src="~/js/delete_category.js"></script>
+}

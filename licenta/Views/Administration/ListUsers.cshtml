@@ -17,8 +17,8 @@
         <p>Vârsta</p>
         <input type="number" name="minage" placeholder="min" value="@ViewData["MinAge"]">
         <input type="number" name="maxage" placeholder="max" value="@ViewData["MaxAge"]">
-        <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"]/><text>Alfabetic</text></div>
-        <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"]/><text>Invers alfabetic</text></div>
+        <div><input type="radio" name="order" value="ASC" @ViewData["AscChecked"] /><text>Alfabetic</text></div>
+        <div><input type="radio" name="order" value="DESC" @ViewData["DescChecked"] /><text>Invers alfabetic</text></div>
         <input type="submit" value="Caută" />
     }
 </div>
@@ -56,10 +56,9 @@
                         <label>Email: @user.UserName</label>
                         <label>Numar de telefon: @user.PhoneNumber</label>
                     </div>
-                    @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
-                    {
-                        <button type="submit">Șterge utilizator</button>
-                    }
+                    @*                    @using (Html.BeginForm("DeleteUser", "Administration", new { userId = user.Id, roleId = roleId }))
+                        {*@
+                    <button type="submit" class="delete_btn" name="@user.UserName" userId="@user.Id">Șterge utilizator</button>
                 </div>
             }
         </div>
@@ -67,29 +66,29 @@
         var prevDisabled = !Model.HasPreviousPage ? "none" : "block";
         var nextDisabled = !Model.HasNextPage ? "none" : "block";
 
-<div class="paging_ctn">
-    <div class="paging_btn">
-        <a asp-action="ListUsers"
-           asp-route-search="@ViewData["SearchString"]"
-           asp-route-order=" @ViewData["Order"]"
-           asp-route-minage="@ViewData["MinAge"]"
-           asp-route-maxage="@ViewData["MaxAge"]"
-           asp-route-page="@(Model.PageIndex - 1)"
-           style="display:@prevDisabled">Previous</a>
-    </div>
-    <div>
-        <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
-    </div>
-    <div class="paging_btn">
-        <a asp-action="ListUsers"
-           asp-route-search="@ViewData["SearchString"]"
-           asp-route-order=" @ViewData["Order"]"
-           asp-route-minage="@ViewData["MinAge"]"
-           asp-route-maxage="@ViewData["MaxAge"]"
-           asp-route-page="@(Model.PageIndex + 1)"
-           style="display:@nextDisabled">Next</a>
-    </div>
-</div>
+        <div class="paging_ctn">
+            <div class="paging_btn">
+                <a asp-action="ListUsers"
+                   asp-route-search="@ViewData["SearchString"]"
+                   asp-route-order=" @ViewData["Order"]"
+                   asp-route-minage="@ViewData["MinAge"]"
+                   asp-route-maxage="@ViewData["MaxAge"]"
+                   asp-route-page="@(Model.PageIndex - 1)"
+                   style="display:@prevDisabled">Previous</a>
+            </div>
+            <div>
+                <p>Pagina @Model.PageIndex din @Model.TotalPages</p>
+            </div>
+            <div class="paging_btn">
+                <a asp-action="ListUsers"
+                   asp-route-search="@ViewData["SearchString"]"
+                   asp-route-order=" @ViewData["Order"]"
+                   asp-route-minage="@ViewData["MinAge"]"
+                   asp-route-maxage="@ViewData["MaxAge"]"
+                   asp-route-page="@(Model.PageIndex + 1)"
+                   style="display:@nextDisabled">Next</a>
+            </div>
+        </div>
 
 
     }
@@ -104,4 +103,5 @@
 }
 @section Scripts{
     <script src="~/js/filter.js"></script>
+    <script src="~/js/users.js"></script>
 }

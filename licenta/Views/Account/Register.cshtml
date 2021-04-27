@@ -11,7 +11,7 @@
 <div id="form_ctn">
     @using (Html.BeginForm("Register", "Account", null, FormMethod.Post, true, new { id = "question_form" })) {
 
-    @Html.ValidationSummary();
+    <div class="validation_summ_ctn">@Html.ValidationSummary();</div>
 
     <div class="form_group">
         @Html.LabelFor(m => m.FirstName)
@@ -39,7 +39,7 @@
 
     <div class="form_group">
         @Html.LabelFor(m => m.Birthday)
-        <input asp-for="@Model.Birthday" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+        <input asp-for="@Model.Birthday" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")"  />
         @Html.ValidationMessageFor(m => m.Birthday, null, new { @class = "validation_mesg" })
     </div>
 

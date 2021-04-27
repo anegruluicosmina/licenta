@@ -1,4 +1,5 @@
-﻿using System;
+﻿using licenta.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace licenta.ViewModel
         [Display(Name ="Data nașterii")]
         [Required(ErrorMessage ="Introduceți data nașterii.")]
         [DataType(DataType.Date)]
+        [CheckDateRangeAttribute]
         public DateTime Birthday { get; set; }
 
         [Display(Name ="Parola")]

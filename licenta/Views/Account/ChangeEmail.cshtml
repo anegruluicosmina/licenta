@@ -1,10 +1,10 @@
 ﻿@model licenta.ViewModel.ChangeEmailViewModel
-<p class="page_title">
-    Editează adresa de email
-</p>
+
 <div id="form_ctn">
     @using (Html.BeginForm())
     {
+        <p class="title">Editează adresa de email</p>
+        <div class="validation_summ_ctn">@Html.ValidationSummary()</div>
         <div class="form_group">
             @Html.LabelFor(m => m.Email)
             @Html.TextBoxFor(m => m.Email)

@@ -1,0 +1,26 @@
+﻿.main_ctn {
+    width: 250px;
+    margin: 26px auto;
+    padding: 16px 11px;
+    background-color: #184D68;
+    color: #edf4f5;
+    border-radius: 10px;
+}
+.title_ctn {
+    text-align: center;
+    padding: 5px;
+    font-size: 15px;
+}
+.text_ctn{
+    text-align: center;
+}
+@media only screen and (min-width: 600px) {
+    .main_ctn {
+        width: 400px;
+        padding: 40px 16px;
+    }
+    .title_ctn {
+        font-weight: 600;
+        letter-spacing: 0.8px;
+    }
+}

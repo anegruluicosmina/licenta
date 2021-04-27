@@ -4,12 +4,13 @@
     ViewBag.Title = "Autentificare";
 }
 
-<p class="page_title"> Autentificare</p>
 
 <div id="form_ctn">
+    <p class="title"> Autentificare</p>
+
     @using (Html.BeginForm("Login", "Account"))
     {
-        @Html.ValidationSummary()
+    <div class="validation_summ_ctn">@Html.ValidationSummary()</div>
         <div class="form_group">
             @Html.LabelFor(m => m.Username)
             @Html.TextBoxFor(m => m.Username)

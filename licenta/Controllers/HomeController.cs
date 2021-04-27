@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using licenta.Models;
+using licenta.ViewModel;
 
 namespace licenta.Controllers
 {
@@ -32,6 +33,12 @@ namespace licenta.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public IActionResult Message(string title, string text)
+        {
+            ViewBag.MessageTitle = title;
+            ViewBag.MessageText = text;
+            return View();
         }
     }
 }

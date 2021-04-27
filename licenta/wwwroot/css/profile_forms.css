@@ -23,7 +23,7 @@
     font-family: 'Montserrat', sans-serif;
     text-align: start;
     background: #184D68;
-    padding: 25px 5px;
+    padding: 16px 5px;
     border-radius: 5px;
 }
 .validation_summ_ctn {
@@ -55,6 +55,7 @@
     font-size: 18px;
     font-weight: 700;
     width: 100%;
+    color: #EAEEEA;
 }
 
 

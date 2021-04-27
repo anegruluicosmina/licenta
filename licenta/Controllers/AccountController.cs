@@ -43,11 +43,15 @@ namespace licenta.Controllers
             return View();
         }
 
+
+        //register user
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
+            //if the model state is valid
             if (ModelState.IsValid)
             {
+                //calculate the birthday 
                 TimeSpan date = DateTime.Now - registerViewModel.Birthday;
                 var age = DateTime.MinValue + date;
                 var user = new ApplicationUser
@@ -61,32 +65,33 @@ namespace licenta.Controllers
                     Age = age.Year
 
                 };
+               //create user in db
                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
                 if (result.Succeeded)
                 {
+                    //if the user was created successfully assigns the role of "CURSANT" 
                     var addRoleResult = await _userManager.AddToRoleAsync(user, "Cursant");
                     if (!addRoleResult.Succeeded)
                     {
                         return Content("Sory there has been a probleme contact the page admin");
                     }
+                    var text = "Pentru a vă putea confirma adresa de email da-ți click pe link-ul de mai jos. În cazul în care nu recunoașteți această cerere puteți ignora acest email.";
+                    //create token and send email
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
                     var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
-                    await _emailService.SendAsync(user.Email, "verificare email", $"<a href = \"{confirmationLink}\">Confirma email</a>", true);
-
+                    await _emailService.SendAsync(user.Email, "verificare email",text + $"</br>"+ $"<a href = \"{confirmationLink}\">Confirma email</a>", true);
+                    //if the register has been by admin send him to the page with the list of users
                     if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Administration");
                     }
-                    /* session cookie*/
-                    /*                    await _signInManager.SignInAsync(user, false);
-                                        return RedirectToAction("index", "home");*/
-                    ModelState.AddModelError("", "Inregistrare cu succes.");
-                    ModelState.AddModelError("", "Inaite de a te autentifica, esti nevoit sa confirmi adresa de email printr-un click pe link-ul trimis pe email de catre noi.");
-/*                    ViewBag.ErrorTitle = "Inregistrare cu succes.";
-                    ViewBag.ErrorMessage = "Inaite de a te autentifica, esti nevoit sa confirmi adresa de email printr-un click pe link-ul trimis pe email de catre noi.";*/
-                    return View(registerViewModel);
+
+
+                    ViewBag.MessageTitle = "Înregistrare cu succes.";
+                    ViewBag.MessageText = "Înaite de a te autentifica, ești nevoit să confirmi adresa de email printr-un click pe link-ul trimis pe email de către noi.";
+
+                    return View("~/Views/Home/Message.cshtml");
                 }
 
                 foreach(var error in result.Errors)
@@ -97,40 +102,55 @@ namespace licenta.Controllers
             return View(registerViewModel);
         }
 
+
+
+        //return view for log in form
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+
+
+        //login user by username and password
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                //find user in db by username(email)
                 var user = await _userManager.FindByEmailAsync(viewModel.Username);
+
+                //check if password is correct
                 if (!(await _userManager.CheckPasswordAsync(user, viewModel.Password)) || user == null)
                 {
-                    ModelState.AddModelError("", "Email-ul sau parola sunt gresite.");
-                    return View(viewModel);
-                }
-                if(user != null && user.EmailConfirmed == false)
-                {
-                    ModelState.AddModelError("", "Email-ul nu a fost inca confirmat");
+                    ModelState.AddModelError("", "Email-ul sau parola sunt greșite.");
                     return View(viewModel);
                 }
 
+                //check if the user cofirmed his email address
+                if(user != null && user.EmailConfirmed == false)
+                {
+                    ModelState.AddModelError("", "Email-ul nu a fost înca confirmat");
+                    return View(viewModel);
+                }
+
+                //sign in the user
                 var result = await _signInManager.PasswordSignInAsync(viewModel.Username, viewModel.Password, viewModel.RememberMe, false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "home");
                 }
 
-                ModelState.AddModelError(string.Empty, "Autentificare esuata.");
+                ModelState.AddModelError(string.Empty, "Autentificare eșuată.");
             }
+
+            //if model is not valid return the view with the error messaged
             return View(viewModel);
         }
 
+        //logout the user
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -144,24 +164,9 @@ namespace licenta.Controllers
         {
             return View();
         }
-/*
-        [HttpPost]
-        public IActionResult ProfileMenu(string submit_btn)
-        {
-            switch (submit_btn) {
-                case "Schimba parola":
-                    return RedirectToAction("ChangePassword");
-                case "Editeaza profilul":
-                    return RedirectToAction("EditUser");
-                case "Schimba email":
-                    return RedirectToAction("ChangeEmail");
-                case "Testele mele":
-                    return RedirectToAction("TestsResults");
-                default:
-                    return RedirectToAction("Profile");
-            }
-        }*/
 
+
+        //return view for edit user
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> EditUser()
@@ -188,6 +193,10 @@ namespace licenta.Controllers
 
             return View(model);
         }
+
+
+
+        //edit user information
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditUser(EditUserViewModel viewModel)
@@ -209,7 +218,8 @@ namespace licenta.Controllers
 
             if (result.Succeeded)
             {
-                return View("Profile");
+                ModelState.AddModelError("", "Actualizările au fost salvate.");
+                return View(viewModel);
             }
             else
             {
@@ -226,39 +236,76 @@ namespace licenta.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
+            //check that the required data has been sent 
             if (userId == null || token == null)
             {
                 return RedirectToAction("index", "home");
             }
+
+            //find user in db by id
             var user = await _userManager.FindByIdAsync(userId);
 
             if(user == null)
-            {
-                return Content("user  not found");
+            { 
+                ViewBag.MessageTitle = "Utilizatorul nu a fost gasit.";
+                return View("~/Views/Home/Message.cshtml");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, token);
 
+            //check that the user confirmed email address
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            
             if (result.Succeeded)
             {
-/*add view for confirmed email*/
-                return Content("Email confirmat");
+                ViewBag.MessageTitle = "Emailul este confirmat.";
+                ViewBag.MessageText = "Acum te poți autentifica în aplicație.";
+                return View("~/Views/Home/Message.cshtml");
             }
-            return Content("email-ul nun a putut fi confirmat");
+
+            ViewBag.MessageTitle = "Email-ul un a putut fi confirmat";
+            ViewBag.MessageText = "Contacteză administratorii prin secțiunea 'Contactează-ne' de mai jos.";
+            return View("~/Views/Home/Message.cshtml");
         }
+
+
+        //return view to recover password if forgotten
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();
         }
+
+
+
+        //change password if forgotten
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPasssword(ForgotPasswordViewModel viewModel)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(viewModel.Email);
-                if(user != null && await _userManager.IsEmailConfirmedAsync(user))
+
+                if (user == null)
+                {
+                    ViewBag.MessageTitle = "Nu a fost găsit un utilizator cu această adresă de email.";
+                    ViewBag.MessageText = "Mai încearcă înca o dată și introdu cu atenție adresa de email.";
+                    return View("~/Views/Home/Message.cshtml");
+
+                }
+
+                if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    ViewBag.MessageTitle = "Emailul nu a fost confirmat.";
+                    ViewBag.MessageText = "După ce te-ai înregistrat în aplicație ți-a fost trimis pe adresa de email un mesaj care conținea un link pentru a confirma adresa de email. " +
+                        "Înainte de a reseta parola confirma adresa de emailul. " +
+                        "În cazul în care nu ai primit mesajul contactează-ne.";
+                    return View("~/Views/Home/Message.cshtml");
+
+                }
+
+                //recover password 
+                if(user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -266,24 +313,36 @@ namespace licenta.Controllers
 
                     await _emailService.SendAsync(viewModel.Email, "Resetare parola", $"<a href = \"{passwordResetLink}\">Resetare parola</a>", true);
 
-                    return View("ForgotPasswordConfirmation");
+                    ViewBag.MessageTitle = "Am înregistrat cererea ta.";
+                    ViewBag.MessageText = "Un email a fost trimis la adresa de email introdusă conținând un link care te trimite către o pagină unde îți poți schimba parola. " +
+                        "În cazul în care nu primești mesajul contactează echipa cu ajutorul datelor de contacte de mai jos.";
+                    return View("~/Views/Home/Message.cshtml");
                 }
-                return Content("HEeeei");
             }
+
             return View(viewModel);
         }
 
+
+
+        //return view to reset de password using the token and email address
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword (string token, string email)
         {
             if(token == null || email == null)
             {
-                Content("Invalid reset password token");
+                ViewBag.MessageTitle = "Codul de autentificare nu mai este valid.";
+                ViewBag.MessageText = "Pentru mai multe datilii contactează-ne folosind datele de contact de mai jos.";
+                return View("~/Views/Home/Message.cshtml");
             }
             return View();
         }
 
+
+
+
+        //reset password for the user using password and password confirmation
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
@@ -297,7 +356,8 @@ namespace licenta.Controllers
                     var result = await _userManager.ResetPasswordAsync(user, viewModel.Token, viewModel.Password);
                     if (result.Succeeded)
                     {
-                        return View("ResetPasswordConfirmation");
+                        ViewBag.MessageTitle = "Parola a fost resetată cu succes.";
+                        return View("~/Views/Home/Message.cshtml");
                     }
                     foreach( var error in result.Errors)
                     {
@@ -305,10 +365,149 @@ namespace licenta.Controllers
                     }
                     return View(viewModel);
                 }
-                return View("ResetPasswordConfirmation");
+                ViewBag.MessageTitle = "Parola a fost resetată cu succes.";
+                return View("~/Views/Home/Message.cshtml");
             }
-         return View(viewModel);
+            return View(viewModel);
         }
+
+
+        //return view to change password for a logged user
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+
+
+        //change password of the logged user
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                //if the user is not logged send him to login page
+                if (user == null)
+                    return RedirectToAction("Login");
+
+                var result = await _userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(viewModel);
+                }
+
+                await _signInManager.RefreshSignInAsync(user);
+                ViewBag.MessageTitle = "Parola a fost schimbată cu succes.";
+                return View("~/Views/Home/Message.cshtml");
+            }
+            return View(viewModel);
+        }
+
+
+        //return view for change email functionality
+        [HttpGet]
+        public IActionResult ChangeEmail()
+        {
+            return View();
+        }
+
+
+        //change email address of a logged user
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmail(ChangeEmailViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                if(user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                if (user.Email.Equals(viewModel.Email))
+                {
+                    ModelState.AddModelError("", "Adresa pe care a-ți introdus-o este aceeași cu adresa de email a contului.");
+                    return View(viewModel);
+                }
+                //replace data
+                user.UserName = viewModel.Email;
+                user.Email = viewModel.Email;
+                user.EmailConfirmed = false;
+                var resultUpdate = await _userManager.UpdateAsync(user);
+
+                if (resultUpdate.Succeeded)
+                {//send email and disconnect the user 
+                    var emailText = "Adresa de email a fost schimbată cu aceasta. Pentru a te putea autentifica în cont trebuie să da-ți click pe link-ul de mai jos. Dacă nu a-ți solicitat acest lucru puteți să nu ignorați acest email.";
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var confirmationLink = Url.Action("ConfirmChangeEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                    await _emailService.SendAsync(viewModel.Email, "verificare email", emailText + $"</br>" + $"<a href = \"{confirmationLink}\">Confirmă email</a>", true);
+                    
+                    await _signInManager.SignOutAsync();
+
+                    string title = "Actualizare reușită.";
+                    string text = "Pentru a te putea autentifica cu noul email te rugăm să confirmi adresa de email folosind intstrucțiunile din mesaj.";
+                    return RedirectToAction("Message", "Home", new { title = title, text = text});
+                }
+                else
+                {//show error from the model
+                    foreach(var error in resultUpdate.Errors)
+                        ModelState.AddModelError(error.Code, error.Description);
+                    return View(viewModel);
+                }
+
+            }
+            return View(viewModel);
+        }
+
+
+
+
+        //confirm email when the logged user asked for a new email address
+        public async Task<IActionResult> ConfirmChangeEmail( string userId, string token)
+        {
+     
+            if(userId == null || token == null)
+            {
+                ViewBag.MessageTitle = "A apărut o eroare și confirmarea nu a fost realizată.";
+                ViewBag.MessageText = "Dacă eroarea persistă contactează-ne prin opțiunile de mai jos.";
+                return View("~/Views/Home/Message.cshtml");
+            }
+
+            
+            var user = await _userManager.FindByIdAsync(userId);
+                        
+            if (user == null)
+            {
+                ViewBag.MessageTitle = "Utilizatorul nu a putut fi găsit.";
+                return View("~/Views/Home/Message.cshtml");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                ViewBag.MessageTitle = "Adresa de email a fost confirmată cu succes.";
+                return View("~/Views/Home/Message.cshtml");
+            }
+
+            ViewBag.MessageTitle = "A apărut o eroare și confirmarea nu a fost realizată.";
+            ViewBag.MessageText = "Mai încearcă o dată. Dacă eroarea persistă contactează-ne prin opțiunile de mai jos.";
+            return View("~/Views/Home/Message.cshtml");
+        }
+
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> TestsResults()
         {
@@ -340,98 +539,6 @@ namespace licenta.Controllers
 
             }
             return View(viewModel);
-        }
-
-        [HttpGet]
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                    return RedirectToAction("Login");
-
-                var result = await _userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
-                if (!result.Succeeded)
-                {
-                    foreach(var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                    return View();
-                }
-
-                await _signInManager.RefreshSignInAsync(user);
-                return Content("ChangePwdConfirmation");
-            }
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        public IActionResult ChangeEmail()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ChangeEmail(ChangeEmailViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.GetUserAsync(User);
-
-                if(user == null)
-                {
-                    return RedirectToAction("Login");
-                }
-                user.UserName = viewModel.Email;
-                user.Email = viewModel.Email;
-                var resultUpdate = await _userManager.UpdateAsync(user);
-                if (resultUpdate.Succeeded)
-                {
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-                    var confirmationLink = Url.Action("ConfirmChangeEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
-                    await _emailService.SendAsync(viewModel.Email, "verificare email", $"<a href = \"{confirmationLink}\">Confirma email</a>", true);
-
-                    return Content("Un email a fost trimis la adresa adaugata");
-                }
-                else
-                {
-                    return Content("Update nereusit");
-                }
-
-            }
-            return View(viewModel);
-        }
-
-        public async Task<IActionResult> ConfirmChangeEmail( string userId, string token)
-        {
-            if(userId == null || token == null)
-            {
-                return RedirectToAction("index", "home");
-            }
-
-            
-            var user = await _userManager.FindByIdAsync(userId);
-                        
-            if (user == null)
-            {
-                return Content("user not found");
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded)
-                return Content("Email confirmat");     
-            
-            return Content("Confirmare nereusita");
         }
 
         public async Task<JsonResult> ProfileChart()

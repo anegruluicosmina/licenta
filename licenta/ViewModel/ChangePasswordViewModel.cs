@@ -21,7 +21,7 @@ namespace licenta.ViewModel
         [Required(ErrorMessage ="Trebuie să adăugați confirmarea parolei")]
         [Display(Name = "Confirmarea parolei noi")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage ="Parola comparată nu se potrivește cu parola nouă")]
+        [Compare("NewPassword", ErrorMessage ="Parola confrimată nu se potrivește cu parola nouă")]
         public string ConfirmNewPassword { get; set; }
     }
 }

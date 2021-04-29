@@ -2,43 +2,55 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<licenta.Models.Note>
-@Html.ActionLink("Adauga o nota noua", "NewNote", "Notes", new { date = ViewBag.Date })
+@{ 
+    var count = 0;
+}
+<div class="action_ctn">@Html.ActionLink("Adaugă o notă nouă", "NewNote", "Notes", new { date = ViewBag.Date })</div>
 <div>
     <p class="date_ctn">@ViewBag.Date.ToShortDateString()</p>
 </div>
-@if (!Model.Any())
-{
-    <p> nicio nota</p>
-}
-else
-{
-    <table class="notes_ctn">
-        <tr>
-            <th>Ora start</th>
-            <th>Ora final</th>
-            <th>Descrie</th>
-            <th>Actiune</th>
-        </tr>
+<table class="notes_ctn">
+    <tr>
+        <th>Oră start</th>
+        <th>Oră final</th>
+        <th>Descrie</th>
+        <th>Acțiune</th>
+    </tr>
         @foreach (var note in Model)
         {
             <tr class="note">
-                <td class="hour_ctn"> @note.StartHour.ToShortTimeString()</td>
-                <td class="hour_ctn"> @note.EndHour.ToShortTimeString()</td>
-                <td class="description_ctn">@note.Description</td>
-                <td>
-                    <button class="delete_btn" id="@note.Id">Sterge</button>
-                    @Html.ActionLink("Editeaza", "EditNote", "Notes", new { id = note.Id })
+                <td class="hour_ctn"> <p>@Html.ActionLink(@note.StartHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id }) </p></td>
+                <td class="hour_ctn"> <p>@Html.ActionLink(@note.EndHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id })</p></td>
+                <td class="description_ctn"><p>@Html.ActionLink(@note.Description, "EditNote", "Notes", new { id = note.Id })</p></td>
+                <td class="delete_ctn">
+                    <button class="delete_btn" id="@note.Id">Șterge</button>
                 </td>
             </tr>
+            count++;
         }
-    </table>
-}
-@Html.ActionLink("Previous", "Notes", "Notes", new { date = ViewBag.PreviousDate })
+        @while (count < 10)
+        {
+            <tr class="note">
+                <td class="hour_ctn"><p></p></td>
+                <td class="hour_ctn"><p></p></td>
+                <td class="description_ctn"><p></p></td>
+                <td class="delete_ctn"><p></p> </td>
+            </tr>
+            count++;
+        }
+</table>
+
+<div class="paging_ctn">
+    @Html.ActionLink("Anterioara", "Notes", "Notes", new { date = ViewBag.PreviousDate })
 @if (ViewBag.Date != DateTime.Now.Date)
 {
     @Html.ActionLink("Azi", "Notes", "Notes", new { date = DateTime.Now.Date })
 }
-@Html.ActionLink("Next", "Notes", "Notes", new { date = ViewBag.NextDate })
+@Html.ActionLink("Următoarea", "Notes", "Notes", new { date = ViewBag.NextDate })
+</div>
 @section Scripts{
     <script src="~/js/note.js"></script>
+}
+@section Style{ 
+    <link href="~/css/notes.css" rel="stylesheet" />
 }

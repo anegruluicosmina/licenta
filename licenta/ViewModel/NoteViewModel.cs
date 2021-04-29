@@ -8,23 +8,23 @@ namespace licenta.ViewModel
 {
     public class NoteViewModel
     {
-        [Display(Name ="data")]
-        [Required(ErrorMessage ="Trebuie sa introduceti o valoeare pentru acest camp")]
+        [Display(Name ="Data")]
+        [Required(ErrorMessage = "Trebuie să introduceți o valoare pentru acest câmp")]
         [DataType(DataType.Date)]
         public DateTime Date{ get; set; }
 
-        [Display(Name ="Ora de inceput")]
-        [Required(ErrorMessage = "Trebuie sa introduceti o valoeare pentru acest camp")]
+        [Display(Name ="Ora de început")]
+        [Required(ErrorMessage = "Trebuie să introduceți o valoare pentru acest câmp")]
         [DataType(DataType.Time)]
         public DateTime StartTime{ get; set; }
 
-        [Display(Name ="Ora de sfarsit")]
-        [Required(ErrorMessage = "Trebuie sa introduceti o valoeare pentru acest camp")]
+        [Display(Name ="Ora de sfârșit")]
+        [Required(ErrorMessage = "Trebuie să introduceți o valoare pentru acest câmp")]
         [DataType(DataType.Time)]
         public DateTime EndTime { get; set; }
 
         [Display(Name ="Descriere")]
-        [Required(ErrorMessage = "Trebuie sa introduceti o valoeare pentru acest camp")]
+        [Required(ErrorMessage = "Trebuie să introduceți o valoare pentru acest câmp")]
         [StringLength(500, ErrorMessage ="Prea multe caractere introduse")]
         public string Description { get; set; }
     }

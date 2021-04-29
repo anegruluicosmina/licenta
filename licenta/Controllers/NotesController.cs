@@ -88,7 +88,7 @@ namespace licenta.Controllers
                 //check if hour from current date is before current moment
                 if (DateTime.Compare(viewModel.Date.Date, DateTime.Now.Date) == 0 && TimeSpan.Compare(viewModel.StartTime.TimeOfDay, DateTime.Now.TimeOfDay) < 0)
                 {
-                    ModelState.AddModelError("IncorrectHours", "Orele nu sunt valide");
+                    ModelState.AddModelError("IncorrectHours", "Nu puteți realiza o notă pentru o dată anterioară");
                     return View("NoteForm", viewModel);
                 }
                 //check if the start hour and end hour are valid

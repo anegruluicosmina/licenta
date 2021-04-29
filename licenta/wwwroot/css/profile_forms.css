@@ -49,7 +49,13 @@
     margin: 4px;
     color: #231f20;
 }
-
+.form_group textarea{
+    background-color: #F2F5ED;
+    font-size: 14px;
+    width: 98%;
+    padding:0 6px;
+    min-height: 60px;
+}
 .title {
     text-align: center;
     font-size: 18px;
@@ -153,4 +159,5 @@
         width: 400px;
         margin: 30px auto;
     }
+
 }

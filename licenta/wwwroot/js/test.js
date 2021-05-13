@@ -5,7 +5,9 @@ var questionsIds = [];
 var wrongQuestions = [];
 var index = -1;
 var answers = document.getElementById("answers");
+
 console.log(model);
+
 const startMinutes = model.time;
 let time = startMinutes * 60;
 let interval = "";
@@ -18,7 +20,8 @@ function updateCountDown() {
 
     countDownElelemt.innerHTML = minutes + ':' + seconds;
     time--;
-    if (minutes == 0 && seconds == 0) {
+
+    if (minutes <= 0 && seconds <= 0) {
         clearInterval(interval);
         var wrongedAnswered = wrongQuestions.length + questionsIds.length;
         if (wrongedAnswered < model.numberOfWrongAnswer) {
@@ -67,51 +70,52 @@ $("#btn_next_question").click(function () {
     $("#explanation").hide();
     $("#show_explanation").hide();
     $("#explanation").text("");
-/*for the first question shown in test*/
+    /*for the first question shown in test*/
     if (index < 0) {
         $(".wrong_correct_answ").show();
         $("#verify_answer").show();
         $("#btn_next_question").attr('value', 'Următoarea întrebare');
         $("#attention_btn").show();
-        interval = setInterval(updateCountDown, 1000);
+        if (interval == '')
+            interval = setInterval(updateCountDown, 1000);
     }
-/*to resume unanswered questions*/
+    /*to resume unanswered questions*/
     if (index + 1 >= questionsIds.length) {
         index = -1;
     }
- /*if the number of incorrectly answered questions is less than the maximum */
-        if (wrongQuestions.length < model.numberOfWrongAnswer) {
-/*if there are still questions go to the next one else the user passed the examn*/
-            if (questionsIds.length > 0) {
-                next_question();
-            } else {
+    /*if the number of incorrectly answered questions is less than the maximum */
+    if (wrongQuestions.length < model.numberOfWrongAnswer) {
+        /*if there are still questions go to the next one else the user passed the examn*/
+        if (questionsIds.length > 0) {
+            next_question();
+        } else {
             /*ADDDD BUTTONS TO TAKE ANOTHER TEST OR TO GO TO THE TEST PAGE*/
-                clearInterval(interval);
-                var data = take_data();
-                $("#result").text("Ai trecut examinarea cu următoarele rezultate:");
-                $("#result").css("border-bottom", "2px solid #184D68");
-                save_test();
+            var data = take_data();
+            $("#result").text("Ai trecut examinarea cu următoarele rezultate:");
+            $("#result").css("border-bottom", "2px solid #184D68");
+            save_test();
             /*btn_new_test();*/
-                $("#btn_new_test").show();
-                $("#question_container").text("");
-                $("#attention_btn").hide();
-    /*show to wrong answered questions*/
-                if (wrongQuestions.length > 0) {
-                    $("#anch_show").show();
-                    $("#anch_show").attr("href", baseUrl+"questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
-                }
-                $("#btn_next_question").hide();
-                $("#verify_answer").hide();
+            $("#btn_new_test").show();
+            $("#question_container").text("");
+            $("#attention_btn").hide();
+            /*show to wrong answered questions*/
+            if (wrongQuestions.length > 0) {
+                $("#anch_show").show();
+                $("#anch_show").attr("href", baseUrl + "questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
             }
-        } else { 
+            $("#btn_next_question").hide();
+            $("#verify_answer").hide();
+        }
+    } else {
         /*if the user had the maximum number of wrong questions*/
         clearInterval(interval);
+        countDownElelemt.innerHTML = '0:0';
         $("#result").text("Ai picat examinarea cu următoarele rezultate:");
         $("#result").css("border-bottom", "2px solid #184D68");
         $("#question_container").text("");
         $("#anch_show").show();
         $("#attention_btn").hide();
-        $("#anch_show").attr("href", baseUrl +"questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
+        $("#anch_show").attr("href", baseUrl + "questions/WrongAnswered?data=" + JSON.stringify(wrongQuestions));
         $("#btn_next_question").hide();
         $("#error_message").text("");
         $("#verify_answer").hide();
@@ -124,7 +128,7 @@ $("#btn_next_question").click(function () {
 /*to verify the answer*/
 $("#verify_answer").click(function () {
     if (questionsIds.length > 0) {
-/*take user's answer*/
+        /*take user's answer*/
         var data = take_data();
         if (data === "[]") {
             $("#error_message").text("Înainte de a verifica un răspuns, selectează unul.");
@@ -138,7 +142,7 @@ $("#verify_answer").click(function () {
             $("#question_container").hide();
             $("#anch_show").show();
         }
-/*verify the number of wrong answered to show the proper message*/
+        /*verify the number of wrong answered to show the proper message*/
         if (wrongQuestions.length > model.numberOfWrongAnswer) {
             $("#result").text("Ai picat examinarea cu următoarele rezultate:");
             $("#result").css("background-color", "2px solid #184D68");
@@ -148,7 +152,7 @@ $("#verify_answer").click(function () {
         } else {
             $("#result").text("Ai trecut examinarea cu următoarele rezultate:");
             $("#result").css("background-color", "2px solid #184D68");
-        /*btn_new_test();*/
+            /*btn_new_test();*/
             $("#btn_new_test").show();
             $("#attention_btn").hide();
         }
@@ -158,16 +162,20 @@ $("#verify_answer").click(function () {
 $("#btn_new_test").click(function () {
     location.reload();
 })
+
+
 /*update the interface for the next question*/
 function next_question() {
     index++;
+    console.log("aaaaaaaaaaaaaaaaaaaa");
     $("#verify_answer").show();
     $("#explanation").text("");
     $("#error_message").text("");
     $("#question_img").text("");
     $("#question_text").text(model.questions.find(element => element.id === questionsIds[index]).text);
     $("#answers").empty();
-/*add the answer*/
+
+    /*add the answer*/
     for (var i = 0; i < model.questions[index].answers.length; i++) {
         var answer = document.createElement("div");
         answer.setAttribute("class", "answer");
@@ -179,10 +187,11 @@ function next_question() {
         $("#answers").append(answer);
     }
 
+    var imagePath = model.questions.find(element => element.id === questionsIds[index]).imagePath;
     //add image
-    if (model.questions[index].imagePath != null) {
+    if (imagePath!= null) {
         var image = document.createElement("img");
-        image.src = model.questions[index].imagePath;
+        image.src = imagePath;
         $("#question_img").show();
         $("#question_img").append(image);
     }
@@ -199,7 +208,7 @@ function take_data() {
 function btn_new_test() {
     var btn_another_test = document.createElement("button");
     btn_another_test.setAttribute("id", "btn_test");
-    btn_another_test.textContent ="Dă un alt test";
+    btn_another_test.textContent = "Dă un alt test";
     $("#test_buttons").append(btn_another_test);
 }
 
@@ -223,14 +232,14 @@ function save_test() {
 function verify_answers(data) {
     $.ajax({
         type: "GET",
-        url: baseUrl+'questions/verifyAnswer',
+        url: baseUrl + 'questions/verifyAnswer',
         data: { data: data, questionid: questionsIds[index] },
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: successFunc,
         error: errorFunc
     });
-/*updates the interface with the call answer*/
+    /*updates the interface with the call answer*/
     function successFunc(data) {
         if (data.id == 0) {
             if (index >= -1) {
@@ -246,12 +255,13 @@ function verify_answers(data) {
             $("#error_message").text("Înainte de a verifica un raspuns, selectează unul.");
 
         } else if (data.id == 2) {
-/*wrong asnwer: save the question to show later*/
+            /*wrong asnwer: save the question to show later*/
             if (index >= -1) {
                 $("#wrong_answers").text(function (i, oldvalue) {
                     return parseInt(oldvalue, 10) + 1;
                 });
             }
+            console.log("wrongQuestions.push " + questionsIds[index + 1]);
             wrongQuestions.push(questionsIds[index + 1]);
             $("#explanation").show();
             $("#show_explanation").show();
@@ -275,7 +285,7 @@ $("#attention_btn").click(function () {
     $.ajax({
         type: "GET",
         url: baseUrl + "questions/WrongQuestion",
-        data: { questionId: questionsIds[index]},
+        data: { questionId: questionsIds[index] },
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: successFunc,

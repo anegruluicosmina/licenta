@@ -11,7 +11,7 @@
 <div id="form_ctn">
     @using (Html.BeginForm("Register", "Account", null, FormMethod.Post, true, new { id = "question_form" })) {
 
-    <div class="validation_summ_ctn">@Html.ValidationSummary();</div>
+    <div class="validation_summ_ctn">@Html.ValidationSummary()</div>
 
     <div class="form_group">
         @Html.LabelFor(m => m.FirstName)

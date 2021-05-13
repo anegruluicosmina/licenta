@@ -30,12 +30,17 @@ namespace licenta.Controllers
             _context = context;
         }
 
+
+
+
         [HttpGet]
         public IActionResult AccessDenied()
         {
             /*return View();*/
             return Content("AccessDenied");
         }
+
+
 
         [HttpGet]
         public IActionResult Register()
@@ -44,7 +49,9 @@ namespace licenta.Controllers
         }
 
 
+
         //register user
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
@@ -105,6 +112,7 @@ namespace licenta.Controllers
 
 
         //return view for log in form
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
@@ -114,6 +122,7 @@ namespace licenta.Controllers
 
 
         //login user by username and password
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
@@ -151,6 +160,7 @@ namespace licenta.Controllers
         }
 
         //logout the user
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -167,8 +177,8 @@ namespace licenta.Controllers
 
 
         //return view for edit user
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> EditUser()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -197,8 +207,8 @@ namespace licenta.Controllers
 
 
         //edit user information
-        [HttpPost]
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel viewModel)
         {
             var user = await _userManager.FindByIdAsync(viewModel.Id);
@@ -232,6 +242,8 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+
+        //confirm the email adress
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -374,6 +386,7 @@ namespace licenta.Controllers
 
         //return view to change password for a logged user
         [HttpGet]
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
@@ -414,6 +427,7 @@ namespace licenta.Controllers
 
         //return view for change email functionality
         [HttpGet]
+        [Authorize]
         public IActionResult ChangeEmail()
         {
             return View();
@@ -422,6 +436,7 @@ namespace licenta.Controllers
 
         //change email address of a logged user
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ChangeEmail(ChangeEmailViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -473,6 +488,7 @@ namespace licenta.Controllers
 
 
         //confirm email when the logged user asked for a new email address
+        [HttpGet]
         public async Task<IActionResult> ConfirmChangeEmail( string userId, string token)
         {
      
@@ -507,8 +523,9 @@ namespace licenta.Controllers
 
 
 
-
+        //returns a model with the categories for which the user has tested 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> TestsResults()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -518,6 +535,7 @@ namespace licenta.Controllers
             foreach (var category in usercategories)
             {
                 var count = userTests.Where(t => t.CategoryId == category.CategoryId).Select(t => t.Date.Date).Distinct().Count();
+                //check if the user has given tests in several days to display a line chart for days
                 if (count > 1)
                 {
                     viewModel.Add(new ProfileCategoriesViewModel
@@ -540,6 +558,14 @@ namespace licenta.Controllers
             }
             return View(viewModel);
         }
+        
+
+
+
+
+        //returns data for pie chart for all the tests
+        [HttpGet]
+        [Authorize]
 
         public async Task<JsonResult> ProfileChart()
         {
@@ -569,6 +595,11 @@ namespace licenta.Controllers
             return Json(data);
         }
 
+
+
+        //return data for line chart in profile (results for each category and the dates on which the tests were given )
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ProfileChartCategory(int categoryId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -634,6 +665,11 @@ namespace licenta.Controllers
             };
             return Json(dataset);
         }
+
+
+        //return data for bar chart in profile (results for each category)
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> BarChartCategory(int categoryId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -673,6 +709,13 @@ namespace licenta.Controllers
             return Json(new {error_message = "Nu ai completata toate campurile" });
 
         }
+
+
+
+
+        //the list of users with whom the current user had conversations 
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Conversations()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -732,7 +775,14 @@ namespace licenta.Controllers
             return StatusCode(404);
 
         }
+
+
+
+
+
         //returns messages with the friend and info about friend
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Chat(string friend)
         {
             if(friend != null)
@@ -761,8 +811,12 @@ namespace licenta.Controllers
             return StatusCode(400);
         }
 
+
+
+
         //save messages to database
-        [HttpGet]
+        [HttpPost]
+        [Authorize]        
         public async Task<IActionResult> SaveMessage(string senderUsername, string receiverUsername, string text)
         {
 

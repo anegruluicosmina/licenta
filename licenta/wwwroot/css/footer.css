@@ -38,16 +38,25 @@
 .footer .footer_ctn .footer_section{
     padding: 6px 20px;
 }
- .about p{
+
+.about p {
     white-space: normal;
     display: flex;
     flex-direction: column;
 }
+
 .about p span{
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 1px;
 }
+
+.about a {
+    font-size: 15px;
+    text-decoration: none;
+    color: #edf4f5;
+}
+
 .form_contact_group {
     margin: 10px 0px;
     display: flex;

@@ -3,6 +3,10 @@
     height: 100vh;
     font-family: 'Montserrat', sans-serif;
 }
+header{
+    position: sticky;
+    top: 0;
+}
 #navigation_ctn_large {
     display: none;
 }

@@ -19,7 +19,7 @@ namespace licenta.Models
         public string Text { get; set; }
 
         [Required(ErrorMessage ="Trebuie sa adaugi o explicatie")]
-        [StringLength(500)]
+        [StringLength(1200)]
         public string Explanation { get; set; }
 
         [DefaultValue("true")]

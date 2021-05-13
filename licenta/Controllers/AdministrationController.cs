@@ -26,11 +26,21 @@ namespace licenta.Controllers
             _userManager = userManager;
             _context = context;
         }
+
+
+
+        //returns view to create a role
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
+
+
+
+        //create a new role
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel viewModel)
         {
@@ -55,6 +65,11 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
+
+
+
+        //returns all the roles 
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public IActionResult ListRoles()
         {
@@ -62,6 +77,9 @@ namespace licenta.Controllers
             return View(roles);
         }
 
+
+        //returns all users
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> ListUsers(string search, string order, int minage, int maxage, int? page, string roleId)
         {
@@ -137,6 +155,9 @@ namespace licenta.Controllers
         }
 
 
+
+        //returns view to role edit
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
@@ -164,7 +185,8 @@ namespace licenta.Controllers
             return View(model);
         }
 
-/*edit role*/
+        //edit role
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> EditRole(EditRoleViewModel viewModel)
         {
@@ -193,6 +215,7 @@ namespace licenta.Controllers
         }
 
         //retrieves users from the database to change their roles 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> EditUserRole(string roleId, string search, string inRole, string order)
         {
@@ -298,6 +321,9 @@ namespace licenta.Controllers
 
         }
 
+
+        //edit role of a user
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> EditUserRole(string roleId,List<UserRoleViewModel> viewModels)
         {
@@ -334,15 +360,18 @@ namespace licenta.Controllers
                     if (i < (viewModels.Count))
                         continue;
                     else
-                        return RedirectToAction("ListUsersInRole", new { roleId = roleId });
+                        return RedirectToAction("ListUsers", new { roleId = roleId });
                 }
             }
 
-            return RedirectToAction("ListUsersInRole", new { roleId = roleId });
+            return RedirectToAction("ListUsers", new { roleId = roleId });
         }
 
-        //delete user from db
 
+
+        //delete user from db
+        [Authorize (Roles ="Admin")]
+        [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             //find user in db
@@ -369,7 +398,10 @@ namespace licenta.Controllers
                 return Json(new { error = "Error", errors = JsonSerializer.Serialize(errors)});
             }
         }
-        [AllowAnonymous]
+
+
+
+
         public async Task<IActionResult> FindUser(string searchString)
         {
             var currentUser = await _userManager.GetUserAsync(User);

@@ -4,37 +4,60 @@
 @model IEnumerable<licenta.Models.Question>
 
 @section Style{
-    <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/wrong_answered_qst.css")" rel="stylesheet" type="text/css" />
 }
+@section Scripts{
+    <script src="~/js/dispute_qst.js"></script> }
 @{
+    var width = "";
     <div class="questions_ctn">
 
         @foreach (var question in Model)
         {
             <div class="question_ctn">
-                @{
-                    <div>
-                        @Html.Label(question.Text, null, new { @class = "qst_text" })
-                    </div>
-                    foreach (var answer in question.Answers)
-                    {
-                        <div>
-                            @{
+                @if (question.ImagePath != null)
+                {
+                    width = "question_text_img";
+                }
+                else
+                {
+                    width = "question_text";
+                }
+                <div class="@width">
+                    @{
+                        <div class="claim_ctn">
+                            @Html.Label(question.Text, null, new { @class = "qst_text" })
+                        </div>
+                        <div class="answers_ctn">
+                            @foreach (var answer in question.Answers)
+                            {
                                 if (answer.IsCorrect)
                                 {
                                     <div class="correct_answer">
-                                        @Html.Label(answer.Text)
+                                        <label>@answer.Text</label>
                                     </div>
                                 }
                                 else
                                 {
-                                    <div class="answer">
-                                        @Html.Label(answer.Text)
-                                    </div>
+                        <div class="answer">
+                            <label>@answer.Text</label>
+                        </div>
                                 }
                             }
                         </div>
+                        <div class="explanation_ctn">
+                            <label>Explicație: @question.Explanation</label>
+                        </div>
+                        <div class="attention_btn">
+                            <button id="attention_btn" questionid=@question.Id>Atenționează întrebarea</button>
+                        </div>
                     }
+                </div>
+                @if (question.ImagePath != null)
+                {
+                    <div class="iamge_ctn">
+                        <img src=@question.ImagePath>
+                    </div>
                 }
             </div>
 

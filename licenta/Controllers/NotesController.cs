@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using licenta.Data;
 using licenta.Models;
 using licenta.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace licenta.Controllers
 {
+    [Authorize(Roles = "Instructor")]
     public class NotesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +23,11 @@ namespace licenta.Controllers
             _context = context;
             _userManage = userManager;
         }
+
+
+
+        //returns all notes in one day 
+
         public async Task<IActionResult> Notes(DateTime date)
         {
             var user = await _userManage.GetUserAsync(User);
@@ -43,6 +50,9 @@ namespace licenta.Controllers
         }
 
 
+
+
+        // add new note
         public async Task<IActionResult> NewNote(DateTime date)
         {
             NoteViewModel viewModel = new NoteViewModel();
@@ -58,6 +68,10 @@ namespace licenta.Controllers
             return View("NoteForm", viewModel);
         }
 
+
+
+        //return view for edit existing note
+        [HttpGet]
         public async Task<IActionResult> EditNote(int id)
         {
             var note = _context.Notes.Where(n => n.Id == id).FirstOrDefault();
@@ -70,6 +84,10 @@ namespace licenta.Controllers
             };
             return View("NoteForm", viewModel);
         }
+
+
+        //save the new note
+        [HttpPost]
         public async Task<IActionResult> SaveNote(NoteViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -120,6 +138,10 @@ namespace licenta.Controllers
             }
         }
 
+
+
+        //delete a note
+        [HttpPost]
         public IActionResult DeleteNote(int id)
         {
             if (id == null)

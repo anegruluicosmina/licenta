@@ -28,6 +28,8 @@ namespace licenta.Controllers
         }
 
         // return the categories
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Categories(int id)
         {
             var categories = await _context.Categories.ToListAsync();
@@ -52,8 +54,10 @@ namespace licenta.Controllers
             return View("EditCategories", categories);
 
         }
-        //return the questions of a category
+        //return the questions of a category for editing
         [HttpGet]
+/*        [Authorize(Roles = "Admin")]
+        [Authorize (Roles = "Instructor")]*/
         public async Task<IActionResult> Questions(int id, string search, string currentFilter,int? page)
         {
             var categoryName = _context.Categories.Where(c => c.Id == id).Select(c => c.Name).FirstOrDefault();
@@ -90,8 +94,13 @@ namespace licenta.Controllers
             return View(model);
 
         }
-        //edit question
-        [Authorize(Roles ="Admin, Instructor")]
+
+
+
+        //returns view to edit question
+        [HttpGet]
+/*        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]*/
         public async Task<IActionResult> Edit(int id)
         {
             var questionInDb = await _context.Question.SingleOrDefaultAsync(q => q.Id == id);
@@ -112,8 +121,10 @@ namespace licenta.Controllers
             return View(viewModel);
         }
 
-        /*[Authorize(Roles ="Admin, Instructor")]*/
         //save the new or updated question
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> Save(Question viewModel)
         { 
             if (!ModelState.IsValid)
@@ -133,7 +144,7 @@ namespace licenta.Controllers
                 string extension = System.IO.Path.GetExtension(viewModel.Image.FileName);
                 var date = DateTime.Now.ToString("yymmssfff");
                 fileName = fileName + date + extension;
-                viewModel.ImagePath = "/Images/" + fileName;
+                viewModel.ImagePath = "/Images/QuestionImage/" + fileName;
                 fileName = System.IO.Path.Combine(Environment.CurrentDirectory + "/wwwroot/Images/" + fileName);
                 using (var fileStream = new FileStream(fileName, FileMode.Create))
                 {
@@ -171,8 +182,13 @@ namespace licenta.Controllers
             return RedirectToAction("Categories", "Questions", new { id = 1});
         }
         
-        [Authorize(Roles ="Admin, Instructor")]
+        
+        
+        
+        
         // return view to add new question
+        [HttpGet]
+        /*[Authorize(Roles = "Admin,Instructor")]*/
         public async Task<IActionResult> New()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -184,8 +200,14 @@ namespace licenta.Controllers
             return View("Edit", viewModel);
         }
 
-        [Authorize(Roles ="Admin, Instructor")]
+
+
+
+
         //save the new or updated category
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> SaveCategory(Category viewModel)
         {
             if (!ModelState.IsValid)
@@ -217,16 +239,23 @@ namespace licenta.Controllers
             return RedirectToAction("Categories", "Questions", new { id = 1 });
         }
 
-        [Authorize(Roles ="Admin, Instructor")]
         //return view to add new category
-        public async Task<IActionResult> NewCategory()
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]
+        public IActionResult NewCategory()
         {
             CategoryFormViewModel viewModel = new CategoryFormViewModel();
             return View("CategoryForm", viewModel);
         }
 
-        [Authorize(Roles ="Admin, Instructor")]
+
+
+
         //return view to edit a category
+        [HttpGet]
+/*        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]*/
         public async Task<IActionResult> EditCategoty(int id)
         {
             var categoryInDb = await _context.Categories.SingleOrDefaultAsync(q => q.Id == id);
@@ -245,7 +274,9 @@ namespace licenta.Controllers
 
 
         //delete question from db by question id
-        [Authorize(Roles = "Admin, Instructor")]
+        [HttpPost]
+/*        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]*/
         public async Task<IActionResult> DeleteQuestion (int id)
         {
             var questionInDb =await  _context.Question
@@ -265,7 +296,9 @@ namespace licenta.Controllers
 
 
         //delete category from db by category id
-        [Authorize(Roles ="Admin, Instructor")]
+        [HttpGet]
+/*        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Instructor")]*/
         public IActionResult DeleteCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(c => c.Id == id);
@@ -285,7 +318,9 @@ namespace licenta.Controllers
             return Json(new { type = "Succes" });
         }
 
-         //return view and data o a test
+        //return view and data for a test
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Test(int id)
         {
             var numberOfQuestions = _context.Categories
@@ -335,9 +370,6 @@ namespace licenta.Controllers
                     };
                     viewModel.Questions.Add(questionModel);
                 }
-
-                /*var questions = _mapper.Map<List<Question>, List<QuestionViewModel>>(questionsInDb);*/
-
                 return View(viewModel);
             }
             else
@@ -348,6 +380,8 @@ namespace licenta.Controllers
         }
 
         //check the correctness of an answer
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> VerifyAnswer(string data, int questionid)
         {
             if (data == "[]" || questionid == 0)
@@ -364,7 +398,7 @@ namespace licenta.Controllers
             if (corectAnswers == null)
                 return Json(new { message = "Eroare de server", id = "3" });
 
-            /*            MVC defaults to DenyGet to protect you against a very specific attack involving JSON 
+            /* MVC defaults to DenyGet to protect you against a very specific attack involving JSON 
                             requests to improve the liklihood that the implications of allowing HTTP GET exposure 
                             are considered in advance of allowing them to occur.*/
             if (Enumerable.SequenceEqual(givenAnswers, corectAnswers))
@@ -374,7 +408,14 @@ namespace licenta.Controllers
 
         }
 
+
+
+
+
+
         //save result of test
+        [HttpPost]
+        [Authorize]
         public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId, string userId)
         {
             var categoryPassed = _context.Categories.Where(c => c.Id == Int32.Parse(categoryId)).FirstOrDefault();
@@ -399,7 +440,13 @@ namespace licenta.Controllers
             return Json("succes");
         }
 
+
+
+
+
         //show to wronged answered questions when test is finished
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> WrongAnswered (string data)
         {
             List<int> wrongAnswered = JsonConvert.DeserializeObject<List<int>>(data);
@@ -411,7 +458,12 @@ namespace licenta.Controllers
 
             return View(questionsInDb);
         }
+
+
+
+        //modify data to show that a question is disputed
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> WrongQuestion(int questionId)
         {
             var questionInDb = await _context.Question.Where(q => q.Id == questionId).SingleOrDefaultAsync();
@@ -420,7 +472,13 @@ namespace licenta.Controllers
 
             return Json(new { message = "Mesaj primit", id = "2" });
         }
-        /*[HttpPost]*/
+
+
+
+        //show the disputed questions
+/*        [Authorize(Roles ="Instructor")]
+        [Authorize(Roles ="Admin")]*/
+        [HttpGet]
         public async Task<IActionResult> DisputedQuestions(int? page)
         {
             var questionsInDb = await _context.Question

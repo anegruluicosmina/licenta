@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+
+@section Style{
+    <link href="~/css/about_us.css" rel="stylesheet" />
+}
+<h2>Contactează-ne</h2>
+<div class="extra_ctn">
+    <div class="contact_ctn">
+        <h3>Ronda Auto Recepție</h3>
+        <p><span>Telefon:</span> 0746825610</p>
+        <p><span>Email:</span> ronda_auto@gmail.com</p>
+        <a href="https://www.facebook.com/">Facebook</a>
+    </div>
+
+    <div class="contact_ctn">
+        <p id="center_txt">
+            Poți contacta și instructori folosind datele lor personale. <br />
+            Acestea pot fi găsite @Html.ActionLink("aici", "Instructors", "Home").
+        </p>
+    </div>
+</div>

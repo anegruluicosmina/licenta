@@ -166,6 +166,7 @@ ul {
         justify-content: space-around;
     }
      .profile_ctn ul li, ul li ul li {
+       margin:0px 13px;
         width: 100px;
     }
     #navigation_ctn_large{

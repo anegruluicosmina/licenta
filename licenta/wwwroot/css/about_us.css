@@ -1,0 +1,77 @@
+﻿.page_ctn {
+    background-image: url('../Images/Icons/t.jpg');
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+.text_ctn {
+    padding: 4px 17px;
+    max-width: 1230px;
+    margin: 0 auto;
+    background: rgba(24, 77, 104, 0.25);
+    border-radius: 10px;
+    width: 91%;
+}
+.extra_ctn {
+    padding: 1px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1073px;
+    margin: 0 auto;
+
+}
+    .extra_ctn div p, .contact_ctn div p {
+        font-weight: 100;
+        text-align: start;
+        margin: 7px 0;
+    }
+.extra_ctn p, .contact_ctn p {
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.navigate_ctn, .contact_ctn {
+    padding: 13px;
+    font-weight: 100;
+    display: flex;
+    flex-direction: column;
+    width: 74%;
+    margin: 25px;
+    background: rgba(24, 77, 104, 0.25);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+.navigate_ctn div{
+    display: flex;
+    flex-direction: column;
+}
+
+.extra_ctn div a{
+    padding: 0;
+    margin: 7px 0;
+}
+
+
+/*privacy page*/
+.main_ctn {
+    width: 90%;
+    background: rgba(24, 77, 104, 0.8);
+    color: #edf4f5;
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 10px 19px;
+    letter-spacing: 0.5px;
+}
+h2 {
+    margin: 0 auto;
+    padding: 10px 0;
+    color: #184D68;
+    text-align: center;
+}
+@media only screen and (min-width: 600px) {
+    .extra_ctn {
+        flex-direction: row;
+    }
+}

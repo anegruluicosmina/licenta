@@ -7,21 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using licenta.Models;
 using licenta.ViewModel;
+using licenta.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace licenta.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext contex;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext contex, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            this.contex = contex;
+            this.userManager = userManager;
         }
 
         public IActionResult Privacy()
@@ -39,6 +41,37 @@ namespace licenta.Controllers
             ViewBag.MessageTitle = title;
             ViewBag.MessageText = text;
             return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        public IActionResult ProgramsAndRates()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Instructors()
+        {
+            var users = await contex.Users.ToListAsync();
+            var instructors = new List<ApplicationUser>();
+            
+
+            foreach(var user in users)
+            {
+                if(await userManager.IsInRoleAsync(user, "Instructor")){
+                    instructors.Add(user);
+                }
+            }
+
+            return View(instructors);
         }
     }
 }

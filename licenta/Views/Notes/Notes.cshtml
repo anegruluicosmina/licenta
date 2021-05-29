@@ -1,8 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<licenta.Models.Note>
-@{ 
+﻿@model IEnumerable<licenta.Models.Note>
+@{
+    ViewData["Title"] = "Note";
     var count = 0;
 }
 <div class="action_ctn">@Html.ActionLink("Adaugă o notă nouă", "NewNote", "Notes", new { date = ViewBag.Date })</div>
@@ -16,41 +14,41 @@
         <th>Descrie</th>
         <th>Acțiune</th>
     </tr>
-        @foreach (var note in Model)
-        {
-            <tr class="note">
-                <td class="hour_ctn"> <p>@Html.ActionLink(@note.StartHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id }) </p></td>
-                <td class="hour_ctn"> <p>@Html.ActionLink(@note.EndHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id })</p></td>
-                <td class="description_ctn"><p>@Html.ActionLink(@note.Description, "EditNote", "Notes", new { id = note.Id })</p></td>
-                <td class="delete_ctn">
-                    <button class="delete_btn" id="@note.Id">Șterge</button>
-                </td>
-            </tr>
-            count++;
-        }
-        @while (count < 10)
-        {
-            <tr class="note">
-                <td class="hour_ctn"><p></p></td>
-                <td class="hour_ctn"><p></p></td>
-                <td class="description_ctn"><p></p></td>
-                <td class="delete_ctn"><p></p> </td>
-            </tr>
-            count++;
-        }
+    @foreach (var note in Model)
+    {
+        <tr class="note">
+            <td class="hour_ctn"> <p>@Html.ActionLink(@note.StartHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id }) </p></td>
+            <td class="hour_ctn"> <p>@Html.ActionLink(@note.EndHour.ToShortTimeString(), "EditNote", "Notes", new { id = note.Id })</p></td>
+            <td class="description_ctn"><p>@Html.ActionLink(@note.Description, "EditNote", "Notes", new { id = note.Id })</p></td>
+            <td class="delete_ctn">
+                <button class="delete_btn" id="@note.Id">Șterge</button>
+            </td>
+        </tr>
+        count++;
+    }
+    @while (count < 10)
+    {
+        <tr class="note">
+            <td class="hour_ctn"><p></p></td>
+            <td class="hour_ctn"><p></p></td>
+            <td class="description_ctn"><p></p></td>
+            <td class="delete_ctn"><p></p> </td>
+        </tr>
+        count++;
+    }
 </table>
 
 <div class="paging_ctn">
     @Html.ActionLink("Anterioara", "Notes", "Notes", new { date = ViewBag.PreviousDate })
-@if (ViewBag.Date != DateTime.Now.Date)
-{
-    @Html.ActionLink("Azi", "Notes", "Notes", new { date = DateTime.Now.Date })
-}
-@Html.ActionLink("Următoarea", "Notes", "Notes", new { date = ViewBag.NextDate })
+    @if (ViewBag.Date != DateTime.Now.Date)
+    {
+        @Html.ActionLink("Azi", "Notes", "Notes", new { date = DateTime.Now.Date })
+    }
+    @Html.ActionLink("Următoarea", "Notes", "Notes", new { date = ViewBag.NextDate })
 </div>
 @section Scripts{
     <script src="~/js/note.js"></script>
 }
-@section Style{ 
+@section Style{
     <link href="~/css/notes.css" rel="stylesheet" />
 }

@@ -1,11 +1,12 @@
 ﻿@model licenta.ViewModel.PaginatedList<ApplicationUser>
 
 @{
-    ViewBag.Title = "Lista utilizatorlor";
     var action = "ListUsers";
     var roleId = ViewBag.RoleId;
     var roleName = ViewBag.RoleName;
+    ViewData["Title"] = "Lista utlizatorilor";
 }
+
 <div class="search_ctn">
     <button id="filters_menu_btn">Filtre</button>
     @using (Html.BeginForm(action, "Administration", FormMethod.Get, new { id = "filter_form" }))
@@ -26,7 +27,7 @@
 <div class="info_ctn">
     @if (roleName == null)
     {
-        <p class="page_title">Lista de utiliztorilor</p>
+        <p class="page_title">Lista utiliztorilor</p>
     }
     else
     {

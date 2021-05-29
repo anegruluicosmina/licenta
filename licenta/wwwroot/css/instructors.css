@@ -1,0 +1,46 @@
+﻿.page_ctn {
+    background-image: url('../Images/Icons/t.jpg');
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+.page_title {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 19px;
+}
+.user_data_ctn {
+    border: 1px solid #184D68;
+    padding: 15px 17px;
+    margin: 17px 0px;
+    background: rgba(24, 77, 104, 0.25);
+    border-radius: 10px;
+    font-size: 15px;
+    width: 74%;
+    margin: 0 auto;
+}
+.user_data_ctn p, h4{
+    margin: 0;
+    padding: 0;
+}
+.user_contact {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+.user_contact label{
+    padding: 5px 0px;
+}
+@media only screen and (min-width: 600px) {
+    .info_ctn{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    .user_data_ctn {
+        width: 323px;
+        margin: 17px;
+        font-size: 14px;
+    }
+}

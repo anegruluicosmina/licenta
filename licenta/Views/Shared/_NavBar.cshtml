@@ -5,11 +5,8 @@
         <div class="container_questions">
             <div class="brand_ctn">
                 <ul>
-                    <li class="item" id="logo_img" style="display:none">
-                        <img src="~/Images/car.jpg" class="logo_img" />
-                    </li>
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Name</a>
+                        <a class="nav_link" asp-area="" asp-controller="" asp-action="">Ronda Auto</a>
                     </li>
                 </ul>
             </div>
@@ -30,7 +27,7 @@
                                 <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Utilizatori</a>
                             </li>
                             <li class="item">
-                                <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
+                                <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Întrebări</a>
                             </li>
 
                         </ul>
@@ -52,23 +49,23 @@
                                 {
                                     <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="TestsResults">Testele mele</a></li>
                                 }
-                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangePassword">Schimba parola</a></li>
-                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="EditUser">Editeaza profilul</a></li>
-                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangeEmail">Editeaza email-ul</a></li>
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangePassword">Schimbă parola</a></li>
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="EditUser">Editează profilul</a></li>
+                                <li class="item"><a class="nav_link" asp-area="" asp-controller="Account" asp-action="ChangeEmail">Editează email-ul</a></li>
                             </ul>
                         </div>
                     </li>
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Log out</a>
+                        <a class="nav_link" asp-area="" asp-controller="account" asp-action="Logout">Deconectare</a>
                     </li>
                 }
                 else
                 {
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Login">Log In</a>
+                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Login">Autentificare</a>
                     </li>
                     <li class="item">
-                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                        <a class="nav_link" asp-area="" asp-controller="Account" asp-action="Register">Înregistare</a>
                     </li>
                 }
             </ul>
@@ -84,7 +81,7 @@
                             <a class="nav_link" asp-area="" asp-controller="Administration" asp-action="ListUsers">Utilizatori</a>
                         </li>
                         <li class="item">
-                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Intrebari</a>
+                            <a class="nav_link" asp-area="" asp-controller="Questions" asp-action="Categories" asp-route-id="1">Întrebări</a>
                         </li>
                         
                     </ul>

@@ -1,0 +1,52 @@
+﻿.page_ctn {
+    background-image: url('../Images/Icons/t.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.program_ctn {
+    width: 88%;
+    background: rgba(24, 77, 104, 0.8);
+    border-radius: 10px;
+    margin: 30px auto;
+    padding: 2px 8px;
+    color: #edf4f5;
+    height: fit-content;
+    min-height: 106px;
+}
+.program_ctn h2{
+    text-align: center;
+}
+.program_ctn a {
+    color: #edf4f5;
+    margin: 0;
+    padding: 0;
+    font-weight: 800;
+    border-bottom: 2px solid white;
+    letter-spacing: 1px;
+}
+#center_txt {
+    text-align: center;
+    margin: inherit;
+}
+.tax_ctn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+@media only screen and (min-width: 600px) {
+    .program_ctn {
+        padding: 5px 29px;
+        font-size: 15px;
+        max-width: 1000px;
+    }
+    .tax_ctn {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+}

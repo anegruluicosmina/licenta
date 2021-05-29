@@ -1,33 +1,32 @@
 ﻿@model IEnumerable<IdentityRole>
 
 @{
-    ViewBag.Title = "All roles";
+    ViewData["Title"] = "Roluri";
 }
-    <p class="page_title">Lista rolurilor</p>
 
-    @if (!Model.Any())
-    {
-        <div>
-            Momentan nu exista niciun rol
-        </div>
-    }
-    else
-    {
-        <div class="roles_ctn">
-            @foreach (var role in Model)
+<p class="page_title">Lista rolurilor</p>
+
+@if (!Model.Any())
+{
+    <div>Momentan nu exista niciun rol</div>
+}
+else
+{
+    <div class="roles_ctn">
+        @foreach (var role in Model)
             {
-                <div class="role_ctn">
-                    <div>
-                        @Html.Label(role.Name, null, new { @class = "role_name" })
-                        @Html.Label(role.Id, null, new { @class = "role_id" })
-                    </div>
-                    @Html.ActionLink("Lista utilizatori", "ListUsers", "Administration", new { roleId = role.Id }, null)
-                </div>
-            }
+             <div class="role_ctn">
+                <div>
+                    @Html.Label(role.Name, null, new { @class = "role_name" })
+                    @Html.Label(role.Id, null, new { @class = "role_id" })
+                 </div>
+                 @Html.ActionLink("Lista utilizatori", "ListUsers", "Administration", new { roleId = role.Id }, null)
+             </div>
+        }
 
-        </div>
-    }
-    @Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
+     </div>
+}
+@Html.ActionLink("Adauga un nou rol", "CreateRole", "Administration")
 @section Style{
     <link href="~/css/list_roles.css" type="text/css" rel="stylesheet" />
 }

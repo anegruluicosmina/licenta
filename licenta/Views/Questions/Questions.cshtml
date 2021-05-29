@@ -3,9 +3,7 @@
 @using PagedList;
 @model licenta.ViewModel.PaginatedList<licenta.Models.Question>
 @{
-
-    @*to take the id of the difficulty*@
-
+    ViewData["Title"] = "Întrebări";
     var div_name = "";
     var categoryId = ViewBag.CategoryId;
     var categoryName = ViewBag.CategoryName;

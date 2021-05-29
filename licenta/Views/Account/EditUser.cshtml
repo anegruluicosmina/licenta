@@ -1,5 +1,7 @@
 ﻿@model licenta.ViewModel.EditUserViewModel
-
+@{ 
+    ViewData["Title"] = "Editează date";
+}
 <div id="form_ctn">
     @using (Html.BeginForm("EditUser", "Account"))
     {

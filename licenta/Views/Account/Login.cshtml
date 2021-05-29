@@ -1,9 +1,7 @@
 ﻿@model licenta.ViewModel.LoginViewModel
-
 @{
-    ViewBag.Title = "Autentificare";
+    ViewData["Title"] = "Autentificare";
 }
-
 
 <div id="form_ctn">
     <p class="title"> Autentificare</p>
@@ -18,7 +16,7 @@
         </div>
         <div class="form_group">
             @Html.LabelFor(m => m.Password)
-            @Html.TextBoxFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password, new { @type = "password" })
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "validation_mesg" })
         </div>
 

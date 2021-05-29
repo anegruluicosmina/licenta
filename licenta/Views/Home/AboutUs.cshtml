@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Despre noi";
+}
+
+@section Style{
+    <link rel="stylesheet" href="~/css/about_us.css" />
+}
+<h2>Despre noi</h2>
+<div class="text_ctn">
+    <p>
+        Dacă aveți dorința de a conduce un automobil
+        și indicatoarele rutiere nu inseamnă nimic pentru
+        dumneavoastră la acest moment atunci este timpul
+        să urmați cursurile puse la dispoziție de noi.
+        <br>
+        <br>
+        Prin acest site dorim să îți punem la dispoziție ocazia să
+        exersezi pentru examenul teoretic auto cu ajutorul unor chestionare
+        ce cuprind infomații atât din cărțile de specialitate
+        cât și din experiențele zilnice.
+    </p>
+</div>
+
+<div class="extra_ctn">
+    <div class="contact_ctn">
+        <p>Contactează-ne la:</p>
+        <div>
+            <p><span>Telefon</span> 0746825610</p>
+            <p><span>Email</span> ronda_auto@gmail.com</p>
+            <a href="https://www.facebook.com/">Facebook</a>
+        </div>
+    </div>
+
+    <div class="navigate_ctn">
+        <p>Navigheează mai departe pentru mai multe informații:</p>
+        <div>
+            @Html.ActionLink("Instructori", "Instructors", "Home")
+            @Html.ActionLink("Programe și tarife", "ProgramsAndRates", "Home")
+        </div>
+    </div>
+</div>

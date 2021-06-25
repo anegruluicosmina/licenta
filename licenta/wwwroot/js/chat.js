@@ -50,8 +50,10 @@ document.getElementById('submitButton').addEventListener('click', () => {
             clearInputField();
 
             var friend = receiverUsername.value;
+            console.log("aici 1");
             document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = 'white';
             document.querySelector("[friend=" + CSS.escape(friend) + "]").style.color = 'black';
+            console.log("aici 2");
             sendMessage();
             //succes
         } else {
@@ -65,10 +67,13 @@ document.getElementById('submitButton').addEventListener('click', () => {
 });
 
 function clearInputField() {
+    console.log("pppppppppp");
     var text = document.getElementById("messageText");
     messageQueue.push(text.value);
     text.value = '';
 }
+
+
 function sendMessage() {
     let text = messageQueue.shift() || "";
     if (text.trim() === "") return;
@@ -87,8 +92,10 @@ function addMessageToChat(message, who) {
 
     if (who === senderUsername) {
         isCurrentUserMessage = true;
+        notifyConversation(senderUsername, message, isCurrentUserMessage);
     } else {
         isCurrentUserMessage = false;
+        notifyConversation(who, message, isCurrentUserMessage);
 /*        var id = "#" + CSS.escape(senderUsername);
         $(id).prependTo('.conversations_ctn');
         var ctn = document.getElementById("#conversations_ctn");
@@ -98,9 +105,9 @@ function addMessageToChat(message, who) {
 
     //receiving
     //who == who sends the message
-    notifyConversation(who, message, isCurrentUserMessage);
+/*    notifyConversation(who, message, isCurrentUserMessage);
     //sending
-    /*notifyConversation(senderUsername, message, isCurrentUserMessage);*/
+    notifyConversation(senderUsername, message, isCurrentUserMessage);*/
 
     if (isCurrentUserMessage == true || user == who) {
         let container = document.createElement('div');
@@ -134,23 +141,23 @@ function notifyConversation(who, message, isCurrent) {
         var friend = chat.getAttribute("convo_name");
         var button = document.getElementById(friend);
         if (button != "undefined" && button != null) {
-            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "black";
+/*            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "yellow";
             document.querySelector("[friend=" + CSS.escape(who) + "]").style.color = "white";
             document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_txt > div.text_ctn > p").innerHTML = message;
             document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_txt > div.sender_ctn > p").innerHTML = "Tu:";
             var date = new Date();
-            document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();
+            document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();*/
         }
     } else {//if it not current user
         var button = document.getElementById(who);
         //if conversation container exists
         if (button != "undefined" && button != null) {
-            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "blue";
+/*            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "blue";
             document.querySelector("[friend=" + CSS.escape(who) + "]").style.color = "red";
             document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.text_ctn > p").innerHTML = message;
             document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.sender_ctn > p").innerHTML = who;
             var date = new Date();
-            document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();
+            document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();*/
         } else {
             //if conversation ctn does not exists create one :)))))
             createConversationCtn(who, message);
@@ -404,22 +411,3 @@ function fillResultCOnversationCtn(who, lastName, firstName) {
 
     result_ctn.appendChild(userResult);
 }
-
-
-
-/*    var sender = who;
-    console.log("notify who:" + who);
-    console.log("notify sender:" + senderUsername.value)
-    if (senderUsername.value == who) {
-        sender = "Tu:";
-    }
-    var button = document.getElementById(who);
-    if (button != "undefined" && button != null) {
-        button.className = "convo_ctn message_not_seen";
-        document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.text_ctn > p").innerHTML = message;
-        document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.sender_ctn > p").innerHTML = who;
-        var date = new Date();
-        var h = date.getHours();
-        var m = date.getMinutes();
-        document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_time > p").innerHTML = h + ":" + m;
-    }*/

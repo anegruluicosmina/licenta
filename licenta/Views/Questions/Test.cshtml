@@ -64,6 +64,8 @@
 @section Scripts{
     <script>
         var model = @Html.Raw(Json.Serialize(Model));
+        var host = window.location.hostname;
+        var port = window.location.port;
     </script>
     <script src="~/js/test.js">
     </script>

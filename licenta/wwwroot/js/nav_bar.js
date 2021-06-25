@@ -1,4 +1,6 @@
-﻿var baseUrl = "https://localhost:44368/";
+﻿var host = window.location.hostname;
+var port = window.location.port;
+var baseUrl = "https://" + host + ":" + port + "/";
 function show_menu() {
     var menu = document.getElementById("navigation_ctn");
     if (menu.style.display === "none" || menu.style.display === "") {

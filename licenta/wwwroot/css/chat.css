@@ -38,33 +38,33 @@
     width: 84%;
 }
 
-    .form_group_input input {
-        width: 100%;
-        border: none;
-        background: #D5E1DD;
-        line-height: 31px;
-        font-size: 16px;
-        outline: none;
-        border-radius: 6px 0px 0px 6px;
-    }
+.form_group_input input {
+    width: 100%;
+    border: none;
+    background: #D5E1DD;
+    line-height: 31px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 6px 0px 0px 6px;
+}
 
 .form_group_submit {
     width: 15%;
 }
 
-    .form_group_submit button {
-        width: 100%;
-        border: none;
-        background-color: #184D68;
-        outline: none;
-        color: #edf4f5;
-        padding: 0;
-        border-radius: 0px 6px 6px 0px;
-    }
+.form_group_submit button {
+    width: 100%;
+    border: none;
+    background-color: #184D68;
+    outline: none;
+    color: #edf4f5;
+    padding: 0;
+    border-radius: 0px 6px 6px 0px;
+}
 
-        .form_group_submit button img {
-            height: 29px;
-        }
+.form_group_submit button img {
+    height: 29px;
+}
 
 .dark_message_ctn {
     display: flex;
@@ -78,10 +78,10 @@
     padding-right: 16px;
 }
 
-    .dark_message_ctn p {
-        margin: 0;
-        padding: 5px 0 0px 10px;
-    }
+.dark_message_ctn p {
+    margin: 0;
+    padding: 5px 0 0px 10px;
+}
 
 .msg_text {
     padding-bottom: 6px;
@@ -100,10 +100,10 @@
     padding-left: 16px;
 }
 
-    .light_message_ctn p {
-        margin: 0;
-        padding: 5px 0 0px 0px;
-    }
+ .light_message_ctn p {
+     margin: 0;
+     padding: 5px 0 0px 0px;
+ }
 
 .msg_date {
     font-size: 10px;
@@ -118,6 +118,9 @@
 /*coversations ctn*/
 .search_ctn {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
 }
 
 .search_form_ctn {
@@ -128,26 +131,26 @@
     justify-content: center;
 }
 
-    .search_form_ctn input[type ="text"] {
-        width: calc(100% - 87px);
-        line-height: 22px;
-        font-size: 16px;
-        outline: none;
-        border: 2px solid #184D68;
-        border-radius: 10px 0px 0px 10px;
-        padding: 5px;
-    }
+.search_form_ctn input[type ="text"] {
+    width: calc(100% - 87p);
+    line-height: 22px;
+    font-size: 16px;
+    outline: none;
+    border: 2px solid #184D68;
+    border-radius: 10px 0px 0px 10px;
+    padding: 5px;
+}
 
-    .search_form_ctn input[type ="submit"] {
-        width: 63px;
-        line-height: 22px;
-        font-size: 15px;
-        outline: none;
-        border: none;
-        background-color: #184D68;
-        color: #edf4f5;
-        border-radius: 0px 10px 10px 0px;
-    }
+.search_form_ctn input[type ="submit"] {
+    width: 63px;
+    line-height: 22px;
+    font-size: 15px;
+    outline: none;
+    border: none;
+    background-color: #184D68;
+    color: #edf4f5;
+    border-radius: 0px 10px 10px 0px;
+}
 
 .conversations_ctn {
     display: flex;
@@ -158,18 +161,18 @@
     align-items: center;
 }
 
-    .conversations_ctn button[type="submit"] {
-        border: 1.7px solid #184D68;
-        margin: 1.5px 0;
-        background: white;
-        width: 92%;
-        max-width: 680px;
-        font-size: 14px;
-    }
+.conversations_ctn button[type="submit"] {
+    border: 1.7px solid #184D68;
+    margin: 1.5px 0;
+    background: white;
+    width: 92%;
+    max-width: 680px;
+    font-size: 14px;
+}
 
-        .conversations_ctn button[type="submit"] div p {
-            margin: 0;
-        }
+.conversations_ctn button[type="submit"] div p {
+    margin: 0;
+}
 
 .friend {
     font-size: 15px;
@@ -183,20 +186,20 @@
 }
 
 .sender_ctn {
-    width: 48px;
-    /*    overflow: hidden;
-    text-align: start;*/
+    width: 54px;
+    overflow: hidden;
+    text-align: start;
 }
 
-    .sender_ctn div {
-        display: inline-flex;
-    }
+.sender_ctn div {
+    display: inline-flex;
+}
 
-        .sender_ctn div p {
-            max-width: 48px;
-            overflow: hidden;
-            margin: 0 5px;
-        }
+.sender_ctn div p {
+    max-width: 48px;
+    overflow: hidden;
+    margin: 0 5px;
+}
 
 .text_ctn {
     width: calc(90% - 45px);
@@ -221,18 +224,18 @@
     align-items: center;
 }
 
-    .result_ctn button {
-        border: 1.7px solid #184D68;
-        margin: 1.5px 0;
-        background: white;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 680px;
-    }
+.result_ctn button {
+    border: 1.7px solid #184D68;
+    margin: 1.5px 0;
+    background: white;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 680px;
+}
 
-        .result_ctn button p {
-            margin: 0;
-        }
+.result_ctn button p {
+    margin: 0;
+}
 
 .error_message_txt {
     text-align: center;
@@ -248,7 +251,7 @@
 
     .friend_ctn {
         display: block;
-        min-width: 300px;
+        min-width: 382px;
     }
 
     .friend_name {
@@ -274,14 +277,14 @@
         height: 37px;
     }
 
-/*conversation ctn*/
+    /*conversation ctn*/
     .search_ctn {
-        width: 40%;
+        width: 84%;
         max-width: 600px;
     }
 
     .conversations_ctn {
-        width: 60%;
+        width: 89%;
         max-width: 800px;
     }
 }

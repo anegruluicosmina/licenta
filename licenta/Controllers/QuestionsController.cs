@@ -56,8 +56,7 @@ namespace licenta.Controllers
         }
         //return the questions of a category for editing
         [HttpGet]
-/*        [Authorize(Roles = "Admin")]
-        [Authorize (Roles = "Instructor")]*/
+        [Authorize(Roles = "Admin, Instructor")]
         public async Task<IActionResult> Questions(int id, string search, string currentFilter,int? page)
         {
             var categoryName = _context.Categories.Where(c => c.Id == id).Select(c => c.Name).FirstOrDefault();
@@ -99,8 +98,8 @@ namespace licenta.Controllers
 
         //returns view to edit question
         [HttpGet]
-/*        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]*/
+        [Authorize(Roles = "Admin, Instructor")]
+
         public async Task<IActionResult> Edit(int id)
         {
             var questionInDb = await _context.Question.SingleOrDefaultAsync(q => q.Id == id);
@@ -123,8 +122,8 @@ namespace licenta.Controllers
 
         //save the new or updated question
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]
+        [Authorize(Roles = "Admin, Instructor")]
+
         public async Task<IActionResult> Save(Question viewModel)
         { 
             if (!ModelState.IsValid)
@@ -145,7 +144,7 @@ namespace licenta.Controllers
                 var date = DateTime.Now.ToString("yymmssfff");
                 fileName = fileName + date + extension;
                 viewModel.ImagePath = "/Images/QuestionImage/" + fileName;
-                fileName = System.IO.Path.Combine(Environment.CurrentDirectory + "/wwwroot/Images/" + fileName);
+                fileName = System.IO.Path.Combine(Environment.CurrentDirectory + "/wwwroot/Images/QuestionImage/" + fileName);
                 using (var fileStream = new FileStream(fileName, FileMode.Create))
                 {
                     await viewModel.Image.CopyToAsync(fileStream);
@@ -188,7 +187,8 @@ namespace licenta.Controllers
         
         // return view to add new question
         [HttpGet]
-        /*[Authorize(Roles = "Admin,Instructor")]*/
+        [Authorize(Roles = "Admin, Instructor")]
+
         public async Task<IActionResult> New()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -206,8 +206,8 @@ namespace licenta.Controllers
 
         //save the new or updated category
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]
+        [Authorize(Roles = "Admin, Instructor")]
+
         public async Task<IActionResult> SaveCategory(Category viewModel)
         {
             if (!ModelState.IsValid)
@@ -241,8 +241,8 @@ namespace licenta.Controllers
 
         //return view to add new category
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]
+        [Authorize(Roles = "Admin, Instructor")]
+
         public IActionResult NewCategory()
         {
             CategoryFormViewModel viewModel = new CategoryFormViewModel();
@@ -275,8 +275,8 @@ namespace licenta.Controllers
 
         //delete question from db by question id
         [HttpPost]
-/*        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]*/
+        [Authorize(Roles = "Admin, Instructor")]
+
         public async Task<IActionResult> DeleteQuestion (int id)
         {
             var questionInDb =await  _context.Question
@@ -297,8 +297,8 @@ namespace licenta.Controllers
 
         //delete category from db by category id
         [HttpGet]
-/*        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Instructor")]*/
+        [Authorize(Roles = "Admin, Instructor")]
+
         public IActionResult DeleteCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(c => c.Id == id);
@@ -414,7 +414,6 @@ namespace licenta.Controllers
 
 
         //save result of test
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> SaveTest(string correctAnswers, string categoryId, string userId)
         {
@@ -476,8 +475,8 @@ namespace licenta.Controllers
 
 
         //show the disputed questions
-/*        [Authorize(Roles ="Instructor")]
-        [Authorize(Roles ="Admin")]*/
+        [Authorize(Roles = "Admin, Instructor")]
+
         [HttpGet]
         public async Task<IActionResult> DisputedQuestions(int? page)
         {

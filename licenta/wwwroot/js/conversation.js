@@ -1,4 +1,6 @@
-﻿var baseUrl = "https://localhost:44368/";
+﻿var host = window.location.hostname;
+var port = window.location.port;
+var baseUrl = "https://" + host + ":" + port + "/";
 $("#find_people").click(function () {
     document.getElementsByClassName("result_ctn")[0].innerHTML = "";
     var searchString = document.getElementById("search_string").value;

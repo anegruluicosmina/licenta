@@ -564,7 +564,6 @@ namespace licenta.Controllers
 
 
         //returns data for pie chart for all the tests
-        [HttpGet]
         [Authorize]
 
         public async Task<JsonResult> ProfileChart()
@@ -598,7 +597,6 @@ namespace licenta.Controllers
 
 
         //return data for line chart in profile (results for each category and the dates on which the tests were given )
-        [HttpGet]
         [Authorize]
         public async Task<IActionResult> ProfileChartCategory(int categoryId)
         {
@@ -668,7 +666,6 @@ namespace licenta.Controllers
 
 
         //return data for bar chart in profile (results for each category)
-        [HttpGet]
         [Authorize]
         public async Task<IActionResult> BarChartCategory(int categoryId)
         {
@@ -781,7 +778,6 @@ namespace licenta.Controllers
 
 
         //returns messages with the friend and info about friend
-        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Chat(string friend)
         {
@@ -815,7 +811,6 @@ namespace licenta.Controllers
 
 
         //save messages to database
-        [HttpPost]
         [Authorize]        
         public async Task<IActionResult> SaveMessage(string senderUsername, string receiverUsername, string text)
         {

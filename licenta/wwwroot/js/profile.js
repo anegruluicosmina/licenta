@@ -19,7 +19,9 @@
 var baseUrl = '@Url.Action("ChangePassword", "Account")';
 var urlEditInfo = '@Url.Action("EditUser", "Account")';
 var myChart;
-var baseUrl = "https://localhost:44368/";
+var host = window.location.hostname;
+var port = window.location.port;
+var baseUrl = "https://" + host + ":" + port + "/";
 
 
 $('#chart_btn').click(function () {

@@ -6,6 +6,13 @@
       "wwwroot/css/site.css",
       "wwwroot/css/navBar.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/chatjs.min.js",
+    "inputFiles": [
+      "wwwroot/lib/signalr/dist/browser/signalr.js",
+      "wwwroot/js/chat.js"
+    ]
   }
 
 ]

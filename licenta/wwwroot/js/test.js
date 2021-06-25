@@ -1,4 +1,4 @@
-﻿var baseUrl = "https://localhost:44368/";
+﻿var baseUrl = "https://"+ host + ":" + port +"/";
 var correctAnswers = 0;
 var category = model.categoryId;
 var questionsIds = [];
@@ -6,7 +6,8 @@ var wrongQuestions = [];
 var index = -1;
 var answers = document.getElementById("answers");
 
-console.log(model);
+
+console.log(baseUrl);
 
 const startMinutes = model.time;
 let time = startMinutes * 60;
@@ -225,7 +226,7 @@ function save_test() {
         error: errorFunc
     });
     function errorFunc() {
-        $("#error_message").text("eroare in save test");
+        $("#error_message").text("Eroare în salvarea rezultatelor testului. Dacă eroarea persistă adu-ne la cunoștință eroarea.");
     }
 }
 /*function to call the action to verify the user's answer*/

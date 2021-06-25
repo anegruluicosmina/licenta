@@ -43,7 +43,7 @@ namespace licenta.Controllers
             return View();
         }
 
-        public IActionResult AboutUs()
+        public IActionResult Index()
         {
             return View();
         }

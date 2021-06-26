@@ -141,7 +141,6 @@ namespace licenta.Controllers
 
 
         //delete a note
-        [HttpPost]
         public IActionResult DeleteNote(int id)
         {
             if (id == null)

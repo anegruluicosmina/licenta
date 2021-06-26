@@ -1,3 +1,5 @@
+import { computeStyles } from "@popperjs/core";
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 connection.on('receiveMessage', addMessageToChat);
@@ -43,9 +45,6 @@ document.getElementById('submitButton').addEventListener('click', () => {
 
     function successFunc(data) {
         if (data.message === "ok") {
-            //move element in top of the q
-/*            var id = "#" + CSS.escape(receiverUsername.value);
-            $(id).prependTo('.conversations_ctn');*/
             //clear the input field
             clearInputField();
 
@@ -96,18 +95,8 @@ function addMessageToChat(message, who) {
     } else {
         isCurrentUserMessage = false;
         notifyConversation(who, message, isCurrentUserMessage);
-/*        var id = "#" + CSS.escape(senderUsername);
-        $(id).prependTo('.conversations_ctn');
-        var ctn = document.getElementById("#conversations_ctn");
-        var convo = document.getElementById(id);
-        ctn.prepend(convo);*/
     }
 
-    //receiving
-    //who == who sends the message
-/*    notifyConversation(who, message, isCurrentUserMessage);
-    //sending
-    notifyConversation(senderUsername, message, isCurrentUserMessage);*/
 
     if (isCurrentUserMessage == true || user == who) {
         let container = document.createElement('div');
@@ -141,23 +130,13 @@ function notifyConversation(who, message, isCurrent) {
         var friend = chat.getAttribute("convo_name");
         var button = document.getElementById(friend);
         if (button != "undefined" && button != null) {
-/*            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "yellow";
-            document.querySelector("[friend=" + CSS.escape(who) + "]").style.color = "white";
-            document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_txt > div.text_ctn > p").innerHTML = message;
-            document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_txt > div.sender_ctn > p").innerHTML = "Tu:";
-            var date = new Date();
-            document.querySelector("[friend=" + CSS.escape(friend) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();*/
+            console.log("undefined");
         }
     } else {//if it not current user
         var button = document.getElementById(who);
         //if conversation container exists
-        if (button != "undefined" && button != null) {
-/*            document.querySelector("[friend=" + CSS.escape(friend) + "]").style.background = "blue";
-            document.querySelector("[friend=" + CSS.escape(who) + "]").style.color = "red";
-            document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.text_ctn > p").innerHTML = message;
-            document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_txt > div.sender_ctn > p").innerHTML = who;
-            var date = new Date();
-            document.querySelector("[friend=" + CSS.escape(who) + "] > div.message_time > p").innerHTML = date.getHours() + ":" + date.getMinutes();*/
+        if (button != "undefined" && button != null)
+            console.log("undefined");
         } else {
             //if conversation ctn does not exists create one :)))))
             createConversationCtn(who, message);
@@ -227,35 +206,6 @@ function createConversationCtn(who, message) {
     conversations_ctn.prepend(convo_ctn);
 }
 
-//get the messages whith that friend when a new conversation is opened
-/*$("button.convo_ctn").click(function () {
-    //get the name email of the friend and update the de input field
-*//*    var friend = $(this).attr('id');
-    document.getElementById("receiverUsername").value = friend;
-    chat.setAttribute("convo_name", receiverUsername.value);
-
-    $.ajax({
-        type: "GET",
-        url: baseUrl + 'account/Chat',
-        data: { friend: friend },
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: successFunc,
-        error: errorFunc
-    })
-    //if messages are received, fill the container with them 
-    function successFunc(data) {
-        chat.innerHTML = "";        
-        var i;
-        for (i = 0; i < data.length; i++){
-            addMessage(data[i]);  
-        }
-    }
-    function errorFunc(data) {
-        console.log(data)
-    }*//*
-})
-*/
 
 //function to add message from action to chat
 function addMessage(item) {
@@ -355,26 +305,6 @@ $("#find_people").click(function () {
         if (data.length > 0) {
             data.forEach(function (entry) {
                 fillResultCOnversationCtn(entry.userName, entry.lastName, entry.firstName);
-
-/*                var result_ctn = document.getElementsByClassName("result_ctn")[0];
-
-                var userResult = document.createElement('button');
-                userResult.name = "friend";
-                userResult.value = entry.userName;
-
-                var userName = document.createElement('p');
-                userName.className = "user_name";
-                userName.innerHTML = entry.lastName + " " + entry.firstName;
-
-                var userEmail = document.createElement('p');
-                userEmail.className = "user_email";
-                userEmail.innerHTML = entry.userName;
-
-                userResult.appendChild(userName);
-                userResult.appendChild(userEmail);
-
-                result_ctn.appendChild(userResult);*/
-
             });
         } else {
             var result_ctn = document.getElementsByClassName("result_ctn")[0];
